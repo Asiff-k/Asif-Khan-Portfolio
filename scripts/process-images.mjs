@@ -190,17 +190,18 @@ async function run() {
     await save(`apps/${slug}`, img.resize({ width: 1440, withoutEnlargement: true }));
   }
 
-  // Portrait: trim the white side bars, then crop 4:5 around the subject.
-  const portrait = await load(path.join(stagingDir, "photos", "Asif-3.jpg"));
-  const trimmed = await sharp(portrait).rotate().trim({ threshold: 20 }).toBuffer();
-  const { width: tw, height: th } = await sharp(trimmed).metadata();
-  const cropW = Math.min(tw, Math.round(th * 0.8));
-  const cropLeft = Math.max(0, Math.min(tw - cropW, Math.round(tw / 2 - cropW / 2)));
-  const portraitCrop = sharp(trimmed)
-    .extract({ left: cropLeft, top: 0, width: cropW, height: Math.round(cropW * 1.25) > th ? th : Math.round(cropW * 1.25) })
+  // Portrait: Asif-4, original colour. The photo is already 4:5, so it is only
+  // trimmed to an exact 4:5 frame (no reframing) and resized.
+  const portrait = await load(path.join(stagingDir, "photos", "Asif-4.jpg"));
+  const { width: rawW, height: ph } = await sharp(portrait).rotate().metadata();
+  // The original has a 3px light border on its right edge; trim it off.
+  const pw = rawW - 6;
+  const frameH = Math.min(ph, Math.round(pw * 1.25));
+  const portraitCrop = sharp(portrait)
+    .rotate()
+    .extract({ left: 0, top: 0, width: pw, height: frameH })
     .resize({ width: 960, withoutEnlargement: true });
-  // Only the photo shown on the site is published.
-  await save("photos/portrait-mono", portraitCrop.clone().grayscale().linear(1.08, -6), { quality: 85 });
+  await save("photos/asif-portrait", portraitCrop, { quality: 86 });
 
   const keys = Object.keys(manifest).sort();
   const body = keys.map((k) => `  ${JSON.stringify(k)}: ${JSON.stringify(manifest[k])},`).join("\n");

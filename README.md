@@ -28,6 +28,7 @@ npm start        # serves the production build at http://localhost:3000
 | Graphic design gallery | `src/content/gallery.ts` |
 | Jobs, AI data projects, education, tools | `src/content/experience.ts` |
 | AI Tools page | `src/content/tools.ts` |
+| Tool and contact logos | `public/logos`, with the source of each logo in `src/content/logos.generated.ts` |
 | Colours, fonts and type scale | `src/app/globals.css` |
 | Spring and gesture settings | `src/lib/motion.ts` |
 

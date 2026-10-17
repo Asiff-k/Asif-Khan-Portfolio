@@ -73,3 +73,11 @@ export function DownloadIcon({ className }: IconProps) {
     </svg>
   );
 }
+
+export function PhoneIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 16 16" width="18" height="18" className={className} {...base}>
+      <path d="M5.5 2.5H3.2a.7.7 0 0 0-.7.75c.4 5.6 4.7 9.9 10.3 10.3a.7.7 0 0 0 .7-.7v-2.3l-2.8-1-1.3 1.3a7.6 7.6 0 0 1-3.8-3.8L6.9 5.8 5.5 2.5z" />
+    </svg>
+  );
+}

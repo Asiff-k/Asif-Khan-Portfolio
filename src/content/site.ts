@@ -20,6 +20,18 @@ export const socials = [
   { label: "Facebook", handle: "asifff.k", href: "https://www.facebook.com/asifff.k/" },
 ] as const;
 
+// Contact tiles. Every link and detail here was confirmed by Asif.
+export const contacts = [
+  { label: "Email", value: site.email, href: `mailto:${site.email}`, logo: "gmail" },
+  { label: "Phone", value: site.phone.display, href: site.phone.href, icon: "phone" },
+  { label: "WhatsApp", value: site.phone.display, href: site.whatsapp, logo: "whatsapp", external: true },
+  { label: "GitHub", value: "Asiff-k", href: socials[0].href, logo: "github", external: true },
+  { label: "LinkedIn", value: "asif-khan-0b4a00312", href: socials[1].href, logo: "linkedin", external: true },
+  { label: "Instagram", value: "__asiff__k", href: socials[2].href, logo: "instagram", external: true },
+  { label: "Facebook", value: "asifff.k", href: socials[3].href, logo: "facebook", external: true },
+  { label: "CV", value: `Download (${site.cv.size})`, href: site.cv.href, icon: "cv", download: true },
+] as const;
+
 export const nav = [
   { label: "Work", href: "/#work" },
   { label: "Design", href: "/#design" },

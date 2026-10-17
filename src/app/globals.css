@@ -77,6 +77,15 @@
   font-optical-sizing: auto;
 }
 
+@utility t-hero {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.5rem, 1.45rem + 4.1vw, 5.25rem);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  font-optical-sizing: auto;
+}
+
 @utility t-display-lg {
   font-family: var(--font-display);
   font-weight: 700;

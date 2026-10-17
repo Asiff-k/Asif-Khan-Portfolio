@@ -1,34 +1,96 @@
 import Link from "next/link";
 import { DesignGallery, type GalleryEntry } from "@/components/design-gallery";
 import { ArrowDown, ArrowRight, ArrowUpRight, DownloadIcon } from "@/components/icons";
+import { ContactIcon, LogoMark } from "@/components/logo-mark";
 import { MediaImage } from "@/components/media-image";
 import { SectionHead } from "@/components/section-head";
 import { aiDataWork, education, jobs, languages, toolGroups } from "@/content/experience";
 import { gallery, galleryCategories } from "@/content/gallery";
-import { media } from "@/content/media.generated";
+import type { LogoKey } from "@/content/logos.generated";
+import { media, type MediaKey } from "@/content/media.generated";
 import { otherProjects, projects } from "@/content/projects";
-import { site, socials } from "@/content/site";
+import { contacts, site } from "@/content/site";
+import { tools } from "@/content/tools";
 
-const disciplines = [
+type Area = {
+  title: string;
+  body: string[];
+  evidence: { label: string; href: string }[];
+  visual:
+    | { kind: "screens"; images: { image: MediaKey; alt: string }[] }
+    | { kind: "posters"; images: MediaKey[] }
+    | { kind: "logos"; logos: { logo?: LogoKey; name: string }[] };
+};
+
+// The four areas of work. Each is backed by real projects on this site, and the
+// research, communication and leadership story is told inside the areas it belongs to.
+const areas: Area[] = [
   {
     title: "Software development",
-    body: "I build complete web apps in PHP, MySQL and JavaScript, with accounts, email verification, admin panels and the logic in between. I've also built Flutter apps and a Next.js company site.",
-    tags: ["PHP", "MySQL", "JavaScript", "Next.js", "Flutter"],
+    body: [
+      "I build complete web apps on my own. Chol Ghuri matches university students into travel groups and splits the costs; CareerNavigator recommends careers from a student's skills and projects. Both run on PHP, MySQL and JavaScript, with accounts, email verification and admin panels.",
+      "When a problem is new to me, I research it before choosing an approach. I've also built a Next.js company website and Flutter apps.",
+    ],
+    evidence: [
+      { label: "Chol Ghuri", href: "/work/chol-ghuri" },
+      { label: "CareerNavigator", href: "/work/careernavigator" },
+      { label: "incodet.com", href: "/work/incodet" },
+    ],
+    visual: {
+      kind: "screens",
+      images: [
+        { image: "apps/chol-ghuri-matching", alt: "Chol Ghuri: group matching with the score explained" },
+        { image: "apps/careernavigator-matches", alt: "CareerNavigator: career matches with weighted scores" },
+      ],
+    },
   },
   {
     title: "UI/UX design",
-    body: "I design websites and app screens in Figma, from wireframes to final screens. At NextGen Production I was the link between designers and developers.",
-    tags: ["Figma", "Web", "Mobile"],
+    body: [
+      "I design web and app interfaces in Figma and Google Stitch, from wireframes to final screens. My client work includes websites for a security advisory firm, a training provider and a virtual tour studio.",
+      "At NextGen Production I worked as the link between designers and developers, then moved up to team leader: setting daily priorities, assigning work and keeping delivery on schedule.",
+    ],
+    evidence: [
+      { label: "Cipher Shield", href: "/work/cipher-shield" },
+      { label: "KI Training", href: "/work/ki-training" },
+      { label: "BRHEX Studio", href: "/work/brhex-studio" },
+    ],
+    visual: {
+      kind: "screens",
+      images: [
+        { image: "ui/brhex-hero", alt: "BRHEX Studio home page design" },
+        { image: "ui/cipher-shield-cover", alt: "Cipher Shield home page design" },
+      ],
+    },
   },
   {
     title: "Graphic design",
-    body: "Posters, product ads, social posts and T-shirt art. I generate imagery with AI tools, then handle the layout, type and branding myself.",
-    tags: ["Posters", "Product ads", "Social posts", "Apparel"],
+    body: [
+      "Posters, product ads, social posts and T-shirt art. I generate the imagery with AI tools, then handle the composition, type and branding myself.",
+    ],
+    evidence: [{ label: "See all 54 pieces", href: "#design" }],
+    visual: {
+      kind: "posters",
+      images: ["graphics/pasta-yum", "graphics/can-blueberry-fusion", "graphics/watch-hour-unit", "graphics/tee-wild"],
+    },
   },
   {
-    title: "AI data work",
-    body: "Short projects preparing training data for AI: video segmentation for robots, satellite image annotation and first-person video capture.",
-    tags: ["Dot Lab", "Ginger 2025", "Atlas Capture"],
+    title: "AI tools and data",
+    body: [
+      "AI is part of my daily work: Perplexity and Gemini Notebook for research, Claude for code, Google Stitch for interface design, and HeyGen, Synthesia and Colossyan for video.",
+      "I've also completed three AI training data projects: robot video segmentation, satellite image annotation and first-person video capture.",
+    ],
+    evidence: [
+      { label: "AI tools", href: "/ai-tools" },
+      { label: "AI data projects", href: "#ai-data" },
+    ],
+    visual: {
+      kind: "logos",
+      logos: [
+        ...tools.filter((t) => t.status === "used"),
+        ...tools.filter((t) => t.status === "platform" && t.logo),
+      ].map((t) => ({ logo: t.logo, name: t.name })),
+    },
   },
 ];
 
@@ -46,14 +108,15 @@ export default function Home() {
       <section className="page-x pt-10 pb-20 md:pt-16 md:pb-28" aria-labelledby="intro-title">
         <div className="grid gap-12 md:grid-cols-12 md:gap-10">
           <div className="md:col-span-7 lg:col-span-8">
-            <p className="t-stamp text-moss">Software · UI/UX · Graphic design · AI data</p>
-            <h1 id="intro-title" className="t-display mt-6 text-balance">
-              I build web apps and <span className="text-moss">design their interfaces.</span>
+            <p className="t-stamp text-moss">Software · UI/UX · Graphic design · AI</p>
+            <h1 id="intro-title" className="t-hero mt-6 text-balance">
+              I build the software, design the screens, and <span className="text-moss">use AI in both.</span>
             </h1>
             <p className="t-body-lg mt-8 max-w-xl text-ink-soft">
-              I&apos;m Asif, a final-year Computer Science and Engineering student at Leading University in
-              Sylhet. I build PHP and JavaScript web apps, design interfaces in Figma, and make graphics with AI
-              image tools. At NextGen Production I went from UI/UX designer to team leader.
+              I&apos;m Asif, a final-year Computer Science and Engineering student at Leading University in Sylhet.
+              I&apos;ve built two full web apps on my own, designed interfaces for client projects, and moved up from
+              UI/UX Designer to Team Leader at NextGen Production. AI tools are part of my daily work, and I&apos;ve
+              completed three AI training data projects.
             </p>
             <div className="mt-10 flex flex-wrap gap-3">
               <Link
@@ -80,10 +143,10 @@ export default function Home() {
           </div>
 
           <figure className="md:col-span-5 lg:col-span-4">
-            <div className="border border-ink">
+            <div className="overflow-hidden border border-ink">
               <MediaImage
-                image="photos/portrait-mono"
-                alt="Portrait of Asiful Hasan Khan in a grey suit"
+                image="photos/asif-portrait"
+                alt="Portrait of Asiful Hasan Khan in a sage green three-piece suit, outdoors"
                 sizes="(min-width: 64rem) 30vw, (min-width: 48rem) 40vw, 100vw"
                 priority
                 className="block h-auto w-full"
@@ -94,7 +157,6 @@ export default function Home() {
                 ["Name", site.name],
                 ["Based in", site.location],
                 ["Studying", "BSc CSE, Leading University (2027)"],
-                ["Looking for", "Software and UI/UX roles"],
               ].map(([k, v]) => (
                 <div key={k} className="grid grid-cols-[7.5rem_1fr] gap-3 py-2.5">
                   <dt className="t-stamp pt-0.5 text-muted">{k}</dt>
@@ -108,23 +170,46 @@ export default function Home() {
 
       {/* What I do */}
       <section className="page-x pb-24 md:pb-32" aria-labelledby="skills-title">
-        <SectionHead index="01" label="Skills" title="What I do" id="skills-title" />
-        <ul className="grid border-l border-rule sm:grid-cols-2 xl:grid-cols-4">
-          {disciplines.map((d, i) => (
-            <li key={d.title} className="flex flex-col border-r border-b border-rule p-6">
-              <p className="t-stamp text-muted">{String(i + 1).padStart(2, "0")}</p>
-              <h3 className="t-subtitle mt-6">{d.title}</h3>
-              <p className="t-body-sm mt-3 text-ink-soft">{d.body}</p>
-              <ul className="mt-auto flex flex-wrap gap-1.5 pt-6">
-                {d.tags.map((t) => (
-                  <li key={t} className="t-stamp border border-rule bg-stone-deep px-2 py-1 text-moss">
-                    {t}
-                  </li>
-                ))}
-              </ul>
+        <SectionHead index="01" label="Skills" title="What I do" id="skills-title">
+          Four kinds of work, each with the projects behind it.
+        </SectionHead>
+        <ol>
+          {areas.map((a, i) => (
+            <li
+              key={a.title}
+              data-area={a.title}
+              className="grid gap-8 border-b border-rule py-12 md:py-14 lg:grid-cols-12 lg:gap-10"
+            >
+              <div className="lg:col-span-4">
+                <p className="t-stamp text-moss">{String(i + 1).padStart(2, "0")}</p>
+                <h3 className="t-headline mt-3">{a.title}</h3>
+                <div className="mt-5 max-w-xl space-y-3">
+                  {a.body.map((para) => (
+                    <p key={para} className="t-body-sm text-ink-soft">
+                      {para}
+                    </p>
+                  ))}
+                </div>
+                <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2" aria-label={`${a.title}: related work`}>
+                  {a.evidence.map((e) => (
+                    <li key={e.href}>
+                      <Link
+                        href={e.href}
+                        className="t-stamp group inline-flex items-center gap-1.5 text-ink hover:text-moss"
+                      >
+                        {e.label}
+                        <ArrowRight className="transition-transform duration-150 group-hover:translate-x-0.5" />
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="lg:col-span-8">
+                <AreaVisual visual={a.visual} />
+              </div>
             </li>
           ))}
-        </ul>
+        </ol>
       </section>
 
       {/* Selected work */}
@@ -300,71 +385,98 @@ export default function Home() {
       {/* Contact */}
       <section id="contact" className="bg-carbon text-carbon-text" aria-labelledby="contact-title">
         <div className="page-x grid gap-14 py-24 md:py-32 lg:grid-cols-12 lg:gap-10">
-          <div className="lg:col-span-7">
+          <div className="lg:col-span-6">
             <p className="t-stamp text-mint">06 · Contact</p>
             <h2 id="contact-title" className="t-display-lg mt-4">
               Let&apos;s talk.
             </h2>
-            <p className="t-body-lg mt-6 max-w-lg text-carbon-muted">
-              If you&apos;d like to talk about a role or a project, send me an email or a message. I&apos;m based in
-              Sylhet, Bangladesh (GMT+6).
+            <p className="t-body-lg mt-8 max-w-md text-carbon-muted">
+              I&apos;m a final-year CSE student in Sylhet who builds web apps, designs interfaces and graphics, and works
+              with AI tools every day. If you&apos;d like to talk about my work or a project, I&apos;d be glad to hear
+              from you.
             </p>
             <a
               href={`mailto:${site.email}`}
-              className="t-headline mt-10 inline-block break-all underline decoration-carbon-rule decoration-1 underline-offset-8 transition-colors duration-150 hover:text-mint hover:decoration-mint"
+              className="group mt-10 inline-flex max-w-full items-center gap-3 border-b border-carbon-rule pb-2 transition-colors duration-150 hover:border-mint"
             >
-              {site.email}
+              <span className="t-title break-all group-hover:text-mint">{site.email}</span>
+              <ArrowUpRight className="size-5 shrink-0 text-carbon-muted group-hover:text-mint" />
             </a>
-            <div className="mt-10">
-              <a
-                href={site.cv.href}
-                download
-                className="t-stamp pressable inline-flex items-center gap-2 bg-stone px-5 py-4 text-ink hover:bg-mint"
-              >
-                <DownloadIcon /> {site.cv.label}
-              </a>
-              <span className="t-stamp ml-4 text-carbon-muted">{site.cv.size}</span>
-            </div>
+            <p className="t-stamp mt-4 text-carbon-muted">Sylhet, Bangladesh · GMT+6</p>
           </div>
-          <div className="lg:col-span-4 lg:col-start-9 lg:self-end">
-            <dl className="border-b border-carbon-rule">
-              <div className="grid grid-cols-[7.5rem_1fr] gap-3 border-t border-carbon-rule py-3">
-                <dt className="t-stamp pt-0.5 text-carbon-muted">Phone</dt>
-                <dd>
-                  <a href={site.phone.href} className="t-body-sm hover:text-mint">
-                    {site.phone.display}
+
+          <div className="lg:col-span-5 lg:col-start-8 lg:self-end">
+            <p className="t-stamp text-carbon-muted">Reach me on</p>
+            <ul className="mt-3 border-t border-carbon-rule">
+              {contacts.map((c) => (
+                <li key={c.label} className="border-b border-carbon-rule">
+                  <a
+                    href={c.href}
+                    {...("external" in c && c.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                    {...("download" in c && c.download ? { download: true } : {})}
+                    className="group grid grid-cols-[1.5rem_1fr_auto] items-center gap-x-4 py-3.5"
+                  >
+                    <ContactIcon contact={c} />
+                    <span className="min-w-0">
+                      <span className="t-stamp block text-carbon-muted">{c.label}</span>
+                      <span className="mt-0.5 block break-words text-[0.9375rem] group-hover:text-mint">{c.value}</span>
+                    </span>
+                    {"download" in c && c.download ? (
+                      <DownloadIcon className="text-carbon-muted group-hover:text-mint" />
+                    ) : (
+                      <ArrowUpRight className="text-carbon-muted transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-mint" />
+                    )}
+                    {"external" in c && c.external && <span className="sr-only">(opens in a new tab)</span>}
                   </a>
-                </dd>
-              </div>
-              <div className="grid grid-cols-[7.5rem_1fr] gap-3 border-t border-carbon-rule py-3">
-                <dt className="t-stamp pt-0.5 text-carbon-muted">WhatsApp</dt>
-                <dd>
-                  <a href={site.whatsapp} target="_blank" rel="noopener noreferrer" className="t-body-sm hover:text-mint">
-                    Message me
-                    <span className="sr-only"> (opens in a new tab)</span>
-                  </a>
-                </dd>
-              </div>
-              {socials.map((s) => (
-                <div key={s.label} className="grid grid-cols-[7.5rem_1fr] gap-3 border-t border-carbon-rule py-3">
-                  <dt className="t-stamp pt-0.5 text-carbon-muted">{s.label}</dt>
-                  <dd>
-                    <a
-                      href={s.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="t-body-sm inline-flex items-center gap-1.5 hover:text-mint"
-                    >
-                      {s.handle} <ArrowUpRight />
-                      <span className="sr-only">(opens in a new tab)</span>
-                    </a>
-                  </dd>
-                </div>
+                </li>
               ))}
-            </dl>
+            </ul>
           </div>
         </div>
       </section>
     </main>
+  );
+}
+
+function AreaVisual({ visual }: { visual: Area["visual"] }) {
+  if (visual.kind === "screens") {
+    return (
+      <div className="grid gap-4 sm:grid-cols-2">
+        {visual.images.map((s) => (
+          <div key={s.image} className="aspect-[16/10] overflow-hidden border border-rule bg-stone-deep">
+            <MediaImage
+              image={s.image}
+              alt={s.alt}
+              sizes="(min-width: 64rem) 30vw, (min-width: 40rem) 50vw, 100vw"
+              className="size-full object-cover object-top"
+            />
+          </div>
+        ))}
+      </div>
+    );
+  }
+  if (visual.kind === "posters") {
+    return (
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        {visual.images.map((image) => (
+          <div key={image} className="aspect-[3/4] overflow-hidden border border-rule bg-stone-deep">
+            <MediaImage image={image} alt="" sizes="(min-width: 64rem) 15vw, (min-width: 40rem) 25vw, 50vw" className="size-full object-cover" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+  return (
+    <ul
+      className="grid grid-cols-3 gap-x-3 gap-y-6 border border-rule bg-stone-deep px-4 py-8 sm:grid-cols-4 sm:px-8 md:grid-cols-6"
+      aria-label="AI tools and platforms I work with"
+    >
+      {visual.logos.map((l) => (
+        <li key={l.name} className="flex flex-col items-center gap-2 text-center">
+          <LogoMark logo={l.logo} name={l.name} size="lg" />
+          <span className="text-[0.75rem] leading-tight text-ink-soft">{l.name}</span>
+        </li>
+      ))}
+    </ul>
   );
 }

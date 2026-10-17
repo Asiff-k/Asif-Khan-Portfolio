@@ -81,7 +81,7 @@ export const toolGroups = [
   },
   {
     label: "AI",
-    items: ["Claude", "Perplexity", "NotebookLM", "Google Stitch", "HeyGen", "Synthesia", "Colossyan"],
+    items: ["Claude", "Perplexity", "Gemini Notebook", "Google Stitch", "HeyGen", "Synthesia", "Colossyan"],
   },
   {
     label: "Everyday work",
