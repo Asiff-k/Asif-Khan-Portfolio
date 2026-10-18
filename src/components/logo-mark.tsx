@@ -44,23 +44,14 @@ export function LogoMark({
 type ContactLike = { label: string; logo?: LogoKey; icon?: "phone" | "cv" } & Record<string, unknown>;
 
 /** Small icon for a contact method: the platform's own icon, or a simple line icon for phone and CV. */
-export function ContactIcon({
-  contact,
-  size = "xs",
-  onLight = false,
-}: {
-  contact: ContactLike;
-  size?: "xs" | "sm";
-  /** Use the darker accent for line icons on light backgrounds. */
-  onLight?: boolean;
-}) {
+export function ContactIcon({ contact, size = "xs" }: { contact: ContactLike; size?: "xs" | "sm" }) {
   if (contact.logo) return <LogoMark logo={contact.logo} name={contact.label} size={size} />;
   const px = sizes[size];
   return (
     <span
       aria-hidden
       style={{ width: px, height: px }}
-      className={`flex shrink-0 items-center justify-center ${onLight ? "text-moss" : "text-mint"}`}
+      className="flex shrink-0 items-center justify-center text-accent"
     >
       {contact.icon === "phone" ? <PhoneIcon /> : <DownloadIcon />}
     </span>

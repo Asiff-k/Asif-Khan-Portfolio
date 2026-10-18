@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { DesignGallery, type GalleryEntry } from "@/components/design-gallery";
 import { ArrowDown, ArrowRight, ArrowUpRight, DownloadIcon } from "@/components/icons";
+import { PageMotion } from "@/components/cinema/page-motion";
 import { ContactIcon, LogoMark } from "@/components/logo-mark";
 import { MediaImage } from "@/components/media-image";
 import { SectionHead } from "@/components/section-head";
@@ -103,16 +104,16 @@ const galleryEntries: GalleryEntry[] = gallery.map((g) => ({
 
 export default function Home() {
   return (
-    <main id="main">
+    <main id="main" data-scenes="home">
       {/* Intro */}
-      <section className="page-x pt-10 pb-20 md:pt-16 md:pb-28" aria-labelledby="intro-title">
+      <section data-scene="dark" className="page-x pt-10 pb-24 md:pt-16 md:pb-32" aria-labelledby="intro-title">
         <div className="grid gap-12 md:grid-cols-12 md:gap-10">
           <div className="md:col-span-7 lg:col-span-8">
-            <p className="t-stamp text-moss">Software · UI/UX · Graphic design · AI</p>
-            <h1 id="intro-title" className="t-hero mt-6 text-balance">
-              I build the software, design the screens, and <span className="text-moss">use AI in both.</span>
+            <p className="t-stamp text-accent">Software · UI/UX · Graphic design · AI</p>
+            <h1 id="intro-title" data-hero-title className="t-hero mt-6 text-balance">
+              I build the software, design the screens, and <span className="text-accent">use AI in both.</span>
             </h1>
-            <p className="t-body-lg mt-8 max-w-xl text-ink-soft">
+            <p className="t-body-lg mt-8 max-w-xl text-fg-soft">
               I&apos;m Asif, a final-year Computer Science and Engineering student at Leading University in Sylhet.
               I&apos;ve built two full web apps on my own, designed interfaces for client projects, and moved up from
               UI/UX Designer to Team Leader at NextGen Production. AI tools are part of my daily work, and I&apos;ve
@@ -121,20 +122,20 @@ export default function Home() {
             <div className="mt-10 flex flex-wrap gap-3">
               <Link
                 href="#work"
-                className="t-stamp pressable inline-flex items-center gap-2 bg-ink px-5 py-4 text-stone hover:bg-moss"
+                className="t-stamp pressable inline-flex items-center gap-2 bg-fg px-5 py-4 text-on-fg hover:bg-accent"
               >
                 See my work <ArrowDown />
               </Link>
               <Link
                 href="#contact"
-                className="t-stamp pressable inline-flex items-center gap-2 border border-ink px-5 py-4 hover:bg-ink hover:text-stone"
+                className="t-stamp pressable inline-flex items-center gap-2 border border-line-strong px-5 py-4 hover:bg-fg hover:text-on-fg"
               >
                 Contact me
               </Link>
               <a
                 href={site.cv.href}
                 download
-                className="t-stamp pressable inline-flex items-center gap-2 border border-ink px-5 py-4 hover:bg-ink hover:text-stone"
+                className="t-stamp pressable inline-flex items-center gap-2 border border-line-strong px-5 py-4 hover:bg-fg hover:text-on-fg"
               >
                 <DownloadIcon /> {site.cv.label}
                 <span className="sr-only"> ({site.cv.size})</span>
@@ -143,7 +144,7 @@ export default function Home() {
           </div>
 
           <figure className="md:col-span-5 lg:col-span-4">
-            <div className="overflow-hidden border border-ink">
+            <div className="overflow-hidden border border-line-strong">
               <MediaImage
                 image="photos/asif-portrait"
                 alt="Portrait of Asiful Hasan Khan in a sage green three-piece suit, outdoors"
@@ -152,14 +153,14 @@ export default function Home() {
                 className="block h-auto w-full"
               />
             </div>
-            <dl className="mt-4 divide-y divide-rule border-b border-rule">
+            <dl className="mt-4 divide-y divide-line border-b border-line">
               {[
                 ["Name", site.name],
                 ["Based in", site.location],
                 ["Studying", "BSc CSE, Leading University (2027)"],
               ].map(([k, v]) => (
                 <div key={k} className="grid grid-cols-[7.5rem_1fr] gap-3 py-2.5">
-                  <dt className="t-stamp pt-0.5 text-muted">{k}</dt>
+                  <dt className="t-stamp pt-0.5 text-fg-muted">{k}</dt>
                   <dd className="t-body-sm">{v}</dd>
                 </div>
               ))}
@@ -169,7 +170,7 @@ export default function Home() {
       </section>
 
       {/* What I do */}
-      <section className="page-x pb-24 md:pb-32" aria-labelledby="skills-title">
+      <section data-scene="light" className="page-x py-24 md:py-32" aria-labelledby="skills-title">
         <SectionHead index="01" label="Skills" title="What I do" id="skills-title">
           Four kinds of work, each with the projects behind it.
         </SectionHead>
@@ -178,14 +179,14 @@ export default function Home() {
             <li
               key={a.title}
               data-area={a.title}
-              className="grid gap-8 border-b border-rule py-12 md:py-14 lg:grid-cols-12 lg:gap-10"
+              className="grid gap-8 border-b border-line py-12 md:py-14 lg:grid-cols-12 lg:gap-10"
             >
               <div className="lg:col-span-4">
-                <p className="t-stamp text-moss">{String(i + 1).padStart(2, "0")}</p>
+                <p className="t-stamp text-accent">{String(i + 1).padStart(2, "0")}</p>
                 <h3 className="t-headline mt-3">{a.title}</h3>
                 <div className="mt-5 max-w-xl space-y-3">
                   {a.body.map((para) => (
-                    <p key={para} className="t-body-sm text-ink-soft">
+                    <p key={para} className="t-body-sm text-fg-soft">
                       {para}
                     </p>
                   ))}
@@ -195,7 +196,7 @@ export default function Home() {
                     <li key={e.href}>
                       <Link
                         href={e.href}
-                        className="t-stamp group inline-flex items-center gap-1.5 text-ink hover:text-moss"
+                        className="t-stamp group inline-flex items-center gap-1.5 text-fg hover:text-accent"
                       >
                         {e.label}
                         <ArrowRight className="transition-transform duration-150 group-hover:translate-x-0.5" />
@@ -213,31 +214,31 @@ export default function Home() {
       </section>
 
       {/* Selected work */}
-      <section id="work" className="page-x pb-24 md:pb-32" aria-labelledby="work-title">
+      <section id="work" data-scene="light" className="page-x py-24 md:py-32" aria-labelledby="work-title">
         <SectionHead index="02" label="Projects" title="Selected work" id="work-title">
           Two web apps I built on my own, a company website I designed and built, and interface designs for client
           websites.
         </SectionHead>
         <ol>
           {projects.map((p, i) => (
-            <li key={p.slug} className="border-b border-rule">
+            <li key={p.slug} className="border-b border-line">
               <Link
                 href={`/work/${p.slug}`}
-                className="group grid gap-5 py-7 transition-colors duration-100 active:bg-stone-deep md:grid-cols-12 md:items-center md:gap-6"
+                className="group grid gap-5 py-7 transition-colors duration-100 active:bg-surface md:grid-cols-12 md:items-center md:gap-6"
               >
-                <span className="t-stamp text-muted md:col-span-1">{String(i + 1).padStart(2, "0")}</span>
+                <span className="t-stamp text-fg-muted md:col-span-1">{String(i + 1).padStart(2, "0")}</span>
                 <span className="md:col-span-6">
-                  <span className="t-title block transition-colors duration-150 group-hover:text-moss">
+                  <span className="t-title block transition-colors duration-150 group-hover:text-accent">
                     {p.title}
                   </span>
-                  <span className="t-body-sm mt-2 block text-ink-soft">{p.summary}</span>
+                  <span className="t-body-sm mt-2 block text-fg-soft">{p.summary}</span>
                 </span>
                 <span className="flex flex-wrap gap-x-4 gap-y-1 md:col-span-2 md:flex-col">
-                  <span className="t-stamp text-moss">{p.kind}</span>
-                  {p.year && <span className="t-stamp text-muted">{p.year}</span>}
+                  <span className="t-stamp text-accent">{p.kind}</span>
+                  {p.year && <span className="t-stamp text-fg-muted">{p.year}</span>}
                 </span>
                 <span className="relative md:col-span-3">
-                  <span className="block overflow-hidden border border-rule transition-colors duration-150 group-hover:border-ink">
+                  <span className="block overflow-hidden border border-line transition-colors duration-150 group-hover:border-line-strong">
                     <MediaImage
                       image={p.cover}
                       alt=""
@@ -255,19 +256,19 @@ export default function Home() {
         </ol>
 
         <div className="mt-12">
-          <p className="t-stamp text-muted">Also on GitHub</p>
-          <ul className="mt-3 border-t border-rule">
+          <p className="t-stamp text-fg-muted">Also on GitHub</p>
+          <ul className="mt-3 border-t border-line">
             {otherProjects.map((p) => (
-              <li key={p.title} className="border-b border-rule">
+              <li key={p.title} className="border-b border-line">
                 <a
                   href={p.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group grid gap-3 py-5 active:bg-stone-deep md:grid-cols-12 md:items-baseline md:gap-6"
+                  className="group grid gap-3 py-5 active:bg-surface md:grid-cols-12 md:items-baseline md:gap-6"
                 >
-                  <span className="t-subtitle md:col-span-3 group-hover:text-moss">{p.title}</span>
-                  <span className="t-body-sm text-ink-soft md:col-span-6">{p.summary}</span>
-                  <span className="t-stamp inline-flex items-center gap-1.5 text-muted md:col-span-3 md:justify-end">
+                  <span className="t-subtitle md:col-span-3 group-hover:text-accent">{p.title}</span>
+                  <span className="t-body-sm text-fg-soft md:col-span-6">{p.summary}</span>
+                  <span className="t-stamp inline-flex items-center gap-1.5 text-fg-muted md:col-span-3 md:justify-end">
                     {p.stack.join(" · ")} · {p.year} <ArrowUpRight />
                     <span className="sr-only">(opens in a new tab)</span>
                   </span>
@@ -279,7 +280,7 @@ export default function Home() {
       </section>
 
       {/* Graphic design */}
-      <section id="design" className="page-x pb-24 md:pb-32" aria-labelledby="design-title">
+      <section id="design" data-scene="dark" className="page-x py-24 md:py-32" aria-labelledby="design-title">
         <SectionHead index="03" label="Graphic design" title="Posters, ads and social posts" id="design-title">
           I generate the imagery with AI tools, then do the composition, type and branding myself. Tap any piece to see
           it larger.
@@ -290,25 +291,25 @@ export default function Home() {
       </section>
 
       {/* AI data work */}
-      <section id="ai-data" className="bg-carbon text-carbon-text" aria-labelledby="ai-title">
+      <section id="ai-data" data-scene="dark" aria-labelledby="ai-title">
         <div className="page-x py-24 md:py-32">
-          <SectionHead index="04" label="AI data work" title="Training data projects" id="ai-title" inverted>
+          <SectionHead index="04" label="AI data work" title="Training data projects" id="ai-title">
             Short-term, project-based work preparing data used to train AI models. All three projects are finished.
           </SectionHead>
           <ol className="grid md:grid-cols-3">
             {aiDataWork.map((w) => (
               <li
                 key={w.org}
-                className="flex flex-col border-b border-carbon-rule py-8 md:border-r md:border-b-0 md:px-6 md:first:pl-0 md:last:border-r-0"
+                className="flex flex-col border-b border-line py-8 md:border-r md:border-b-0 md:px-6 md:first:pl-0 md:last:border-r-0"
               >
-                <p className="t-stamp text-mint">{w.period}</p>
+                <p className="t-stamp text-accent">{w.period}</p>
                 <h3 className="t-title mt-5">{w.title}</h3>
-                <p className="t-label mt-2 text-carbon-muted">{w.org}</p>
-                <p className="t-body-sm mt-5 text-carbon-muted">{w.body}</p>
+                <p className="t-label mt-2 text-fg-muted">{w.org}</p>
+                <p className="t-body-sm mt-5 text-fg-muted">{w.body}</p>
                 <dl className="mt-auto grid grid-cols-[6rem_1fr] gap-y-2 pt-8">
-                  <dt className="t-stamp text-carbon-muted">Platform</dt>
+                  <dt className="t-stamp text-fg-muted">Platform</dt>
                   <dd className="t-stamp">{w.platform}</dd>
-                  <dt className="t-stamp text-carbon-muted">Status</dt>
+                  <dt className="t-stamp text-fg-muted">Status</dt>
                   <dd className="t-stamp">{w.status}</dd>
                 </dl>
               </li>
@@ -318,21 +319,21 @@ export default function Home() {
       </section>
 
       {/* Experience */}
-      <section id="experience" className="page-x py-24 md:py-32" aria-labelledby="experience-title">
+      <section id="experience" data-scene="light" className="page-x py-24 md:py-32" aria-labelledby="experience-title">
         <SectionHead index="05" label="Background" title="Experience and education" id="experience-title" />
         <div className="grid gap-16 pt-10 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-7">
-            <h3 className="t-stamp text-muted">Work</h3>
+            <h3 className="t-stamp text-fg-muted">Work</h3>
             <ol className="mt-4">
               {jobs.map((j) => (
-                <li key={j.org} className="border-t border-rule py-8">
-                  <p className="t-stamp text-moss">{j.period}</p>
+                <li key={j.org} className="border-t border-line py-8">
+                  <p className="t-stamp text-accent">{j.period}</p>
                   <h4 className="t-title mt-3">{j.title}</h4>
-                  <p className="t-label mt-2 text-ink-soft">{j.org}</p>
+                  <p className="t-label mt-2 text-fg-soft">{j.org}</p>
                   <ul className="mt-5 space-y-2.5">
                     {j.points.map((pt) => (
-                      <li key={pt} className="t-body-sm grid grid-cols-[1rem_1fr] text-ink-soft">
-                        <span aria-hidden className="text-muted">
+                      <li key={pt} className="t-body-sm grid grid-cols-[1rem_1fr] text-fg-soft">
+                        <span aria-hidden className="text-fg-muted">
                           –
                         </span>
                         {pt}
@@ -346,13 +347,13 @@ export default function Home() {
 
           <div className="space-y-14 lg:col-span-4 lg:col-start-9">
             <div>
-              <h3 className="t-stamp text-muted">Education</h3>
+              <h3 className="t-stamp text-fg-muted">Education</h3>
               <ol className="mt-4">
                 {education.map((e) => (
-                  <li key={e.title} className="border-t border-rule py-5">
-                    <p className="t-stamp text-moss">{e.period}</p>
+                  <li key={e.title} className="border-t border-line py-5">
+                    <p className="t-stamp text-accent">{e.period}</p>
                     <p className="t-subtitle mt-2">{e.title}</p>
-                    <p className="t-body-sm mt-1 text-ink-soft">
+                    <p className="t-body-sm mt-1 text-fg-soft">
                       {e.org} · {e.detail}
                     </p>
                   </li>
@@ -360,56 +361,56 @@ export default function Home() {
               </ol>
             </div>
             <div>
-              <h3 className="t-stamp text-muted">Tools</h3>
-              <dl className="mt-4 border-b border-rule">
+              <h3 className="t-stamp text-fg-muted">Tools</h3>
+              <dl className="mt-4 border-b border-line">
                 {toolGroups.map((g) => (
-                  <div key={g.label} className="grid grid-cols-[7.5rem_1fr] gap-3 border-t border-rule py-3">
-                    <dt className="t-stamp pt-0.5 text-muted">{g.label}</dt>
+                  <div key={g.label} className="grid grid-cols-[7.5rem_1fr] gap-3 border-t border-line py-3">
+                    <dt className="t-stamp pt-0.5 text-fg-muted">{g.label}</dt>
                     <dd className="t-body-sm">{g.items.join(", ")}</dd>
                   </div>
                 ))}
               </dl>
-              <Link href="/ai-tools" className="t-stamp group mt-4 inline-flex items-center gap-1.5 hover:text-moss">
+              <Link href="/ai-tools" className="t-stamp group mt-4 inline-flex items-center gap-1.5 hover:text-accent">
                 See the AI tools page
                 <ArrowRight className="transition-transform duration-150 group-hover:translate-x-1" />
               </Link>
             </div>
             <div>
-              <h3 className="t-stamp text-muted">Languages</h3>
-              <p className="t-body-sm mt-4 border-t border-rule pt-3">{languages.join(", ")}</p>
+              <h3 className="t-stamp text-fg-muted">Languages</h3>
+              <p className="t-body-sm mt-4 border-t border-line pt-3">{languages.join(", ")}</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Contact */}
-      <section id="contact" className="bg-carbon text-carbon-text" aria-labelledby="contact-title">
+      <section id="contact" data-scene="dark" aria-labelledby="contact-title">
         <div className="page-x grid gap-14 py-24 md:py-32 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-6">
-            <p className="t-stamp text-mint">06 · Contact</p>
+            <p className="t-stamp text-accent">06 · Contact</p>
             <h2 id="contact-title" className="t-display-lg mt-4">
               Let&apos;s talk.
             </h2>
-            <p className="t-body-lg mt-8 max-w-md text-carbon-muted">
+            <p className="t-body-lg mt-8 max-w-md text-fg-muted">
               I&apos;m a final-year CSE student in Sylhet who builds web apps, designs interfaces and graphics, and works
               with AI tools every day. If you&apos;d like to talk about my work or a project, I&apos;d be glad to hear
               from you.
             </p>
             <a
               href={`mailto:${site.email}`}
-              className="group mt-10 inline-flex max-w-full items-center gap-3 border-b border-carbon-rule pb-2 transition-colors duration-150 hover:border-mint"
+              className="group mt-10 inline-flex max-w-full items-center gap-3 border-b border-line pb-2 transition-colors duration-150 hover:border-accent"
             >
-              <span className="t-title break-all group-hover:text-mint">{site.email}</span>
-              <ArrowUpRight className="size-5 shrink-0 text-carbon-muted group-hover:text-mint" />
+              <span className="t-title break-all group-hover:text-accent">{site.email}</span>
+              <ArrowUpRight className="size-5 shrink-0 text-fg-muted group-hover:text-accent" />
             </a>
-            <p className="t-stamp mt-4 text-carbon-muted">Sylhet, Bangladesh · GMT+6</p>
+            <p className="t-stamp mt-4 text-fg-muted">Sylhet, Bangladesh · GMT+6</p>
           </div>
 
           <div className="lg:col-span-5 lg:col-start-8 lg:self-end">
-            <p className="t-stamp text-carbon-muted">Reach me on</p>
-            <ul className="mt-3 border-t border-carbon-rule">
+            <p className="t-stamp text-fg-muted">Reach me on</p>
+            <ul className="mt-3 border-t border-line">
               {contacts.map((c) => (
-                <li key={c.label} className="border-b border-carbon-rule">
+                <li key={c.label} className="border-b border-line">
                   <a
                     href={c.href}
                     {...("external" in c && c.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
@@ -418,13 +419,13 @@ export default function Home() {
                   >
                     <ContactIcon contact={c} />
                     <span className="min-w-0">
-                      <span className="t-stamp block text-carbon-muted">{c.label}</span>
-                      <span className="mt-0.5 block break-words text-[0.9375rem] group-hover:text-mint">{c.value}</span>
+                      <span className="t-stamp block text-fg-muted">{c.label}</span>
+                      <span className="mt-0.5 block break-words text-[0.9375rem] group-hover:text-accent">{c.value}</span>
                     </span>
                     {"download" in c && c.download ? (
-                      <DownloadIcon className="text-carbon-muted group-hover:text-mint" />
+                      <DownloadIcon className="text-fg-muted group-hover:text-accent" />
                     ) : (
-                      <ArrowUpRight className="text-carbon-muted transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-mint" />
+                      <ArrowUpRight className="text-fg-muted transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent" />
                     )}
                     {"external" in c && c.external && <span className="sr-only">(opens in a new tab)</span>}
                   </a>
@@ -434,6 +435,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <PageMotion />
     </main>
   );
 }
@@ -443,7 +445,7 @@ function AreaVisual({ visual }: { visual: Area["visual"] }) {
     return (
       <div className="grid gap-4 sm:grid-cols-2">
         {visual.images.map((s) => (
-          <div key={s.image} className="aspect-[16/10] overflow-hidden border border-rule bg-stone-deep">
+          <div key={s.image} className="aspect-[16/10] overflow-hidden border border-line bg-surface">
             <MediaImage
               image={s.image}
               alt={s.alt}
@@ -459,7 +461,7 @@ function AreaVisual({ visual }: { visual: Area["visual"] }) {
     return (
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         {visual.images.map((image) => (
-          <div key={image} className="aspect-[3/4] overflow-hidden border border-rule bg-stone-deep">
+          <div key={image} className="aspect-[3/4] overflow-hidden border border-line bg-surface">
             <MediaImage image={image} alt="" sizes="(min-width: 64rem) 15vw, (min-width: 40rem) 25vw, 50vw" className="size-full object-cover" />
           </div>
         ))}
@@ -468,13 +470,13 @@ function AreaVisual({ visual }: { visual: Area["visual"] }) {
   }
   return (
     <ul
-      className="grid grid-cols-3 gap-x-3 gap-y-6 border border-rule bg-stone-deep px-4 py-8 sm:grid-cols-4 sm:px-8 md:grid-cols-6"
+      className="grid grid-cols-3 gap-x-3 gap-y-6 border border-line bg-surface px-4 py-8 sm:grid-cols-4 sm:px-8 md:grid-cols-6"
       aria-label="AI tools and platforms I work with"
     >
       {visual.logos.map((l) => (
         <li key={l.name} className="flex flex-col items-center gap-2 text-center">
           <LogoMark logo={l.logo} name={l.name} size="lg" />
-          <span className="text-[0.75rem] leading-tight text-ink-soft">{l.name}</span>
+          <span className="text-[0.75rem] leading-tight text-fg-soft">{l.name}</span>
         </li>
       ))}
     </ul>

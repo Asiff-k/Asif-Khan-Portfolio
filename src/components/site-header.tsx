@@ -27,6 +27,7 @@ export function SiteHeader() {
     const root = document.documentElement;
     const previous = root.style.overflow;
     root.style.overflow = "hidden";
+    root.dataset.menu = "open";
     panelRef.current?.querySelector<HTMLElement>("a")?.focus();
 
     function onKey(e: KeyboardEvent) {
@@ -55,19 +56,20 @@ export function SiteHeader() {
     window.addEventListener("resize", onResize);
     return () => {
       root.style.overflow = previous;
+      delete root.dataset.menu;
       window.removeEventListener("keydown", onKey);
       window.removeEventListener("resize", onResize);
     };
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-rule bg-stone">
+    <header className="sticky top-0 z-40 border-b border-line bg-bg">
       <div className="page-x flex h-16 items-center justify-between gap-6">
         <Link href="/" className="group flex items-baseline gap-3" aria-label={`${site.name}, home`}>
           <span className="font-display text-[1.0625rem] font-bold tracking-[-0.02em]">
             {site.name}
           </span>
-          <span className="t-stamp hidden text-muted sm:inline">{site.location}</span>
+          <span className="t-stamp hidden text-fg-muted sm:inline">{site.location}</span>
         </Link>
 
         <nav aria-label="Main" className="hidden lg:block">
@@ -77,7 +79,7 @@ export function SiteHeader() {
                 <Link
                   href={item.href}
                   aria-current={pathname === item.href ? "page" : undefined}
-                  className="t-label py-2 transition-colors duration-150 hover:text-moss aria-[current=page]:text-moss"
+                  className="t-label py-2 transition-colors duration-150 hover:text-accent aria-[current=page]:text-accent"
                 >
                   {item.label}
                 </Link>
@@ -86,7 +88,7 @@ export function SiteHeader() {
             <li>
               <Link
                 href="/#contact"
-                className="t-stamp pressable inline-flex items-center bg-ink px-4 py-3 text-stone hover:bg-moss"
+                className="t-stamp pressable inline-flex items-center bg-fg px-4 py-3 text-on-fg hover:bg-accent"
               >
                 Contact
               </Link>
@@ -112,8 +114,9 @@ export function SiteHeader() {
           <motion.div
             key="menu"
             id="mobile-menu"
+            data-lenis-prevent
             ref={panelRef}
-            className="fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto border-t border-rule bg-stone lg:hidden"
+            className="fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto border-t border-line bg-bg lg:hidden"
             initial={reduce ? { opacity: 0 } : { opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, y: -12 }}
@@ -122,15 +125,15 @@ export function SiteHeader() {
             <nav aria-label="Main" className="page-x py-6">
               <ul>
                 {[...nav, { label: "Contact", href: "/#contact" }].map((item, i) => (
-                  <li key={item.href} className="border-b border-rule">
+                  <li key={item.href} className="border-b border-line">
                     <Link
                       href={item.href}
                       onClick={() => setOpen(false)}
                       aria-current={pathname === item.href ? "page" : undefined}
-                      className="flex items-baseline justify-between py-4 aria-[current=page]:text-moss"
+                      className="flex items-baseline justify-between py-4 aria-[current=page]:text-accent"
                     >
                       <span className="t-title">{item.label}</span>
-                      <span className="t-stamp text-muted">{String(i + 1).padStart(2, "0")}</span>
+                      <span className="t-stamp text-fg-muted">{String(i + 1).padStart(2, "0")}</span>
                     </Link>
                   </li>
                 ))}
@@ -138,7 +141,7 @@ export function SiteHeader() {
               <ul className="mt-8 grid grid-cols-2 gap-3">
                 {socials.map((s) => (
                   <li key={s.label}>
-                    <a href={s.href} target="_blank" rel="noopener noreferrer" className="t-label text-ink-soft hover:text-moss">
+                    <a href={s.href} target="_blank" rel="noopener noreferrer" className="t-label text-fg-soft hover:text-accent">
                       {s.label}
                     </a>
                   </li>

@@ -55,7 +55,7 @@ export function DesignGallery({ entries, categories }: Props) {
               type="button"
               aria-pressed={active}
               onClick={() => setFilter(c)}
-              className="t-label pressable shrink-0 border border-rule bg-stone-deep px-3 py-2 text-moss hover:border-moss aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-mint"
+              className="t-label pressable shrink-0 border border-line bg-surface px-3 py-2 text-accent hover:border-accent aria-pressed:border-line-strong aria-pressed:bg-fg aria-pressed:text-bg"
             >
               {c} <span className="opacity-70">{counts.get(c) ?? 0}</span>
             </button>
@@ -80,7 +80,7 @@ export function DesignGallery({ entries, categories }: Props) {
               className="group pressable block w-full text-left"
             >
               <span
-                className="block border border-rule bg-stone-deep transition-[border-color] duration-150 group-hover:border-ink"
+                className="block border border-line bg-surface transition-[border-color] duration-150 group-hover:border-line-strong"
                 style={{ opacity: open === i ? 0 : 1 }}
               >
                 <Image
@@ -94,7 +94,7 @@ export function DesignGallery({ entries, categories }: Props) {
                   className="block h-auto w-full"
                 />
               </span>
-              <span className="t-stamp mt-2 block text-muted group-hover:text-ink">{e.title}</span>
+              <span className="t-stamp mt-2 block text-fg-muted group-hover:text-fg">{e.title}</span>
             </button>
           </li>
         ))}

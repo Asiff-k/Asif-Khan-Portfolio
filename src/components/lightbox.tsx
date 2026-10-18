@@ -328,6 +328,7 @@ export function Lightbox({ items, index, onIndexChange, onClosed, getOrigin, lab
       ref={dialogRef}
       role="dialog"
       aria-modal="true"
+      data-lenis-prevent
       aria-label={label}
       className="fixed inset-0 z-50 touch-none select-none"
       onPointerDown={onPointerDown}
