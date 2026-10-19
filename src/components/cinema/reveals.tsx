@@ -11,6 +11,7 @@ import { usePrefersReducedMotion } from "@/lib/use-media";
  * - [data-reveal="image"]: clip-path opens from the bottom while the image
  *   settles from scale 1.12 to 1, like a slow camera dolly.
  * - [data-reveal="item"]: masked rise for cards and timeline entries.
+ * - [data-draw]: an SVG line drawn by scroll (stroke-dashoffset scrub).
  * Content is visible without JavaScript; nothing runs for reduced motion.
  */
 export function Reveals() {
@@ -79,11 +80,33 @@ export function Reveals() {
             duration: 1.1,
             stagger: 0.09,
             ease: ease.enter,
+            // Drop the finished mask so tilted cards are not clipped at their edges.
+            onComplete: () => gsap.set(items, { clearProps: "clipPath" }),
           }),
       });
       cleanups.push(() => {
         t.kill();
         gsap.set(items, { clearProps: "transform,opacity,clipPath" });
+      });
+    });
+
+    // [data-draw]: an SVG stroke (pathLength 1) that draws as its section scrolls by.
+    document.querySelectorAll<SVGPathElement>("[data-draw]").forEach((path) => {
+      gsap.set(path, { strokeDasharray: 1, strokeDashoffset: 1 });
+      const tween = gsap.to(path, {
+        strokeDashoffset: 0,
+        ease: ease.scrub,
+        scrollTrigger: {
+          trigger: path.closest("[data-draw-root]") ?? path,
+          start: "top 75%",
+          end: "bottom 60%",
+          scrub: true,
+        },
+      });
+      cleanups.push(() => {
+        tween.scrollTrigger?.kill();
+        tween.kill();
+        gsap.set(path, { clearProps: "strokeDasharray,strokeDashoffset" });
       });
     });
 

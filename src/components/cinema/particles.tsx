@@ -69,6 +69,7 @@ const fragment = /* glsl */ `
   uniform vec3 uColorA;
   uniform vec3 uColorB;
   uniform float uOpacity;
+  uniform float uDim;
   varying float vAlpha;
   varying float vMix;
   void main() {
@@ -76,7 +77,7 @@ const fragment = /* glsl */ `
     float a = smoothstep(0.5, 0.0, d);
     a *= a;
     if (a < 0.01) discard;
-    gl_FragColor = vec4(mix(uColorA, uColorB, vMix), a * vAlpha * uOpacity);
+    gl_FragColor = vec4(mix(uColorA, uColorB, vMix), a * vAlpha * uOpacity * uDim);
   }
 `;
 
@@ -110,6 +111,10 @@ export function Particles({ count, fontFamily }: { count: number; fontFamily: st
     ready.current = { promise, resolve };
   }
   const pointer = useRef({ target: new Vector2(999, 999), active: 0, targetActive: 0 });
+  // How far the particles have gathered into the contact orb (0..1); the orb
+  // eases toward the cursor by this much.
+  const orb = useRef(0);
+  const follow = useRef(new Vector2());
 
   const view: View = useMemo(() => {
     const v = viewport.getCurrentViewport(camera, [0, 0, 0]);
@@ -151,6 +156,7 @@ export function Particles({ count, fontFamily }: { count: number; fontFamily: st
         uColorA: { value: new Color(look[scene].a) },
         uColorB: { value: new Color(look[scene].b) },
         uOpacity: { value: look[scene].opacity },
+        uDim: { value: 1 },
       },
     });
   }, [gl]);
@@ -221,12 +227,14 @@ export function Particles({ count, fontFamily }: { count: number; fontFamily: st
     stage.register({
       scrub(from, to, p) {
         generation++;
+        orb.current = to === "orb" ? p : from === "orb" ? 1 - p : 0;
         tween?.kill();
         if (!pair.current || pair.current[0] !== from || pair.current[1] !== to) setPairAttributes(from, to);
         material.uniforms.uProgress.value = p;
       },
       morph(to, duration = 2.4) {
         tween?.kill();
+        orb.current = 0;
         const g = ++generation;
         void ready.current?.promise.then(() => {
           if (g !== generation) return;
@@ -295,7 +303,21 @@ export function Particles({ count, fontFamily }: { count: number; fontFamily: st
     const k = 1 - Math.pow(0.001, Math.min(delta, 0.05));
     (u.uPointer.value as Vector2).lerp(ptr.target, k);
     ptr.active += (ptr.targetActive - ptr.active) * k;
-    u.uPointerActive.value = ptr.active;
+    // The orb drifts toward the cursor, so repel fades out as it gathers.
+    u.uPointerActive.value = ptr.active * (1 - orb.current);
+    const pts = points.current;
+    if (pts) {
+      const w = orb.current * ptr.active;
+      // Half way toward the cursor, and dimmer as it gathers (all particles
+      // in one small orb are bright), so the contact links stay readable.
+      const tx = w ? ptr.target.x * 0.5 : 0;
+      const ty = w ? ptr.target.y * 0.5 : 0;
+      u.uDim.value = 1 - orb.current * 0.55;
+      const kk = 1 - Math.pow(0.05, Math.min(delta, 0.05));
+      follow.current.x += (tx * orb.current - follow.current.x) * kk;
+      follow.current.y += (ty * orb.current - follow.current.y) * kk;
+      pts.position.set(follow.current.x, follow.current.y, 0);
+    }
   });
 
   return <points ref={points} geometry={geometry} material={material} frustumCulled={false} />;

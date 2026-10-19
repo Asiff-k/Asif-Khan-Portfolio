@@ -4,6 +4,7 @@ import { DesignShowcase } from "@/components/design-showcase";
 import { ArrowDown, ArrowRight, ArrowUpRight, DownloadIcon } from "@/components/icons";
 import { PageMotion } from "@/components/cinema/page-motion";
 import { Tilt } from "@/components/cinema/tilt";
+import { ToolLoop } from "@/components/cinema/tool-loop";
 import { ContactIcon, LogoMark } from "@/components/logo-mark";
 import { MediaImage } from "@/components/media-image";
 import { SectionHead } from "@/components/section-head";
@@ -97,6 +98,22 @@ const areas: Area[] = [
     },
   },
 ];
+
+// Tools named in the AI data band, design tools first. Only names that appear in
+// the CV tool groups are used; platforms (Atlas Capture, Ginger 2025) are not tools.
+const loopTools = [
+  "Figma",
+  "Canva",
+  "Claude",
+  "Google Stitch",
+  "Perplexity",
+  "Gemini Notebook",
+  "HeyGen",
+  "Synthesia",
+  "Colossyan",
+  "Next.js",
+  "Tailwind CSS",
+].filter((t) => toolGroups.some((g) => (g.items as readonly string[]).includes(t)));
 
 const galleryEntries: GalleryEntry[] = gallery.map((g) => ({
   ...media[g.image],
@@ -320,26 +337,37 @@ export default function Home() {
 
       {/* AI data work */}
       <section id="ai-data" data-scene="dark" aria-labelledby="ai-title">
-        <div className="page-x py-24 md:py-32">
+        <div aria-hidden className="overflow-hidden pt-16 md:pt-24">
+          <ToolLoop tools={loopTools} />
+        </div>
+        <div className="page-x pt-10 pb-24 md:pt-16 md:pb-32">
           <SectionHead index="04" label="AI data work" title="Training data projects" id="ai-title">
             Short-term, project-based work preparing data used to train AI models. All three projects are finished.
           </SectionHead>
-          <ol className="grid md:grid-cols-3">
+          <ul className="sr-only" aria-label="Tools I use">
+            {loopTools.map((t) => (
+              <li key={t}>{t}</li>
+            ))}
+          </ul>
+          <ol data-reveal-group className="grid md:grid-cols-3">
             {aiDataWork.map((w) => (
               <li
                 key={w.org}
-                className="flex flex-col border-b border-line py-8 md:border-r md:border-b-0 md:px-6 md:first:pl-0 md:last:border-r-0"
+                data-reveal="item"
+                className="border-b border-line md:border-r md:border-b-0 md:last:border-r-0"
               >
-                <p className="t-stamp text-accent">{w.period}</p>
-                <h3 className="t-title mt-5">{w.title}</h3>
-                <p className="t-label mt-2 text-fg-muted">{w.org}</p>
-                <p className="t-body-sm mt-5 text-fg-muted">{w.body}</p>
-                <dl className="mt-auto grid grid-cols-[6rem_1fr] gap-y-2 pt-8">
-                  <dt className="t-stamp text-fg-muted">Platform</dt>
-                  <dd className="t-stamp">{w.platform}</dd>
-                  <dt className="t-stamp text-fg-muted">Status</dt>
-                  <dd className="t-stamp">{w.status}</dd>
-                </dl>
+                <Tilt className="flex h-full flex-col py-8 md:px-6 md:[li:first-child_&]:pl-0">
+                  <p className="t-stamp text-accent">{w.period}</p>
+                  <h3 className="t-title mt-5">{w.title}</h3>
+                  <p className="t-label mt-2 text-fg-muted">{w.org}</p>
+                  <p className="t-body-sm mt-5 text-fg-muted">{w.body}</p>
+                  <dl className="mt-auto grid grid-cols-[6rem_1fr] gap-y-2 pt-8">
+                    <dt className="t-stamp text-fg-muted">Platform</dt>
+                    <dd className="t-stamp">{w.platform}</dd>
+                    <dt className="t-stamp text-fg-muted">Status</dt>
+                    <dd className="t-stamp">{w.status}</dd>
+                  </dl>
+                </Tilt>
               </li>
             ))}
           </ol>
@@ -352,25 +380,35 @@ export default function Home() {
         <div className="grid gap-16 pt-10 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-7">
             <h3 className="t-stamp text-fg-muted">Work</h3>
-            <ol className="mt-4">
-              {jobs.map((j) => (
-                <li key={j.org} className="border-t border-line py-8">
-                  <p className="t-stamp text-accent">{j.period}</p>
-                  <h4 className="t-title mt-3">{j.title}</h4>
-                  <p className="t-label mt-2 text-fg-soft">{j.org}</p>
-                  <ul className="mt-5 space-y-2.5">
-                    {j.points.map((pt) => (
-                      <li key={pt} className="t-body-sm grid grid-cols-[1rem_1fr] text-fg-soft">
-                        <span aria-hidden className="text-fg-muted">
-                          –
-                        </span>
-                        {pt}
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              ))}
-            </ol>
+            <div data-draw-root className="relative mt-4 pl-6 md:pl-8">
+              <svg
+                aria-hidden
+                className="absolute top-0 left-0 h-full w-0.5 overflow-visible text-accent"
+                viewBox="0 0 2 100"
+                preserveAspectRatio="none"
+              >
+                <path data-draw d="M1 0V100" pathLength={1} stroke="currentColor" strokeWidth={2} fill="none" />
+              </svg>
+              <ol data-reveal-group>
+                {jobs.map((j) => (
+                  <li key={j.org} data-reveal="item" className="border-t border-line py-8">
+                    <p className="t-stamp text-accent">{j.period}</p>
+                    <h4 className="t-title mt-3">{j.title}</h4>
+                    <p className="t-label mt-2 text-fg-soft">{j.org}</p>
+                    <ul className="mt-5 space-y-2.5">
+                      {j.points.map((pt) => (
+                        <li key={pt} className="t-body-sm grid grid-cols-[1rem_1fr] text-fg-soft">
+                          <span aria-hidden className="text-fg-muted">
+                            –
+                          </span>
+                          {pt}
+                        </li>
+                      ))}
+                    </ul>
+                  </li>
+                ))}
+              </ol>
+            </div>
           </div>
 
           <div className="space-y-14 lg:col-span-4 lg:col-start-9">
@@ -438,12 +476,12 @@ export default function Home() {
             <p className="t-stamp text-fg-muted">Reach me on</p>
             <ul className="mt-3 border-t border-line">
               {contacts.map((c) => (
-                <li key={c.label} className="border-b border-line">
+                <li key={c.label} className="flex items-center gap-x-4 border-b border-line">
                   <a
                     href={c.href}
                     {...("external" in c && c.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                     {...("download" in c && c.download ? { download: true } : {})}
-                    className="group grid grid-cols-[1.5rem_1fr_auto] items-center gap-x-4 py-3.5"
+                    className="group grid min-w-0 flex-1 grid-cols-[1.5rem_1fr_auto] items-center gap-x-4 py-3.5"
                   >
                     <ContactIcon contact={c} />
                     <span className="min-w-0">
@@ -457,6 +495,18 @@ export default function Home() {
                     )}
                     {"external" in c && c.external && <span className="sr-only">(opens in a new tab)</span>}
                   </a>
+                  {"also" in c && (
+                    <a
+                      href={c.also.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group t-stamp pressable inline-flex shrink-0 items-center gap-2 border border-line px-3 py-2 hover:border-accent hover:text-accent"
+                    >
+                      <ContactIcon contact={c.also} />
+                      {c.also.label}
+                      <span className="sr-only">(opens in a new tab)</span>
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>

@@ -347,6 +347,110 @@ html[data-menu="open"] .cinema-edge {
 /* The site is sharp everywhere: square marquee thumbnails. */
 .fm-work span[style*="background-image"] { border-radius: 0; }
 
+/* ---------- Nav text roll ---------- */
+.roll-letters { display: inline-flex; }
+.roll-char {
+  display: inline-flex;
+  flex-direction: column;
+  height: 1lh;
+  overflow: hidden;
+}
+.roll-char > span {
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.2, 0.9, 0.2, 1) calc(var(--i) * 22ms);
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  a:hover .roll-char > span,
+  a:focus-visible .roll-char > span {
+    transform: translateY(-100%);
+  }
+}
+
+/* ---------- Custom cursor (mouse only) ---------- */
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: #f7f6f2;
+  color: #121316;
+  mix-blend-mode: difference;
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    width 0.45s cubic-bezier(0.2, 0.9, 0.2, 1),
+    height 0.45s cubic-bezier(0.2, 0.9, 0.2, 1),
+    opacity 0.2s linear;
+}
+.cursor[data-visible] { opacity: 1; }
+/* The labelled circle is solid (scene ink on light, stone on dark): a blended
+   circle turns off-palette over moss. */
+.cursor[data-label] {
+  width: 64px;
+  height: 64px;
+  mix-blend-mode: normal;
+  background: var(--scene-fg);
+  color: var(--scene-bg);
+}
+.cursor span {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 0.2s linear;
+}
+.cursor[data-label] span { opacity: 1; transition-delay: 0.15s; }
+
+/* ---------- Project pages: moss panel wipe on arrival ---------- */
+.page-wipe {
+  position: fixed;
+  inset: 4rem 0 0 0;
+  z-index: 35;
+  background: #3e6b5c;
+  pointer-events: none;
+  transform-origin: top;
+  transform: scaleY(0);
+  animation: page-wipe 0.6s cubic-bezier(0.76, 0, 0.24, 1) both;
+}
+@keyframes page-wipe {
+  from { transform: scaleY(1); }
+  to { transform: scaleY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-wipe { display: none; }
+}
+
+/* ---------- daisyUI mockup frames: sharp, in site tokens ---------- */
+.d-mockup-browser {
+  --radius-box: 0;
+  --color-base-200: var(--scene-surface);
+  border: 1px solid var(--scene-line);
+  background: var(--scene-bg);
+}
+.d-mockup-browser .d-mockup-browser-toolbar { margin-block: 0.625rem; }
+.d-mockup-browser .d-mockup-browser-toolbar .d-input {
+  padding-inline: 0.75rem;
+  height: 1.75rem;
+  max-width: 24rem;
+  font-family: var(--font-mono);
+  color: var(--scene-fg-soft);
+}
+.d-mockup-phone,
+.d-mockup-phone .d-mockup-phone-display,
+.d-mockup-phone .d-mockup-phone-camera {
+  border-radius: 0;
+}
+.d-mockup-phone {
+  border-color: var(--scene-line-strong);
+  background: #121316;
+}
+
 /* ---------- Hero intro (letterbox) ---------- */
 .intro-bar {
   display: none;

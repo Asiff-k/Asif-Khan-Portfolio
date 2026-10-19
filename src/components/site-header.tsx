@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { nav, site, socials } from "@/content/site";
 import { springDefault } from "@/lib/motion";
 import { CloseIcon, MenuIcon } from "./icons";
+import { RollText } from "./roll-text";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
@@ -81,7 +82,7 @@ export function SiteHeader() {
                   aria-current={pathname === item.href ? "page" : undefined}
                   className="t-label py-2 transition-colors duration-150 hover:text-accent aria-[current=page]:text-accent"
                 >
-                  {item.label}
+                  <RollText text={item.label} />
                 </Link>
               </li>
             ))}

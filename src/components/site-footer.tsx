@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { contacts, nav, site } from "@/content/site";
+import { FooterName } from "./cinema/footer-name";
 import { ArrowUpRight, DownloadIcon } from "./icons";
 import { ContactIcon } from "./logo-mark";
 
@@ -63,6 +64,9 @@ export function SiteFooter() {
             })}
           </ul>
         </div>
+      </div>
+      <div className="page-x overflow-hidden pt-4 pb-8 md:pb-10">
+        <FooterName name={site.name} />
       </div>
       <div className="page-x border-t border-line py-5">
         <p className="t-stamp text-fg-muted">© 2026 {site.name}</p>

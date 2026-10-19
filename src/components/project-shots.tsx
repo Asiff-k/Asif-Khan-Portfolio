@@ -24,22 +24,25 @@ export function ProjectShots({ shots, title }: { shots: ShotEntry[]; title: stri
             return (
               <li key={shot.src} className="md:col-span-2">
                 <figure>
-                  <div
-                    tabIndex={0}
-                    role="region"
-                    aria-label={`${shot.title}, scrollable`}
-                    className="h-[70vh] max-h-[52rem] overflow-y-auto overscroll-contain border border-rule bg-stone-deep"
-                  >
-                    <Image
-                      src={shot.src}
-                      width={shot.width}
-                      height={shot.height}
-                      alt={`${title}: ${shot.title}`}
-                      sizes="(min-width: 75rem) 1100px, 100vw"
-                      unoptimized
-                      className="block h-auto w-full"
-                    />
-                  </div>
+                  <BrowserFrame title={title}>
+                    <div
+                      tabIndex={0}
+                      role="region"
+                      aria-label={`${shot.title}, scrollable`}
+                      data-lenis-prevent
+                      className="h-[70vh] max-h-[52rem] overflow-y-auto overscroll-contain border-t border-rule bg-stone-deep"
+                    >
+                      <Image
+                        src={shot.src}
+                        width={shot.width}
+                        height={shot.height}
+                        alt={`${title}: ${shot.title}`}
+                        sizes="(min-width: 75rem) 1100px, 100vw"
+                        unoptimized
+                        className="block h-auto w-full"
+                      />
+                    </div>
+                  </BrowserFrame>
                   <figcaption className="t-stamp mt-3 text-muted">{shot.title} · scroll to see the whole page</figcaption>
                 </figure>
               </li>
@@ -50,29 +53,32 @@ export function ProjectShots({ shots, title }: { shots: ShotEntry[]; title: stri
           return (
             <li key={shot.src} className={first && !shot.mobile ? "md:col-span-2" : shot.mobile ? "max-w-xs" : ""}>
               <figure>
-                <button
-                  ref={(el) => {
-                    if (el) thumbs.current.set(i, el);
-                    else thumbs.current.delete(i);
-                  }}
-                  type="button"
-                  onClick={() => setOpen(i)}
-                  aria-label={`Enlarge: ${shot.title}`}
-                  className="group pressable block w-full border border-rule bg-stone-deep hover:border-ink"
-                  style={{ opacity: open === i ? 0 : 1 }}
-                >
-                  <Image
-                    src={shot.src}
-                    width={shot.width}
-                    height={shot.height}
-                    alt={`${title}: ${shot.title}`}
-                    sizes={first ? "(min-width: 75rem) 1100px, 100vw" : "(min-width: 48rem) 50vw, 100vw"}
-                    placeholder="blur"
-                    blurDataURL={shot.blurDataURL}
-                    preload={first}
-                    className="block h-auto w-full"
-                  />
-                </button>
+                <Frame mobile={shot.mobile} title={title}>
+                  <button
+                    ref={(el) => {
+                      if (el) thumbs.current.set(i, el);
+                      else thumbs.current.delete(i);
+                    }}
+                    type="button"
+                    onClick={() => setOpen(i)}
+                    aria-label={`Enlarge: ${shot.title}`}
+                    data-cursor="Open"
+                    className={`group pressable block w-full bg-stone-deep ${shot.mobile ? "h-full" : "border-t border-rule"}`}
+                    style={{ opacity: open === i ? 0 : 1 }}
+                  >
+                    <Image
+                      src={shot.src}
+                      width={shot.width}
+                      height={shot.height}
+                      alt={`${title}: ${shot.title}`}
+                      sizes={first ? "(min-width: 75rem) 1100px, 100vw" : "(min-width: 48rem) 50vw, 100vw"}
+                      placeholder="blur"
+                      blurDataURL={shot.blurDataURL}
+                      preload={first}
+                      className={shot.mobile ? "block size-full object-cover object-top" : "block h-auto w-full"}
+                    />
+                  </button>
+                </Frame>
                 <figcaption className="t-stamp mt-3 text-muted">{shot.title}</figcaption>
               </figure>
             </li>
@@ -91,5 +97,27 @@ export function ProjectShots({ shots, title }: { shots: ShotEntry[]; title: stri
         />
       )}
     </>
+  );
+}
+
+/** daisyUI browser frame (sharp, site tokens; see globals.css). The bar shows the project name, not a made-up URL. */
+function BrowserFrame({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="d-mockup-browser">
+      <div className="d-mockup-browser-toolbar">
+        <div className="d-input">{title}</div>
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function Frame({ mobile, title, children }: { mobile?: boolean; title: string; children: React.ReactNode }) {
+  if (!mobile) return <BrowserFrame title={title}>{children}</BrowserFrame>;
+  return (
+    <div className="d-mockup-phone">
+      {/* No camera notch: with square corners it reads as a bar over the screenshot. */}
+      <div className="d-mockup-phone-display">{children}</div>
+    </div>
   );
 }

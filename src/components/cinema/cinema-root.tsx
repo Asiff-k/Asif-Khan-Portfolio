@@ -1,5 +1,6 @@
 "use client";
 
+import { Cursor } from "./cursor";
 import { SceneDirector } from "./scene-director";
 import { SmoothScroll } from "./smooth-scroll";
 
@@ -9,6 +10,7 @@ export function CinemaRoot() {
     <>
       <SmoothScroll />
       <SceneDirector />
+      <Cursor />
     </>
   );
 }

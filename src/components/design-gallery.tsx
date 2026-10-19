@@ -77,6 +77,7 @@ export function DesignGallery({ entries, categories }: Props) {
               type="button"
               onClick={() => setOpen(i)}
               aria-label={`Open ${e.title}`}
+              data-cursor="Open"
               className="group pressable block w-full text-left"
             >
               <span
