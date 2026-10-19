@@ -41,3 +41,12 @@ One line each: what was chosen and why.
 - Skills pointer tilt applies only to the app and interface screenshots (two per row), not to posters or the logo grid, to keep it to one new effect.
 - Image reveals use clip-path plus a slow scale-down; content stays visible without JavaScript and with reduced motion.
 - Experience gets its own beat (sphere back to field) so the dense sphere never sits behind reading text; Contact then gathers the field into the orb. Light-scene particle opacity is 0.18.
+
+## Work (Flowing Menu)
+
+- Flowing Menu shows only with a mouse at 768px and up (CSS media query, no JS switch, so no layout shift). Touch and narrow screens keep the plain list: tap goes straight to the project page, with a one-line summary.
+- Its background is transparent and its text and divider colours follow the scene variables, so the particle field shows through and the house lights still apply. The marquee band is moss with stone text.
+- Thumbnails in the band use the Next image optimizer at 640px wide, not the full-size covers.
+- The component's own load-in sweep (intro) is off: it runs on mount, before the section is on screen. The heading reveal covers the entrance.
+- Index and meta labels in the component are aria-hidden, as shipped; the project pages carry that information.
+- React Bits source is kept with its copyright header; the full license text is in src/components/vendor/LICENSE-react-bits.md.

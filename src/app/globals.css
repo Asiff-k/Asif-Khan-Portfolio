@@ -330,6 +330,15 @@ html[data-menu="open"] .cinema-edge {
   .cinema-grain { animation: none; }
 }
 
+/* ---------- Work: Flowing Menu (mouse, 768px and up) or plain list ---------- */
+.fm-only { display: none; }
+@media (min-width: 768px) and (hover: hover) and (pointer: fine) {
+  .fm-only { display: block; }
+  .fm-fallback { display: none; }
+}
+/* The site is sharp everywhere: square marquee thumbnails. */
+.fm-work span[style*="background-image"] { border-radius: 0; }
+
 /* ---------- Hero intro (letterbox) ---------- */
 .intro-bar {
   display: none;

@@ -6,6 +6,7 @@ import { Tilt } from "@/components/cinema/tilt";
 import { ContactIcon, LogoMark } from "@/components/logo-mark";
 import { MediaImage } from "@/components/media-image";
 import { SectionHead } from "@/components/section-head";
+import FlowingMenu from "@/components/vendor/flowing-menu";
 import { aiDataWork, education, jobs, languages, toolGroups } from "@/content/experience";
 import { gallery, galleryCategories } from "@/content/gallery";
 import type { LogoKey } from "@/content/logos.generated";
@@ -220,19 +221,44 @@ export default function Home() {
           Two web apps I built on my own, a company website I designed and built, and interface designs for client
           websites.
         </SectionHead>
-        <ol>
+        {/* Mouse and wide screens: Flowing Menu. Touch and narrow screens: the list below. */}
+        <div className="fm-only fm-work font-display" data-cursor="View" style={{ height: `${projects.length * 7.5}rem` }}>
+          <FlowingMenu
+            items={projects.map((p) => ({
+              text: p.title,
+              link: `/work/${p.slug}`,
+              image: `/_next/image?url=${encodeURIComponent(media[p.cover].src)}&w=640&q=75`,
+              meta: [p.kind, p.year].filter(Boolean).join(" · "),
+            }))}
+            ariaLabel="Selected work"
+            speed={50}
+            bandRadius={0}
+            align="left"
+            showIndex
+            showArrow
+            dimInactive
+            imageShape="rounded"
+            intro={false}
+            bgColor="transparent"
+            textColor="var(--scene-fg)"
+            marqueeBgColor="#3e6b5c"
+            marqueeTextColor="#f7f6f2"
+            borderColor="var(--scene-line)"
+          />
+        </div>
+        <ol className="fm-fallback">
           {projects.map((p, i) => (
             <li key={p.slug} className="border-b border-line">
               <Link
                 href={`/work/${p.slug}`}
-                className="group grid gap-5 py-7 transition-colors duration-100 active:bg-surface md:grid-cols-12 md:items-center md:gap-6"
+                className="group grid grid-cols-1 gap-5 py-7 transition-colors duration-100 active:bg-surface md:grid-cols-12 md:items-center md:gap-6"
               >
                 <span className="t-stamp text-fg-muted md:col-span-1">{String(i + 1).padStart(2, "0")}</span>
-                <span className="md:col-span-6">
+                <span className="min-w-0 md:col-span-6">
                   <span className="t-title block transition-colors duration-150 group-hover:text-accent">
                     {p.title}
                   </span>
-                  <span className="t-body-sm mt-2 block text-fg-soft">{p.summary}</span>
+                  <span className="t-body-sm mt-2 block truncate text-fg-soft">{p.summary}</span>
                 </span>
                 <span className="flex flex-wrap gap-x-4 gap-y-1 md:col-span-2 md:flex-col">
                   <span className="t-stamp text-accent">{p.kind}</span>
