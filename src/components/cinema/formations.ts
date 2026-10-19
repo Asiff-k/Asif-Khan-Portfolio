@@ -56,6 +56,62 @@ export function sphere(count: number, radius: number, center: [number, number, n
 }
 
 /**
+ * Drinks can surface: a lathe profile (domed base, straight body, tapered neck,
+ * lid rim) sampled by surface area, tilted slightly. Echoes the can designs in
+ * the gallery. Sits right of centre so the section heading stays clear.
+ *
+ * TODO(asset): the brief's solid can (lathe mesh with a label sleeve) needs flat
+ * label artwork at public/design/labels/*.png (about 1.8:1). Until then the
+ * Design beat stays particles only.
+ */
+export function can(count: number, view: View): Formation {
+  const r = rand(4);
+  const height = view.halfH * 1.25;
+  const radius = height * 0.27;
+  // Profile as (y, radius) pairs from bottom to top, y in 0..1 of height.
+  const profile: [number, number][] = [
+    [0, 0.78], [0.02, 0.92], [0.05, 1], [0.86, 1], [0.92, 0.9], [0.96, 0.84], [0.98, 0.84], [1, 0.8],
+  ];
+  // Segment weights by lateral area (mean radius x slant length).
+  const seg = profile.slice(1).map(([y1, r1], i) => {
+    const [y0, r0] = profile[i];
+    return { y0, r0, y1, r1, w: ((r0 + r1) / 2) * Math.hypot((y1 - y0) * height, (r1 - r0) * radius) };
+  });
+  const lid = 0.12; // share of points on the top and bottom discs
+  const total = seg.reduce((a, s) => a + s.w, 0);
+  const tilt = -0.2;
+  const [cx, cy, cz] = [view.halfW * 0.42, -view.halfH * 0.05, -1];
+  const out = new Float32Array(count * 3);
+  for (let i = 0; i < count; i++) {
+    let y: number;
+    let rad: number;
+    if (r() < lid) {
+      const top = r() < 0.5;
+      y = top ? 1 : 0;
+      rad = (top ? 0.8 : 0.78) * Math.sqrt(r());
+    } else {
+      let pick = r() * total;
+      let s = seg[0];
+      for (const candidate of seg) {
+        s = candidate;
+        if ((pick -= candidate.w) <= 0) break;
+      }
+      const t = r();
+      y = s.y0 + (s.y1 - s.y0) * t;
+      rad = s.r0 + (s.r1 - s.r0) * t;
+    }
+    const a = r() * Math.PI * 2;
+    const x = Math.cos(a) * rad * radius;
+    const z = Math.sin(a) * rad * radius;
+    const yy = (y - 0.5) * height;
+    out[i * 3] = cx + x * Math.cos(tilt) - yy * Math.sin(tilt);
+    out[i * 3 + 1] = cy + x * Math.sin(tilt) + yy * Math.cos(tilt);
+    out[i * 3 + 2] = cz + z;
+  }
+  return out;
+}
+
+/**
  * Points sampled from "ASIF" drawn in Manrope 800 on an offscreen canvas.
  * Falls back to a sphere if the canvas or font is unavailable.
  */

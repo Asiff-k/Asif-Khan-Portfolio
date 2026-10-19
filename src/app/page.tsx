@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { DesignGallery, type GalleryEntry } from "@/components/design-gallery";
+import type { GalleryEntry } from "@/components/design-gallery";
+import { DesignShowcase } from "@/components/design-showcase";
 import { ArrowDown, ArrowRight, ArrowUpRight, DownloadIcon } from "@/components/icons";
 import { PageMotion } from "@/components/cinema/page-motion";
 import { Tilt } from "@/components/cinema/tilt";
@@ -313,7 +314,7 @@ export default function Home() {
           it larger.
         </SectionHead>
         <div className="mt-8">
-          <DesignGallery entries={galleryEntries} categories={galleryCategories} />
+          <DesignShowcase entries={galleryEntries} categories={galleryCategories} />
         </div>
       </section>
 

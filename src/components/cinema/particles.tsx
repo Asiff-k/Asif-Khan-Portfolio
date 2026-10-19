@@ -14,7 +14,7 @@ import {
 } from "three";
 import { gsap } from "@/lib/gsap";
 import { sceneStore, type SceneName } from "@/lib/scene";
-import { cloud, field, name, sphere, type Formation, type View } from "./formations";
+import { can, cloud, field, name, sphere, type Formation, type View } from "./formations";
 import { stage, type FormationKey } from "./stage-controller";
 
 const vertex = /* glsl */ `
@@ -164,7 +164,7 @@ export function Particles({ count, fontFamily }: { count: number; fontFamily: st
       f.field = field(count, view);
       f.sphere = sphere(count, Math.min(view.halfH * 0.62, view.halfW * 0.5), [view.halfW * 0.35, 0, -1]);
       f.orb = sphere(count, 0.32, [0, 0, 0]);
-      f.can = f.can ?? sphere(count, view.halfH * 0.5);
+      f.can = can(count, view);
       f.name = await name(count, view, fontFamily);
       if (cancelled) return;
       if (pair.current) {

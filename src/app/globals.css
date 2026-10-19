@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+/* daisyUI: only the mockup frames and diff slider, prefixed, with no themes or base styles. */
+@plugin "daisyui" {
+  themes: false;
+  include: mockup, diff;
+  prefix: "d-";
+  logs: false;
+}
+
 /*
  * Design tokens from the Stitch "Kinetic Editorial Technologist" system.
  * Light editorial canvas with inverted carbon panels. Every corner is sharp.

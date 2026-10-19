@@ -50,3 +50,15 @@ One line each: what was chosen and why.
 - The component's own load-in sweep (intro) is off: it runs on mount, before the section is on screen. The heading reveal covers the entrance.
 - Index and meta labels in the component are aria-hidden, as shipped; the project pages carry that information.
 - React Bits source is kept with its copyright header; the full license text is in src/components/vendor/LICENSE-react-bits.md.
+
+## Design (screening room)
+
+- CAN is a procedural lathe profile (domed base, body, tapered neck, lid rim) sampled by surface area in plain JS, not MeshSurfaceSampler: same result without building a mesh, and three.js stays inside the lazy stage chunk. It sits right of centre so the heading stays clear.
+- Solid can skipped: there are no label files in public/design/labels. TODO(asset) in src/components/cinema/formations.ts.
+- Before/after diff sliders skipped: there are no pairs in public/design/process. TODO(asset) in src/components/design-showcase.tsx. daisyUI is set up (include: mockup, diff; prefix d-; themes false); those are the file names in daisyUI 5.7.47's components folder, and its classes ship only when used.
+- Dome Gallery: tile and opened radius 0 (site is sharp everywhere), grayscale off, 640px optimized thumbnails, 1080px for the opened piece. An opened piece is shown whole (object-fit contain, no drop shadow) instead of cropped to the portrait frame.
+- The dome's backdrop is transparent so the CAN particles stay visible around it; its edge fades still blend into carbon.
+- The dome is one tab stop: arrow keys turn it, Enter or Space opens the piece in front, Escape closes. Its 175 tiles repeat the 54 pieces, so they are not individual tab stops; screen readers get the grid, which lists each piece once with filters.
+- Dome by default with a mouse at 768px and up; grid by default on touch, under 768px and with reduced motion. The button under the dome switches views on every screen size.
+- The dome is full-bleed, viewport-high and pinned for half a screen of scrolling on desktop only (pinning a drag surface on touch would trap the page).
+- The dome component (and @use-gesture) loads only when the section is within 800px of the viewport.
