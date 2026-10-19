@@ -2,6 +2,7 @@ import Link from "next/link";
 import { DesignGallery, type GalleryEntry } from "@/components/design-gallery";
 import { ArrowDown, ArrowRight, ArrowUpRight, DownloadIcon } from "@/components/icons";
 import { PageMotion } from "@/components/cinema/page-motion";
+import { Tilt } from "@/components/cinema/tilt";
 import { ContactIcon, LogoMark } from "@/components/logo-mark";
 import { MediaImage } from "@/components/media-image";
 import { SectionHead } from "@/components/section-head";
@@ -388,7 +389,7 @@ export default function Home() {
         <div className="page-x grid gap-14 py-24 md:py-32 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-6">
             <p className="t-stamp text-accent">06 · Contact</p>
-            <h2 id="contact-title" className="t-display-lg mt-4">
+            <h2 id="contact-title" data-reveal="heading" className="t-display-lg mt-4">
               Let&apos;s talk.
             </h2>
             <p className="t-body-lg mt-8 max-w-md text-fg-muted">
@@ -445,14 +446,16 @@ function AreaVisual({ visual }: { visual: Area["visual"] }) {
     return (
       <div className="grid gap-4 sm:grid-cols-2">
         {visual.images.map((s) => (
-          <div key={s.image} className="aspect-[16/10] overflow-hidden border border-line bg-surface">
-            <MediaImage
-              image={s.image}
-              alt={s.alt}
-              sizes="(min-width: 64rem) 30vw, (min-width: 40rem) 50vw, 100vw"
-              className="size-full object-cover object-top"
-            />
-          </div>
+          <Tilt key={s.image}>
+            <div data-reveal="image" className="aspect-[16/10] overflow-hidden border border-line bg-surface">
+              <MediaImage
+                image={s.image}
+                alt={s.alt}
+                sizes="(min-width: 64rem) 30vw, (min-width: 40rem) 50vw, 100vw"
+                className="size-full object-cover object-top"
+              />
+            </div>
+          </Tilt>
         ))}
       </div>
     );
@@ -461,7 +464,7 @@ function AreaVisual({ visual }: { visual: Area["visual"] }) {
     return (
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         {visual.images.map((image) => (
-          <div key={image} className="aspect-[3/4] overflow-hidden border border-line bg-surface">
+          <div key={image} data-reveal="image" className="aspect-[3/4] overflow-hidden border border-line bg-surface">
             <MediaImage image={image} alt="" sizes="(min-width: 64rem) 15vw, (min-width: 40rem) 25vw, 50vw" className="size-full object-cover" />
           </div>
         ))}

@@ -80,6 +80,11 @@
     background: var(--scene-bg);
   }
 
+  /* Lenis does the smoothing; native smooth scrolling on top doubles it. */
+  html.lenis {
+    scroll-behavior: auto;
+  }
+
   /* The body is the single fixed backdrop the house lights control. */
   body {
     background: var(--scene-bg);

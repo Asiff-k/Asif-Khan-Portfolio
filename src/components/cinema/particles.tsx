@@ -93,7 +93,7 @@ function onIdle(fn: () => void): () => void {
 
 const look: Record<SceneName, { a: string; b: string; opacity: number; additive: boolean }> = {
   dark: { a: "#82b8a0", b: "#3e6b5c", opacity: 0.7, additive: true },
-  light: { a: "#121316", b: "#46464b", opacity: 0.25, additive: false },
+  light: { a: "#121316", b: "#46464b", opacity: 0.18, additive: false },
 };
 
 export function Particles({ count, fontFamily }: { count: number; fontFamily: string }) {
@@ -189,6 +189,10 @@ export function Particles({ count, fontFamily }: { count: number; fontFamily: st
   }, [view, count, fontFamily]);
 
   function setPairAttributes(from: FormationKey, to: FormationKey) {
+    // Remember the requested pair even before the formations exist; the
+    // build step applies it once they do.
+    pair.current = [from, to];
+    lastTarget.current = to;
     const f = formations.current;
     const a = f[from];
     const b = f[to];
@@ -196,8 +200,6 @@ export function Particles({ count, fontFamily }: { count: number; fontFamily: st
     (geometry.getAttribute("aFrom") as BufferAttribute).copyArray(a).needsUpdate = true;
     (geometry.getAttribute("aTo") as BufferAttribute).copyArray(b).needsUpdate = true;
     (geometry.getAttribute("position") as BufferAttribute).copyArray(b).needsUpdate = true;
-    pair.current = [from, to];
-    lastTarget.current = to;
   }
 
   // Where the particles visibly are right now (ignoring noise), for time-based morphs.
@@ -213,15 +215,21 @@ export function Particles({ count, fontFamily }: { count: number; fontFamily: st
   // Register with the page-side controller.
   useEffect(() => {
     let tween: gsap.core.Tween | null = null;
+    // Bumped by every scrub and morph so a morph waiting on the formations
+    // never overrides a newer scroll position.
+    let generation = 0;
     stage.register({
       scrub(from, to, p) {
+        generation++;
         tween?.kill();
         if (!pair.current || pair.current[0] !== from || pair.current[1] !== to) setPairAttributes(from, to);
         material.uniforms.uProgress.value = p;
       },
       morph(to, duration = 2.4) {
         tween?.kill();
+        const g = ++generation;
         void ready.current?.promise.then(() => {
+          if (g !== generation) return;
           const f = formations.current;
           const target = f[to];
           if (!target) return;

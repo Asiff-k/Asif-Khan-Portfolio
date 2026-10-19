@@ -13,11 +13,14 @@ type Impl = {
 
 let impl: Impl | null = null;
 const pending: Array<(i: Impl) => void> = [];
+const readyListeners = new Set<() => void>();
 
 export const stage = {
   register(i: Impl | null) {
     impl = i;
-    if (i) pending.splice(0).forEach((fn) => fn(i));
+    if (!i) return;
+    pending.splice(0).forEach((fn) => fn(i));
+    readyListeners.forEach((fn) => fn());
   },
   scrub(from: FormationKey, to: FormationKey, p: number) {
     if (impl) impl.scrub(from, to, p);
@@ -27,4 +30,11 @@ export const stage = {
     else pending.push((i) => i.morph(to, duration));
   },
   ready: () => impl !== null,
+  /** Called each time a stage registers (it can mount after the page). */
+  onReady(fn: () => void) {
+    readyListeners.add(fn);
+    return () => {
+      readyListeners.delete(fn);
+    };
+  },
 };

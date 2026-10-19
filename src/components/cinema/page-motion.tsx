@@ -1,6 +1,8 @@
 "use client";
 
 import { HeroIntro } from "./intro";
+import { Reveals } from "./reveals";
+import { ScrollWorld } from "./scroll-world";
 
 /**
  * Motion that changes page DOM (split headings, reveals, scroll mapping).
@@ -11,6 +13,8 @@ export function PageMotion() {
   return (
     <>
       <HeroIntro />
+      <Reveals />
+      <ScrollWorld />
     </>
   );
 }
