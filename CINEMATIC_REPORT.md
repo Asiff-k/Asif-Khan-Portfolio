@@ -23,7 +23,7 @@ This replaces the black monochrome theme described in the next section.
   - Below that are three plain text columns.
 - **Copy:**
   - Your new introduction is at the top of the page.
-  - The new facts are placed in What I do and Experience: Incodet as your own agency, Product Designer then Team Leader at NextGen, the completed CodeSoft internship, project-based client work, and a new Skills list.
+  - The new facts are placed in What I do and Experience: the Incodet website you designed and coded from scratch plus the Cipher Shield and KI Training UIs you designed with Incodet, Product Designer then Team Leader at NextGen, the completed CodeSoft internship, project-based client work, and a new Skills list.
   - Your process sentence is in What I do, and your AI sentence is in Design.
   - "Final-year" is removed everywhere.
 
@@ -45,7 +45,7 @@ The machine's Lighthouse runs were noisier on this day; the redesign itself adde
 
 ### For you to check
 
-1. **Incodet:** the site now calls it your own agency, as you wrote. Earlier you'd told me you didn't own it, so please confirm.
+1. **Incodet (confirmed):** it is not your agency. The site says you designed and coded the Incodet website from scratch and designed the UI for two of their client projects, Cipher Shield and KI Training.
 2. **Gemini Notebook link:** it goes to notebook.google.com (Gemini Notebook itself), not gemini.google.com, which is the general Gemini chat.
 
 ## Monochrome redesign
@@ -385,7 +385,7 @@ The full list, one line each, is in `DECISIONS.md` and reproduced here:
 - Contact is redesigned for white: "Let's talk." with a thin square-in-square line figure that turns slowly, a hairline that draws across the page as it scrolls into view (CSS scroll timeline; drawn at once where unsupported or with reduced motion), then three plain text columns (about, write or call, elsewhere). No icons and no particles behind it; each link still appears once.
 - Copy: the hero text is your new introduction. The new facts are placed in What I do (fullstack, Incodet, project-based client work, Product Designer then Team Leader at NextGen, AI/ML and training AI models, daily AI use), in Experience (Incodet, Product Designer at NextGen, the completed CodeSoft internship, project-based client work) and in a new Skills list. Your process sentence leads What I do, and the Design section uses your sentence about AI as inspiration and efficiency.
 - "Final-year" is removed everywhere: hero, site description, and Chol Ghuri's role (now "University CSE project").
-- Incodet is now described as your own agency, as you wrote; earlier copy said you designed and built the website for the company.
+- Incodet (corrected): it is not Asif's agency. He designed and coded the Incodet website from scratch and designed the UI for two of its client projects, Cipher Shield and KI Training. Experience lists this as project-based work for Incodet, and the NextGen Production website is listed under his NextGen role.
 - The Flowing Menu's index and meta labels are raised from 50% to 72% opacity, so they read on white.
 
 ## Files changed against main

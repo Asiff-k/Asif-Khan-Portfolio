@@ -119,12 +119,12 @@ export const projects: Project[] = [
     slug: "incodet",
     title: "incodet.com",
     kind: "Software",
-    summary: "Website for Incodet, my own software and design agency",
-    role: "Full UI design and development.",
+    summary: "Website for Incodet, a software development company",
+    role: "Design and development, from scratch.",
     stack: ["Next.js", "Tailwind CSS", "Vercel"],
     cover: "apps/incodet-home",
     intro: [
-      "Incodet is my own agency: it designs and builds software products for startups and growing businesses. I did the full UI design and development of its website, including the case study pages.",
+      "Incodet designs and builds software products for startups and growing businesses. I designed and coded their website from scratch, including the case study pages. I also designed the UI for two of their client projects, Cipher Shield and KI Training.",
       "The site covers their services, how they work, case studies, pricing and FAQs, and ends with a calendar for booking a call.",
     ],
     shots: [{ image: "apps/incodet-home", caption: "Home page" }],
@@ -138,7 +138,7 @@ export const projects: Project[] = [
     role: "UI design",
     cover: "ui/cipher-shield-cover",
     intro: [
-      "CipherShield is a security advisory firm in Perth. I designed the interface for their website. It covers their services, a knowledge hub, company information and contact details.",
+      "CipherShield is a security advisory firm in Perth. I designed the interface for their website, as a project with Incodet. It covers their services, a knowledge hub, company information and contact details.",
     ],
     shots: [{ image: "ui/cipher-shield-full", caption: "Full home page design", tall: true }],
     links: [{ label: "Visit ciphershield.au", href: "https://ciphershield.au/" }],
@@ -152,7 +152,7 @@ export const projects: Project[] = [
     year: "2025",
     cover: "ui/ki-training-cover",
     intro: [
-      "KI Training & Assessing is a registered training organisation in Perth that runs nationally recognised courses. I designed the interface for their website.",
+      "KI Training & Assessing is a registered training organisation in Perth that runs nationally recognised courses. I designed the interface for their website, as a project with Incodet.",
       "The site is built around how people book courses: course pathways show price, length and location up front, and visitors can see schedules for each training site.",
     ],
     shots: [{ image: "ui/ki-training-full", caption: "Full home page design", tall: true }],

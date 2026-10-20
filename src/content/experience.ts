@@ -2,10 +2,13 @@
 
 export const jobs = [
   {
-    period: "Own agency",
-    title: "UI design and development",
+    period: "Project-based",
+    title: "Web design and development, UI design",
     org: "Incodet",
-    points: ["Built the full UI and the development of incodet.com, including the case study pages."],
+    points: [
+      "Designed and coded the Incodet website from scratch, including the case study pages.",
+      "Designed the UI for two client projects: the Cipher Shield and KI Training websites.",
+    ],
   },
   {
     period: "Jul 2025 – Nov 2025",
@@ -16,6 +19,7 @@ export const jobs = [
       "Moved up from designer to team leader and led the team for the last three months.",
       "Set daily priorities, assigned tasks and balanced the workload so the team delivered on schedule.",
       "Worked as the link between designers and developers so work moved between them without delays.",
+      "Designed the interface for the NextGen Production website.",
     ],
   },
   {
@@ -26,12 +30,6 @@ export const jobs = [
       "Completed a three-month web development internship, working on the team's live projects.",
       "Took part in team reviews and planning sessions and reported progress on my tasks.",
     ],
-  },
-  {
-    period: "Project-based",
-    title: "UI/UX design for clients",
-    org: "Client work",
-    points: ["Designed the Cipher Shield, KI Training and NextGen Production websites."],
   },
 ];
 

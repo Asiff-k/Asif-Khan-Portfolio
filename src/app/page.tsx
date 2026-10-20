@@ -36,7 +36,7 @@ const areas: Area[] = [
     title: "Software development",
     body: [
       "Fullstack development, frontend and backend. I build web apps from scratch: Chol Ghuri matches university students into travel groups and splits the costs; CareerNavigator recommends careers from a student's skills and projects. Both run on PHP, MySQL and JavaScript, with accounts, email verification and admin panels.",
-      "I also built the full UI and development of incodet.com for Incodet, my own agency, and I build Flutter apps.",
+      "I also designed and coded incodet.com, the website of the software company Incodet, from scratch, and I build Flutter apps.",
     ],
     evidence: [
       { label: "Chol Ghuri", href: "/work/chol-ghuri" },
@@ -51,7 +51,7 @@ const areas: Area[] = [
   {
     title: "UI/UX design",
     body: [
-      "I design web and app interfaces in Figma, from wireframes to final screens. Project-based client work includes the Cipher Shield, KI Training and NextGen Production websites.",
+      "I design web and app interfaces in Figma, from wireframes to final screens. With Incodet I designed the UI for two client projects, the Cipher Shield and KI Training websites, and I designed the NextGen Production website.",
       "At NextGen Production I worked as a Product Designer, on graphics and UI/UX, and moved up to Team Leader: setting daily priorities, assigning work and keeping delivery on schedule.",
     ],
     evidence: [
@@ -231,8 +231,8 @@ export default function Home() {
       {/* Selected work */}
       <section id="work" className="page-x py-24 md:py-32" aria-labelledby="work-title">
         <SectionHead index="02" label="Projects" title="Selected work" id="work-title">
-          Two web apps I built on my own, the website of my agency Incodet, and interface designs for client
-          websites.
+          Two web apps I built on my own, a company website I designed and coded from scratch, and interface designs
+          for client websites.
         </SectionHead>
         {/* Mouse and wide screens: Flowing Menu. Touch and narrow screens: the list below. */}
         <div className="fm-only fm-work font-display" data-cursor="View" style={{ height: `${projects.length * 7.5}rem` }}>
