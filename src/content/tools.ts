@@ -87,7 +87,7 @@ export const tools: Tool[] = [
     task: "Interface design",
     about: "Turns a written brief into interface designs, with code and Figma export.",
     use: "Designing web interfaces.",
-    href: "https://stitch.google.com",
+    href: "https://stitch.withgoogle.com",
   },
   {
     name: "Figma",
@@ -139,7 +139,7 @@ export const tools: Tool[] = [
     status: "platform",
     about: "iPhone app for recording first-person video tasks for AI research.",
     use: "More than 100 hours of household activity video for HumanData Labs, Oct 2026.",
-    href: "https://apps.apple.com/us/app/atlas-capture/id6755671397",
+    href: "https://www.atlascapture.io",
   },
   {
     name: "Dot Lab",

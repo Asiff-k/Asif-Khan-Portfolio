@@ -22,7 +22,7 @@ export function DesignGallery({ entries, categories }: { entries: GalleryEntry[]
           className: "block h-auto w-full",
         });
         return (
-          <li key={e.src} data-category={e.category} className="mb-4 break-inside-avoid md:mb-6">
+          <li key={e.src} data-category={e.category} className="mb-5 break-inside-avoid md:mb-6">
             <button
               type="button"
               data-index={i}
@@ -30,11 +30,11 @@ export function DesignGallery({ entries, categories }: { entries: GalleryEntry[]
               data-cursor="Open"
               className="group pressable block w-full text-left"
             >
-              <span className="block border border-line bg-surface transition-[border-color] duration-150 group-hover:border-line-strong">
+              <span className="block overflow-hidden rounded-tile bg-surface shadow-[0_1px_2px_rgb(18_19_22/0.04),0_10px_28px_rgb(18_19_22/0.06)]">
                 {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
                 <img {...props} />
               </span>
-              <span className="t-stamp mt-2 block text-fg-muted group-hover:text-fg">{e.title}</span>
+              <span className="mt-2.5 block px-1 text-[0.875rem] text-fg-soft group-hover:text-fg">{e.title}</span>
             </button>
           </li>
         );

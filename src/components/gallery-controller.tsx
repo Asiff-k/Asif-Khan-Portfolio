@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useId, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import type { GalleryEntry } from "./design-gallery";
 
 // The lightbox (and the motion library behind its gestures) loads on first use,
@@ -42,6 +42,25 @@ export function GalleryController({
     return map;
   }, [entries]);
 
+  // Tiles go from blurred to sharp as they scroll in (CSS in globals.css, keyed on .is-in).
+  useEffect(() => {
+    const lis = list.current?.querySelectorAll<HTMLElement>(":scope > li");
+    if (!lis) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add("is-in");
+            io.unobserve(e.target);
+          }
+        }
+      },
+      { rootMargin: "0px 0px -8% 0px" },
+    );
+    lis.forEach((li) => io.observe(li));
+    return () => io.disconnect();
+  }, []);
+
   const thumb = useCallback(
     (v: number) => list.current?.querySelector<HTMLElement>(`[data-index="${visible[v]?.i}"]`) ?? null,
     [visible],
@@ -64,7 +83,7 @@ export function GalleryController({
     categories
       .map((c) => `.gallery-list[data-filter="${c}"] > li:not([data-category="${c}"]) { display: none; }`)
       .join("\n") +
-    (open !== null ? `\n.gallery-list [data-index="${visible[open]?.i}"] > span:first-child { opacity: 0; }` : "");
+    (open !== null ? `\n.gallery-list [data-index="${visible[open]?.i}"] > span:first-child { opacity: 0 !important; }` : "");
 
   return (
     <div>
@@ -96,7 +115,7 @@ export function GalleryController({
       <ul
         ref={list}
         data-filter={filter}
-        className="gallery-list mt-8 columns-2 gap-4 md:columns-3 md:gap-6 xl:columns-4"
+        className="gallery-list mt-8 columns-1 gap-5 sm:columns-2 md:gap-6 lg:columns-3"
         onClick={onListClick}
         onPointerEnter={prefetchLightbox}
         onTouchStart={prefetchLightbox}

@@ -334,15 +334,21 @@
   .js .fm-only { display: block; }
   .js .fm-fallback { display: none; }
 }
-/* Index numbers and meta labels ship at 50% opacity; on white that is too light to read comfortably. */
-.fm-work .opacity-50 { opacity: 0.72; }
-/* The site is sharp everywhere: square marquee thumbnails. */
-.fm-work span[style*="background-image"] { border-radius: 0; }
-/* Keyboard focus: the black band slides in, plus a white ring inside it (the
-   component's own focus outline is cancelled by its outline-none class). */
-.fm-work a:focus-visible {
-  outline: 2px solid #ffffff;
-  outline-offset: -6px;
+
+/* ---------- Design grid: tiles go from blurred to sharp as they scroll in ---------- */
+.js .gallery-list > li > button > span:first-child {
+  opacity: 0;
+  filter: blur(8px);
+  transform: translateY(16px);
+  transition: opacity 0.8s ease, filter 0.9s ease, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.js .gallery-list > li.is-in > button > span:first-child {
+  opacity: 1;
+  filter: none;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .js .gallery-list > li > button > span:first-child { opacity: 1; filter: none; transform: none; transition: none; }
 }
 
 /* ---------- Mobile menu panel ---------- */
@@ -521,26 +527,8 @@ main li {
     0 0 6px var(--scene-bg),
     0 0 14px var(--scene-bg);
 }
+.no-halo,
+.no-halo * {
+  text-shadow: none !important;
+}
 
-/* ---------- Contact: a hairline drawn by scroll, and a slowly turning figure ---------- */
-.contact-line { transform-origin: left; }
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .contact-line {
-      animation: contact-line linear both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 35%;
-    }
-  }
-}
-@keyframes contact-line {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
-.contact-mark { animation: contact-turn 48s linear infinite; }
-@keyframes contact-turn {
-  to { transform: rotate(360deg); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .contact-mark { animation: none; }
-}
