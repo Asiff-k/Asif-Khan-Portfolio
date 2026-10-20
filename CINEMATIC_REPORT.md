@@ -15,10 +15,10 @@ Sections below this one describe the first cinematic pass. Where they mention gr
 | 8b721f2 | **Black and white only.** One black palette on every page, with white text and accents and no green anywhere: UI, particles, favicon, share image and theme colour. Light/dark scene switching is removed. The "ASIF" particle text and the letterbox intro are gone; the headline fades in with CSS. Particles are white. The sphere (AI data) and the can (Design) turn continuously, one full turn about every 18 seconds. The contact orb is now a thin white ring that pulses slowly. |
 | c7c962d | **Smooth dome drag.** Dragging, flicking and the arrow keys move a target, and the dome glides toward it every frame. After a flick it keeps turning and slows over about 2.5s. Measured frame by frame, the speed tapers to zero with no sudden stop. |
 | f9ff80f | **What I do.** The software, UI/UX and graphic design visuals are neutral monochrome illustrations drawn in code (see the note below). Dev Journey is removed: its repo has no screenshots and it isn't on the Play Store. The grey panel behind the AI tool logos is gone. |
-| 770bce8 (and the commit before it) | **Logos.** All logos are greyscale and scale up and brighten on hover or keyboard focus. |
+| f361404 | **Logos.** All logos are greyscale and scale up and brighten on hover or keyboard focus. |
 | 770bce8 | **No AI bragging.** The headline is now "I build the software and design the screens." "AI tools are part of my daily work" and similar lines are removed. So is the note that this portfolio was designed with Google Stitch. The tool lists stay. |
 | 770bce8 | **One contact area.** The footer, on every page, holds your new contact paragraph, the email and one list of links. Each social link and the email appear once per page. The separate Contact section, the footer's "Elsewhere" list and the mobile menu's social links are removed. |
-| final commit | **Frame rate and report.** A lighter dome (100 tiles, smaller tile images), a dimmer contact ring, and this report. |
+| caaa363 | **Frame rate and report.** A lighter dome (100 tiles, smaller tile images), a dimmer contact ring, and this report. |
 
 ### Two choices to review
 
