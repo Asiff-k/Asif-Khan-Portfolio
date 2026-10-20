@@ -329,7 +329,7 @@ export function Particles({ count }: { count: number }) {
     const w = ringWeight.current;
     u.uPointerActive.value = ptr.active * (1 - w);
     u.uPulse.value = w * 0.07;
-    u.uDim.value = 1 - w * 0.4;
+    u.uDim.value = 1 - w * 0.6;
     const pts = points.current;
     if (pts) {
       // Half way toward the cursor, so the links under it stay readable.

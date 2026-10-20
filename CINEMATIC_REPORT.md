@@ -2,6 +2,54 @@
 
 Branch `cinematic` (not merged into `main`; production is untouched).
 
+## Monochrome redesign (latest)
+
+Preview: https://asif-khan-portfolio-git-cinematic-asiffkhanx007-4901s-projects.vercel.app (Vercel login required; production still serves `main`).
+
+Sections below this one describe the first cinematic pass. Where they mention green, light and dark scenes, the "ASIF" particle text, the letterbox intro, the Contact section or Dev Journey, this redesign replaces them.
+
+### What changed
+
+| Commit | Change |
+| --- | --- |
+| 8b721f2 | **Black and white only.** One black palette on every page, with white text and accents and no green anywhere: UI, particles, favicon, share image and theme colour. Light/dark scene switching is removed. The "ASIF" particle text and the letterbox intro are gone; the headline fades in with CSS. Particles are white. The sphere (AI data) and the can (Design) turn continuously, one full turn about every 18 seconds. The contact orb is now a thin white ring that pulses slowly. |
+| c7c962d | **Smooth dome drag.** Dragging, flicking and the arrow keys move a target, and the dome glides toward it every frame. After a flick it keeps turning and slows over about 2.5s. Measured frame by frame, the speed tapers to zero with no sudden stop. |
+| f9ff80f | **What I do.** The software, UI/UX and graphic design visuals are neutral monochrome illustrations drawn in code (see the note below). Dev Journey is removed: its repo has no screenshots and it isn't on the Play Store. The grey panel behind the AI tool logos is gone. |
+| 770bce8 (and the commit before it) | **Logos.** All logos are greyscale and scale up and brighten on hover or keyboard focus. |
+| 770bce8 | **No AI bragging.** The headline is now "I build the software and design the screens." "AI tools are part of my daily work" and similar lines are removed. So is the note that this portfolio was designed with Google Stitch. The tool lists stay. |
+| 770bce8 | **One contact area.** The footer, on every page, holds your new contact paragraph, the email and one list of links. Each social link and the email appear once per page. The separate Contact section, the footer's "Elsewhere" list and the mobile menu's social links are removed. |
+| final commit | **Frame rate and report.** A lighter dome (100 tiles, smaller tile images), a dimmer contact ring, and this report. |
+
+### Two choices to review
+
+1. **No internet pictures in What I do.** Real-world examples from the web would be other people's apps, interfaces and posters, sitting next to "I build complete web apps…" and links to your projects. That reads as your work. So I used your other option, neutral placeholders: code-drawn illustrations of an editor, a terminal, a wireframe, a design canvas and four abstract posters. Your real screenshots are still on every project page and in the Selected work menu. If you want pictures here, send images you have the rights to and that represent your own work, and I'll swap them in.
+2. **One AI line kept in the Design section.** I removed the "AI-assisted" label from all 54 pieces and the claim in What I do. One factual line stays: "The imagery is AI-generated; the composition, type and branding are mine." That keeps the posters from passing as fully hand-made. Delete it if you prefer; it's the only one left.
+
+### Measurements (local production build)
+
+| Check | Result | Target |
+| --- | --- | --- |
+| Lighthouse Performance (mobile, median of 6) | 83 (range 74 to 87) | at least 80: met |
+| Lighthouse Accessibility | 100 | at least 95: met |
+| Best Practices | 100 | |
+| CLS | 0.002 | |
+| TBT | 351 ms | |
+| LCP (simulated) | 3.6 s (range 3.0 to 3.9) | The real trace paints the intro text at 0.34 s; the simulated estimate varies a lot from run to run. |
+| First-load JS | 238.5 KB gzipped | |
+| Desktop FPS, scrolling the whole home page | 56.6 average; slowest 5% of frames 17 ms (about 58fps) | 60: not quite met on this laptop |
+| FPS at 4x CPU throttle | 37.8 to 38.3 | 45: not met on this laptop |
+| FPS by section | Hero 58, Skills 55, Work 59, Design 49, AI data 55, Experience 59, Contact 60 | |
+| Keyboard | 43 tab stops on the home page, all with a visible focus indicator; the dome works with the arrow keys | met |
+| `npm run build`, TypeScript, ESLint (no warnings) | pass | met |
+| Console errors | none | met |
+| Site QA suite | 134 of 134 checks pass, including each social link and the email appearing once per page | |
+
+FPS was measured on this laptop's Intel HD 520 (2016 integrated graphics) in a real GPU browser.
+
+- The Design section's 3D dome is the remaining cost. With the dome hidden, 4x throttle reaches about 43fps.
+- The test loop itself costs main-thread time under throttle. The plain `main` site couldn't even be measured at 4x for that reason, so treat the 4x numbers as pessimistic.
+- To guarantee 60fps on low-end laptops, the remaining option is the grid by default with the dome one click away.
+
 ## Preview
 
 - Branch preview (always the latest `cinematic` deploy):
@@ -252,6 +300,30 @@ The full list, one line each, is in `DECISIONS.md` and reproduced here:
 - prefers-contrast: more applies darker secondary text and stronger rules to the scene palettes too (paletteFor in src/lib/scene.ts), not only to the static tokens.
 - Flowing Menu links get an explicit focus ring: the component's outline-none class cancels its own focus outline in Tailwind 4.
 - The cursor label is re-checked on scroll, so it does not keep the label of an element that scrolled away.
+
+### Monochrome redesign (black and white)
+
+- One black palette for the whole site: page #0a0a0a, surface #141414, rules #262626, strong rules #8a8a8a, text #f5f5f5, secondary text #c4c4c4 and #a3a3a3, accent white. No green anywhere (UI, particles, favicon, social share image, theme colour).
+- The old token names (stone, ink, moss, mint, carbon) are kept with new values so every page turned black at once: "stone" is now the black page colour, "ink" the white text colour, moss and mint are white. A comment in globals.css explains this.
+- Light/dark scene switching is removed completely (scene director, fade layer, per-section light/dark markers). Every page, including project pages, the AI tools page and 404, is black.
+- Links that used to turn green on hover now underline (white on white would show no change). White buttons hover to light grey; pressed filter buttons are white with black text.
+- Content images stay in colour: your portrait, project screenshots and design pieces are the work itself, not interface colour.
+- Particles are white and grey (additive, 50% opacity). With reduced motion there is no stage and no poster (the old poster was a capture of the green ASIF formation).
+- The "ASIF" particle wordmark and the letterbox intro are gone. The hero headline fades and rises in with CSS only (0.9s), so it never waits for JavaScript; reduced motion shows it at once. On load the particles gather into the quiet field.
+- The sphere (AI data) and the can (Design) turn about their own vertical axis continuously, one full turn about every 18 seconds, including while they form.
+- The contact orb is now a thin white ring of particles that pulses slowly (about 7% in size) and drifts half way toward the cursor.
+- The progressive edge blur is limited to the home page: with every page black, it would otherwise blur the top of project pages at rest.
+- Dome drag: the pointer, momentum and arrow keys now move a target rotation, and the dome glides toward it every frame (exponential ease, about 110ms behind). After a flick it keeps turning and slows with time-based friction (about 2.5s to rest), so it never stops abruptly. Grabbing it mid-glide catches it where it is, without a jump.
+- What I do: the software, UI/UX and graphic design visuals are neutral monochrome illustrations drawn in code (an editor and a terminal; a page wireframe and a design canvas; four abstract posters), not pictures from the internet. Real-world examples found online would be other people's apps and designs placed next to "I build complete web apps…" and links to Asif's projects, which would present their work as his. The brief allowed neutral placeholders when good examples were not available; these are those placeholders. Asif's own screenshots remain on the project pages and in the Selected work menu.
+- Dev Journey is removed (with the "Also on GitHub" block it was the only item in): its repository has no screenshots (only the app logo and Flutter's default README), and it is not on the Play Store (the app id is still com.example.dev_journey; the Play listing returns 404).
+- The grey panel behind the AI tool logos in What I do is removed; the logos sit directly on the black page.
+- All brand logos (AI tools, platforms, contact icons) are shown in greyscale to keep the site black and white. On hover (the logo, its card or its link) and on keyboard focus they scale up 12% and brighten; with reduced motion they only brighten.
+- AI bragging removed: the headline is now "I build the software and design the screens." (no "use AI in both"); the hero stamp drops "AI"; "AI tools are part of my daily work" is gone from the intro; the AI tools page headline is "Tools for research, code, design and video."; the footer tagline "with AI in the workflow" is gone; Google Stitch's note "Designing this portfolio." is now "Designing web interfaces."; the UI/UX text names Figma only. The AI tool lists, the AI data projects and your own contact sentence ("works with AI tools every day") stay.
+- The "AI-assisted" label on all 54 gallery pieces and the AI sentence in What I do are removed. One factual line stays in the Design section ("The imagery is AI-generated; the composition, type and branding are mine."), so posters with generated imagery are not presented as fully hand-made. Delete that sentence if you prefer; it is the only one left.
+- Contact copy replaced with your text (no "final-year", no "in Sylhet").
+- One contact area: the footer, on every page, holds "Let's talk", the email, and one list (phone and WhatsApp, GitHub, LinkedIn, Instagram, Facebook, CV). The separate home Contact section, the footer's "Elsewhere" list and the mobile menu's social links are removed, so each social link and the email appear once per page. Header and hero "Contact" links go to #contact on the current page.
+- Dome lightened for frame rate: 20 segments (100 tiles, was 120) and 384px tile images (tiles show at about 150px; the opened piece still loads at 1080px). With the scene switching gone, this brought desktop scrolling to about 57fps average with the slowest 5% of frames at 17ms on the test laptop.
+- The contact ring is dimmed to 40% brightness when fully formed (every particle packed into one thin circle is otherwise glaring).
 
 ## Files changed against main
 

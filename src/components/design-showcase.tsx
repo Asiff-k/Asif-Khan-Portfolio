@@ -119,7 +119,7 @@ export function DesignShowcase({ pieces, grid }: { pieces: { src: string; title:
         >
           {mountDome && (
             <DomeGallery
-              images={pieces.map((p) => ({ src: optimized(p.src, 640), full: optimized(p.src, 1080), alt: p.title }))}
+              images={pieces.map((p) => ({ src: optimized(p.src, 384), full: optimized(p.src, 1080), alt: p.title }))}
               label="Design pieces on a 3D dome. Arrow keys turn it, Enter opens the piece in front, Escape closes it."
               fit={0.6}
               grayscale={false}
@@ -130,7 +130,7 @@ export function DesignShowcase({ pieces, grid }: { pieces: { src: string; title:
               openedImageHeight="min(80vh, 560px)"
               dragDampening={2}
               maxVerticalRotationDeg={5}
-              segments={24}
+              segments={20}
             />
           )}
         </div>
