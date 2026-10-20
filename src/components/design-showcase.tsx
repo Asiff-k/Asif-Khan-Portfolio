@@ -2,9 +2,9 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
-import { ScrollTrigger } from "@/lib/gsap";
+import { refreshWhenSettled, ScrollTrigger } from "@/lib/gsap";
+import { onIdle } from "@/lib/idle";
 import { useFinePointer, useIsNarrow, usePrefersReducedMotion } from "@/lib/use-media";
-import { DesignGallery, type GalleryEntry } from "./design-gallery";
 
 // Loaded only when the section comes near, so @use-gesture stays out of the first load.
 const DomeGallery = dynamic(() => import("./vendor/dome-gallery"), { ssr: false });
@@ -23,7 +23,7 @@ type View = "dome" | "grid";
  * (public/design/process/<name>-raw.jpg and <name>-final.jpg). None exist yet,
  * so the sliders are not rendered.
  */
-export function DesignShowcase({ entries, categories }: { entries: GalleryEntry[]; categories: readonly string[] }) {
+export function DesignShowcase({ pieces, grid }: { pieces: { src: string; title: string }[]; grid: React.ReactNode }) {
   const [choice, setChoice] = useState<View | null>(null);
   const [near, setNear] = useState(false);
   const slot = useRef<HTMLDivElement>(null);
@@ -39,6 +39,22 @@ export function DesignShowcase({ entries, categories }: { entries: GalleryEntry[
   const cssView = choice ?? (reduce ? "grid" : null);
   const slotClass = cssView === "dome" ? "" : cssView === "grid" ? "hidden" : "fm-only";
   const gridClass = cssView === "grid" ? "" : cssView === "dome" ? "hidden" : "fm-fallback";
+
+  // Where the dome is the default (desktop), mount it once the page has loaded
+  // and the browser is idle, before the visitor is likely to be scrolling:
+  // mounting adds the pin, and re-measuring scroll triggers mid-scroll would
+  // interrupt it. Elsewhere it mounts when the section comes near.
+  useEffect(() => {
+    if (!domeByDefault) return;
+    let cancel = () => {};
+    const go = () => (cancel = onIdle(() => setNear(true), 3000));
+    if (document.readyState === "complete") go();
+    else window.addEventListener("load", go, { once: true });
+    return () => {
+      window.removeEventListener("load", go);
+      cancel();
+    };
+  }, [domeByDefault]);
 
   useEffect(() => {
     const el = slot.current;
@@ -56,6 +72,26 @@ export function DesignShowcase({ entries, categories }: { entries: GalleryEntry[
     return () => io.disconnect();
   }, []);
 
+  // Its 3D tiles cost compositor time even off screen, so the dome is
+  // hidden (layout kept) whenever its slot is out of view.
+  useEffect(() => {
+    const el = slot.current;
+    if (!el || !mountDome) return;
+    const root = document.documentElement;
+    const io = new IntersectionObserver(([e]) => {
+      el.style.visibility = e.isIntersecting ? "" : "hidden";
+      // The edge blur re-blurs every moving tile behind it; off while the dome shows.
+      if (e.isIntersecting) root.dataset.dome = "";
+      else delete root.dataset.dome;
+    });
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      el.style.visibility = "";
+      delete root.dataset.dome;
+    };
+  }, [mountDome]);
+
   // Hold the dome in place for half a screen of scrolling (desktop only), then
   // re-measure every scroll trigger, since the page height has changed.
   useEffect(() => {
@@ -65,10 +101,10 @@ export function DesignShowcase({ entries, categories }: { entries: GalleryEntry[
       t = ScrollTrigger.create({ trigger: el, pin: true, start: "top 64px", end: "+=50%" });
       ScrollTrigger.sort();
     }
-    ScrollTrigger.refresh();
+    refreshWhenSettled();
     return () => {
       t?.kill();
-      ScrollTrigger.refresh();
+      refreshWhenSettled();
     };
   }, [pin, view]);
 
@@ -83,7 +119,7 @@ export function DesignShowcase({ entries, categories }: { entries: GalleryEntry[
         >
           {mountDome && (
             <DomeGallery
-              images={entries.map((e) => ({ src: optimized(e.src, 640), full: optimized(e.src, 1080), alt: e.title }))}
+              images={pieces.map((p) => ({ src: optimized(p.src, 640), full: optimized(p.src, 1080), alt: p.title }))}
               label="Design pieces on a 3D dome. Arrow keys turn it, Enter opens the piece in front, Escape closes it."
               fit={0.6}
               grayscale={false}
@@ -94,6 +130,7 @@ export function DesignShowcase({ entries, categories }: { entries: GalleryEntry[
               openedImageHeight="min(80vh, 560px)"
               dragDampening={2}
               maxVerticalRotationDeg={5}
+              segments={24}
             />
           )}
         </div>
@@ -113,7 +150,7 @@ export function DesignShowcase({ entries, categories }: { entries: GalleryEntry[
       </div>
 
       <div className={`${gridClass} mt-8`}>
-        <DesignGallery entries={entries} categories={categories} />
+        {grid}
       </div>
     </div>
   );

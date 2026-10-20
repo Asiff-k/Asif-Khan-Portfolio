@@ -32,6 +32,19 @@ export const palettes: Record<SceneName, Record<string, string | number>> = {
   },
 };
 
+// prefers-contrast: more. Secondary text and rules move toward full contrast
+// (the same values the site used before the house lights).
+const contrast: Record<SceneName, Record<string, string>> = {
+  light: { "--scene-fg-soft": "#2f312c", "--scene-fg-muted": "#2f312c", "--scene-line": "#121316" },
+  dark: { "--scene-fg-soft": "#d7d9d2", "--scene-fg-muted": "#d7d9d2", "--scene-line": "#a2a59f" },
+};
+
+/** The palette to apply for a scene, with the high-contrast values when asked for. */
+export function paletteFor(scene: SceneName) {
+  const more = typeof window !== "undefined" && window.matchMedia("(prefers-contrast: more)").matches;
+  return more ? { ...palettes[scene], ...contrast[scene] } : palettes[scene];
+}
+
 type Listener = (scene: SceneName) => void;
 const listeners = new Set<Listener>();
 let current: SceneName = "light";

@@ -78,3 +78,22 @@ One line each: what was chosen and why.
 - Project pages: a moss panel wipes up off the page in 0.6s, from work/[slug]/template.tsx with a CSS animation. It runs when a project page mounts (client navigation or load), never blocks the router, and is off with reduced motion.
 - Project screenshots sit in daisyUI browser frames (the bar shows the project name, not an invented URL) and phone frames, both square. The phone camera notch is left out: with square corners it reads as a bar covering the screenshot.
 - Full-page screenshot regions get data-lenis-prevent so the wheel scrolls inside them.
+
+## Performance and accessibility (P6)
+
+- House lights no longer tween the palette variables on <html>: measured on the test laptop (Intel HD 520), that restyles and repaints the whole page at about 100ms a frame, so every scene change stalled for 0.8s. The palette now switches once at the midpoint, and a fixed layer carries a continuous 0.8s opacity fade (incoming colour over the old background, then outgoing colour over the new one). At rest the layer is transparent and the page background is the real scene colour.
+- A scene trigger that fires for the scene already showing does nothing (the hero's trigger used to re-run a full fade on load).
+- The motion library (used by the lightbox gestures) is out of the first load: the lightbox loads on first use, prefetched when the pointer or focus reaches the thumbnails, and the mobile menu uses CSS transitions (the closed panel is visibility hidden, out of the tab order).
+- next/image is a client component, so every image hydrated. Page images and logos are now plain <img> elements from getImageProps (same srcset and sizes). The design grid's 54 thumbnails render on the server; one small client controller handles filters (data attribute plus CSS), the live count and the lightbox.
+- Blur placeholders only on the priority hero image; each one is an SVG blur filter to paint, and lazy images sit on the frame's surface colour.
+- Flowing Menu loads client-side only for mouse users at 768px and up. html.js (set by the inline head script) lets visitors without JavaScript see the plain project list and grid.
+- Reveal setup waits for an idle moment, reads all positions before writing any style, skips anything already on screen, and splits a heading into lines only as it reaches the bottom edge.
+- On touch devices the particle stage loads on the first scroll or touch (three.js evaluation costs a phone several hundred milliseconds of main thread during load). Mouse devices still load it when the browser is idle.
+- JetBrains Mono (labels only) is not preloaded, so the hero text fonts get the early bandwidth.
+- Dome: 24 segments (120 tiles, was 175), hidden with visibility whenever off screen, its masked backdrop-blur ring removed, and the page's edge blur switched off while the dome is on screen. Together these took the sections around it from about 25-30fps to 42-59fps on the test laptop.
+- The dome mounts once the page is idle after load (desktop), and ScrollTrigger refreshes wait until scrolling stops: a refresh restores the scroll position from when it started, which cut anchor jumps short.
+- Particle count was not lowered: hiding the canvas entirely changed scroll FPS by under 1fps, normal and at 4x CPU throttle, so particles are not the bottleneck. There is no solid can to drop.
+- Gallery and AI tools filter counts no longer use 70% opacity (3.8:1 contrast on the dark surface).
+- prefers-contrast: more applies darker secondary text and stronger rules to the scene palettes too (paletteFor in src/lib/scene.ts), not only to the static tokens.
+- Flowing Menu links get an explicit focus ring: the component's outline-none class cancels its own focus outline in Tailwind 4.
+- The cursor label is re-checked on scroll, so it does not keep the label of an element that scrolled away.

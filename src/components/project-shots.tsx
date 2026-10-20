@@ -1,8 +1,14 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
-import { Lightbox, type LightboxItem } from "./lightbox";
+import type { LightboxItem } from "./lightbox";
+
+// The lightbox (and the motion library behind its gestures) loads on first use,
+// prefetched when the pointer or keyboard focus reaches the thumbnails.
+const Lightbox = dynamic(() => import("./lightbox").then((m) => m.Lightbox), { ssr: false });
+const prefetchLightbox = () => void import("./lightbox");
 
 export type ShotEntry = LightboxItem & { tall?: boolean; mobile?: boolean };
 
@@ -18,7 +24,12 @@ export function ProjectShots({ shots, title }: { shots: ShotEntry[]; title: stri
 
   return (
     <>
-      <ul className="grid gap-x-6 gap-y-10 md:grid-cols-2">
+      <ul
+        className="grid gap-x-6 gap-y-10 md:grid-cols-2"
+        onPointerEnter={prefetchLightbox}
+        onTouchStart={prefetchLightbox}
+        onFocus={prefetchLightbox}
+      >
         {shots.map((shot) => {
           if (shot.tall) {
             return (

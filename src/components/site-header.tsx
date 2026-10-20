@@ -2,17 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { nav, site, socials } from "@/content/site";
-import { springDefault } from "@/lib/motion";
 import { CloseIcon, MenuIcon } from "./icons";
 import { RollText } from "./roll-text";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  const reduce = useReducedMotion();
   const buttonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -110,48 +107,42 @@ export function SiteHeader() {
         </button>
       </div>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            key="menu"
-            id="mobile-menu"
-            data-lenis-prevent
-            ref={panelRef}
-            className="fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto border-t border-line bg-bg lg:hidden"
-            initial={reduce ? { opacity: 0 } : { opacity: 0, y: -12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={reduce ? { opacity: 0 } : { opacity: 0, y: -12 }}
-            transition={reduce ? { duration: 0.15 } : springDefault}
-          >
-            <nav aria-label="Main" className="page-x py-6">
-              <ul>
-                {[...nav, { label: "Contact", href: "/#contact" }].map((item, i) => (
-                  <li key={item.href} className="border-b border-line">
-                    <Link
-                      href={item.href}
-                      onClick={() => setOpen(false)}
-                      aria-current={pathname === item.href ? "page" : undefined}
-                      className="flex items-baseline justify-between py-4 aria-[current=page]:text-accent"
-                    >
-                      <span className="t-title">{item.label}</span>
-                      <span className="t-stamp text-fg-muted">{String(i + 1).padStart(2, "0")}</span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-              <ul className="mt-8 grid grid-cols-2 gap-3">
-                {socials.map((s) => (
-                  <li key={s.label}>
-                    <a href={s.href} target="_blank" rel="noopener noreferrer" className="t-label text-fg-soft hover:text-accent">
-                      {s.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Always rendered; CSS (.menu-panel) fades and slides it, and visibility
+          hidden keeps the closed panel out of the tab order and accessibility tree. */}
+      <div
+        id="mobile-menu"
+        data-lenis-prevent
+        ref={panelRef}
+        data-open={open ? "" : undefined}
+        className="menu-panel fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto border-t border-line bg-bg lg:hidden"
+      >
+        <nav aria-label="Main" className="page-x py-6">
+          <ul>
+            {[...nav, { label: "Contact", href: "/#contact" }].map((item, i) => (
+              <li key={item.href} className="border-b border-line">
+                <Link
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  aria-current={pathname === item.href ? "page" : undefined}
+                  className="flex items-baseline justify-between py-4 aria-[current=page]:text-accent"
+                >
+                  <span className="t-title">{item.label}</span>
+                  <span className="t-stamp text-fg-muted">{String(i + 1).padStart(2, "0")}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <ul className="mt-8 grid grid-cols-2 gap-3">
+            {socials.map((s) => (
+              <li key={s.label}>
+                <a href={s.href} target="_blank" rel="noopener noreferrer" className="t-label text-fg-soft hover:text-accent">
+                  {s.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
     </header>
   );
 }

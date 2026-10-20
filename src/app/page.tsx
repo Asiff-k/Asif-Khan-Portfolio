@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { GalleryEntry } from "@/components/design-gallery";
+import { DesignGallery, type GalleryEntry } from "@/components/design-gallery";
 import { DesignShowcase } from "@/components/design-showcase";
 import { ArrowDown, ArrowRight, ArrowUpRight, DownloadIcon } from "@/components/icons";
 import { PageMotion } from "@/components/cinema/page-motion";
@@ -8,7 +8,7 @@ import { ToolLoop } from "@/components/cinema/tool-loop";
 import { ContactIcon, LogoMark } from "@/components/logo-mark";
 import { MediaImage } from "@/components/media-image";
 import { SectionHead } from "@/components/section-head";
-import FlowingMenu from "@/components/vendor/flowing-menu";
+import { WorkMenu } from "@/components/work-menu";
 import { aiDataWork, education, jobs, languages, toolGroups } from "@/content/experience";
 import { gallery, galleryCategories } from "@/content/gallery";
 import type { LogoKey } from "@/content/logos.generated";
@@ -241,27 +241,13 @@ export default function Home() {
         </SectionHead>
         {/* Mouse and wide screens: Flowing Menu. Touch and narrow screens: the list below. */}
         <div className="fm-only fm-work font-display" data-cursor="View" style={{ height: `${projects.length * 7.5}rem` }}>
-          <FlowingMenu
+          <WorkMenu
             items={projects.map((p) => ({
               text: p.title,
               link: `/work/${p.slug}`,
               image: `/_next/image?url=${encodeURIComponent(media[p.cover].src)}&w=640&q=75`,
               meta: [p.kind, p.year].filter(Boolean).join(" · "),
             }))}
-            ariaLabel="Selected work"
-            speed={50}
-            bandRadius={0}
-            align="left"
-            showIndex
-            showArrow
-            dimInactive
-            imageShape="rounded"
-            intro={false}
-            bgColor="transparent"
-            textColor="var(--scene-fg)"
-            marqueeBgColor="#3e6b5c"
-            marqueeTextColor="#f7f6f2"
-            borderColor="var(--scene-line)"
           />
         </div>
         <ol className="fm-fallback">
@@ -331,7 +317,10 @@ export default function Home() {
           it larger.
         </SectionHead>
         <div className="mt-8">
-          <DesignShowcase entries={galleryEntries} categories={galleryCategories} />
+          <DesignShowcase
+            pieces={galleryEntries.map((e) => ({ src: e.src, title: e.title }))}
+            grid={<DesignGallery entries={galleryEntries} categories={galleryCategories} />}
+          />
         </div>
       </section>
 

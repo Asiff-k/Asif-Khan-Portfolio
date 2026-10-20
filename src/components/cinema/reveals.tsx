@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { ease, gsap, ScrollTrigger, SplitText } from "@/lib/gsap";
+import { onIdle } from "@/lib/idle";
 import { usePrefersReducedMotion } from "@/lib/use-media";
 
 /**
@@ -13,6 +14,11 @@ import { usePrefersReducedMotion } from "@/lib/use-media";
  * - [data-reveal="item"]: masked rise for cards and timeline entries.
  * - [data-draw]: an SVG line drawn by scroll (stroke-dashoffset scrub).
  * Content is visible without JavaScript; nothing runs for reduced motion.
+ *
+ * Setup waits for an idle moment after hydration, reads every position in one
+ * pass before writing any style (no forced layouts in between), leaves alone
+ * whatever is already on screen, and splits a heading into lines only when it
+ * is about to scroll in.
  */
 export function Reveals() {
   const pathname = usePathname();
@@ -22,96 +28,121 @@ export function Reveals() {
     if (reduce) return;
     const cleanups: Array<() => void> = [];
 
-    document.querySelectorAll<HTMLElement>('[data-reveal="heading"]').forEach((el) => {
-      const split = SplitText.create(el, { type: "lines", mask: "lines" });
-      gsap.set(split.lines, { yPercent: 110 });
-      const t = ScrollTrigger.create({
-        trigger: el,
-        start: "top 88%",
-        once: true,
-        onEnter: () =>
-          gsap.to(split.lines, {
-            yPercent: 0,
-            duration: 1.2,
-            stagger: 0.08,
-            ease: ease.enter,
-            onComplete: () => split.revert(),
-          }),
-      });
-      cleanups.push(() => {
-        t.kill();
-        split.revert();
-      });
+    const cancel = onIdle(() => {
+      const fold = window.innerHeight;
+      const below = (el: Element) => el.getBoundingClientRect().top > fold;
+
+      // Read pass.
+      const headings = [...document.querySelectorAll<HTMLElement>('[data-reveal="heading"]')].filter(below);
+      const images = [...document.querySelectorAll<HTMLElement>('[data-reveal="image"]')].filter(below);
+      const groups = [...document.querySelectorAll<HTMLElement>("[data-reveal-group]")]
+        .map((group) => ({ group, items: [...group.querySelectorAll<HTMLElement>('[data-reveal="item"]')] }))
+        .filter((g) => g.items.length && below(g.group));
+      const paths = [...document.querySelectorAll<SVGPathElement>("[data-draw]")];
+
+      // Write pass: initial states.
+      for (const el of images) {
+        gsap.set(el, { clipPath: "inset(100% 0% 0% 0%)" });
+        const img = el.querySelector("img");
+        if (img) gsap.set(img, { scale: 1.12 });
+      }
+      for (const { items } of groups) gsap.set(items, { yPercent: 18, opacity: 0, clipPath: "inset(0% 0% 100% 0%)" });
+      for (const path of paths) gsap.set(path, { strokeDasharray: 1, strokeDashoffset: 1 });
+
+      // Triggers.
+      for (const el of headings) {
+        let split: SplitText | null = null;
+        const t = ScrollTrigger.create({
+          trigger: el,
+          // Split as the heading's top reaches the bottom edge, while it is still out of view.
+          start: "top bottom",
+          once: true,
+          onEnter: () => {
+            split = SplitText.create(el, { type: "lines", mask: "lines" });
+            gsap.fromTo(
+              split.lines,
+              { yPercent: 110 },
+              {
+                yPercent: 0,
+                duration: 1.2,
+                stagger: 0.08,
+                ease: ease.enter,
+                delay: 0.1,
+                onComplete: () => split?.revert(),
+              },
+            );
+          },
+        });
+        cleanups.push(() => {
+          t.kill();
+          split?.revert();
+        });
+      }
+
+      for (const el of images) {
+        const img = el.querySelector("img");
+        const t = ScrollTrigger.create({
+          trigger: el,
+          start: "top 90%",
+          once: true,
+          onEnter: () => {
+            gsap.to(el, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.3, ease: ease.enterSoft });
+            if (img) gsap.to(img, { scale: 1, duration: 1.4, ease: ease.enter });
+          },
+        });
+        cleanups.push(() => {
+          t.kill();
+          gsap.set(el, { clearProps: "clipPath" });
+          if (img) gsap.set(img, { clearProps: "scale" });
+        });
+      }
+
+      for (const { group, items } of groups) {
+        const t = ScrollTrigger.create({
+          trigger: group,
+          start: "top 85%",
+          once: true,
+          onEnter: () =>
+            gsap.to(items, {
+              yPercent: 0,
+              opacity: 1,
+              clipPath: "inset(0% 0% 0% 0%)",
+              duration: 1.1,
+              stagger: 0.09,
+              ease: ease.enter,
+              // Drop the finished mask so tilted cards are not clipped at their edges.
+              onComplete: () => gsap.set(items, { clearProps: "clipPath" }),
+            }),
+        });
+        cleanups.push(() => {
+          t.kill();
+          gsap.set(items, { clearProps: "transform,opacity,clipPath" });
+        });
+      }
+
+      for (const path of paths) {
+        const tween = gsap.to(path, {
+          strokeDashoffset: 0,
+          ease: ease.scrub,
+          scrollTrigger: {
+            trigger: path.closest("[data-draw-root]") ?? path,
+            start: "top 75%",
+            end: "bottom 60%",
+            scrub: true,
+          },
+        });
+        cleanups.push(() => {
+          tween.scrollTrigger?.kill();
+          tween.kill();
+          gsap.set(path, { clearProps: "strokeDasharray,strokeDashoffset" });
+        });
+      }
     });
 
-    document.querySelectorAll<HTMLElement>('[data-reveal="image"]').forEach((el) => {
-      const img = el.querySelector("img");
-      gsap.set(el, { clipPath: "inset(100% 0% 0% 0%)" });
-      if (img) gsap.set(img, { scale: 1.12 });
-      const t = ScrollTrigger.create({
-        trigger: el,
-        start: "top 90%",
-        once: true,
-        onEnter: () => {
-          gsap.to(el, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.3, ease: ease.enterSoft });
-          if (img) gsap.to(img, { scale: 1, duration: 1.4, ease: ease.enter });
-        },
-      });
-      cleanups.push(() => {
-        t.kill();
-        gsap.set(el, { clearProps: "clipPath" });
-        if (img) gsap.set(img, { clearProps: "scale" });
-      });
-    });
-
-    document.querySelectorAll<HTMLElement>('[data-reveal-group]').forEach((group) => {
-      const items = group.querySelectorAll<HTMLElement>('[data-reveal="item"]');
-      if (!items.length) return;
-      gsap.set(items, { yPercent: 18, opacity: 0, clipPath: "inset(0% 0% 100% 0%)" });
-      const t = ScrollTrigger.create({
-        trigger: group,
-        start: "top 85%",
-        once: true,
-        onEnter: () =>
-          gsap.to(items, {
-            yPercent: 0,
-            opacity: 1,
-            clipPath: "inset(0% 0% 0% 0%)",
-            duration: 1.1,
-            stagger: 0.09,
-            ease: ease.enter,
-            // Drop the finished mask so tilted cards are not clipped at their edges.
-            onComplete: () => gsap.set(items, { clearProps: "clipPath" }),
-          }),
-      });
-      cleanups.push(() => {
-        t.kill();
-        gsap.set(items, { clearProps: "transform,opacity,clipPath" });
-      });
-    });
-
-    // [data-draw]: an SVG stroke (pathLength 1) that draws as its section scrolls by.
-    document.querySelectorAll<SVGPathElement>("[data-draw]").forEach((path) => {
-      gsap.set(path, { strokeDasharray: 1, strokeDashoffset: 1 });
-      const tween = gsap.to(path, {
-        strokeDashoffset: 0,
-        ease: ease.scrub,
-        scrollTrigger: {
-          trigger: path.closest("[data-draw-root]") ?? path,
-          start: "top 75%",
-          end: "bottom 60%",
-          scrub: true,
-        },
-      });
-      cleanups.push(() => {
-        tween.scrollTrigger?.kill();
-        tween.kill();
-        gsap.set(path, { clearProps: "strokeDasharray,strokeDashoffset" });
-      });
-    });
-
-    ScrollTrigger.refresh();
-    return () => cleanups.forEach((c) => c());
+    return () => {
+      cancel();
+      cleanups.forEach((c) => c());
+    };
   }, [pathname, reduce]);
 
   return null;

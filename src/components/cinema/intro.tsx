@@ -6,11 +6,13 @@ import { gsap, SplitText } from "@/lib/gsap";
 import { stage } from "./stage-controller";
 
 /**
- * Decides before first paint whether the letterbox intro plays: home page,
+ * Marks the page as running JavaScript (html.js, used to swap client-only
+ * views in without leaving no-JS visitors an empty box), and decides before
+ * first paint whether the letterbox intro plays: home page,
  * first visit this session, wide screen, motion allowed. Runs as an inline
  * script so the headline is never hidden when JavaScript is off.
  */
-export const introScript = `try{var d=document.documentElement;if(location.pathname==="/"&&!sessionStorage.getItem("intro-seen")&&matchMedia("(min-width: 768px)").matches&&!matchMedia("(prefers-reduced-motion: reduce)").matches){d.classList.add("intro")}}catch(e){}`;
+export const introScript = `try{var d=document.documentElement;d.classList.add("js");if(location.pathname==="/"&&!sessionStorage.getItem("intro-seen")&&matchMedia("(min-width: 768px)").matches&&!matchMedia("(prefers-reduced-motion: reduce)").matches){d.classList.add("intro")}}catch(e){}`;
 
 /** Letterbox bars retract, then the hero headline rises line by line (at most 2s). */
 export function HeroIntro() {

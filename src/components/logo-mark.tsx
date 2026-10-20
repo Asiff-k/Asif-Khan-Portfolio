@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { getImageProps } from "next/image";
 import { logos, type LogoKey } from "@/content/logos.generated";
 import { DownloadIcon, PhoneIcon } from "./icons";
 
@@ -27,16 +27,19 @@ export function LogoMark({
   }
   const asset = logos[logo];
   const appIcon = asset.kind === "App Store icon";
+  // Plain <img> (no hydration); same output as an unoptimized next/image.
+  const { props } = getImageProps({
+    src: asset.src,
+    alt: "",
+    width: 160,
+    height: 160,
+    unoptimized: true,
+    className: appIcon ? "size-full object-cover" : "size-[86%] object-contain",
+  });
   return (
     <span style={{ width: px, height: px }} className={`flex shrink-0 items-center justify-center ${className}`}>
-      <Image
-        src={asset.src}
-        alt=""
-        width={160}
-        height={160}
-        unoptimized
-        className={appIcon ? "size-full object-cover" : "size-[86%] object-contain"}
-      />
+      {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
+      <img {...props} />
     </span>
   );
 }

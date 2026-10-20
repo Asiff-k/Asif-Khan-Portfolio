@@ -24,18 +24,11 @@ export function Cursor() {
     const x = gsap.quickTo(el, "x", { duration: 0.35, ease: "power3.out" });
     const y = gsap.quickTo(el, "y", { duration: 0.35, ease: "power3.out" });
     let first = true;
+    const last = { x: -1, y: -1 };
+    let frame = 0;
 
-    const move = (e: PointerEvent) => {
-      if (e.pointerType !== "mouse") return;
-      if (first) {
-        gsap.set(el, { x: e.clientX, y: e.clientY });
-        first = false;
-      }
-      x(e.clientX);
-      y(e.clientY);
-      el.dataset.visible = "";
-      const target = (e.target as Element | null)?.closest?.("[data-cursor]");
-      const text = target?.getAttribute("data-cursor") ?? "";
+    const setLabel = (target: Element | null) => {
+      const text = target?.closest?.("[data-cursor]")?.getAttribute("data-cursor") ?? "";
       if (text) {
         el.dataset.label = text;
         if (label.current) label.current.textContent = text;
@@ -43,13 +36,37 @@ export function Cursor() {
         delete el.dataset.label;
       }
     };
+    const move = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse") return;
+      if (first) {
+        gsap.set(el, { x: e.clientX, y: e.clientY });
+        first = false;
+      }
+      last.x = e.clientX;
+      last.y = e.clientY;
+      x(e.clientX);
+      y(e.clientY);
+      el.dataset.visible = "";
+      setLabel(e.target as Element | null);
+    };
+    // Scrolling moves the page under a still mouse: re-check what is under it.
+    const scroll = () => {
+      if (frame || last.x < 0) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        setLabel(document.elementFromPoint(last.x, last.y));
+      });
+    };
     const hide = () => delete el.dataset.visible;
 
     window.addEventListener("pointermove", move, { passive: true });
+    window.addEventListener("scroll", scroll, { passive: true });
     document.documentElement.addEventListener("pointerleave", hide);
     window.addEventListener("blur", hide);
     return () => {
       window.removeEventListener("pointermove", move);
+      window.removeEventListener("scroll", scroll);
+      cancelAnimationFrame(frame);
       document.documentElement.removeEventListener("pointerleave", hide);
       window.removeEventListener("blur", hide);
     };

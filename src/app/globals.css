@@ -82,6 +82,7 @@
     --scene-dark: 1;
   }
 
+  /* The page background is the scene colour; .scene-backdrop carries the fade between scenes. */
   html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
@@ -93,7 +94,6 @@
     scroll-behavior: auto;
   }
 
-  /* The body is the single fixed backdrop the house lights control. */
   body {
     background: var(--scene-bg);
     color: var(--scene-fg);
@@ -248,11 +248,21 @@
   }
 }
 
+/* High contrast: before any script runs; the house lights apply the same
+   values (paletteFor in src/lib/scene.ts). */
 @media (prefers-contrast: more) {
   :root {
     --color-rule: #121316;
     --color-muted: #2f312c;
     --color-carbon-muted: #d7d9d2;
+    --scene-fg-soft: #2f312c;
+    --scene-fg-muted: #2f312c;
+    --scene-line: #121316;
+  }
+  :root:has(main[data-scenes]) {
+    --scene-fg-soft: #d7d9d2;
+    --scene-fg-muted: #d7d9d2;
+    --scene-line: #a2a59f;
   }
 }
 
@@ -281,14 +291,23 @@
   100% { transform: translate(0, 0); }
 }
 
-/* Behind the content (z 0, after the stage in DOM order): darkens the backdrop, never the text. */
+/* House lights fade layer (see SceneDirector): transparent at rest, opacity-only while scenes change. */
+.scene-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+
+/* Behind the content (z 0, after the stage in DOM order): darkens the backdrop, never the text.
+   Fades with the backdrop. */
 .cinema-vignette {
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
   opacity: var(--scene-dark);
-  visibility: hidden;
   background: radial-gradient(ellipse at 50% 45%, transparent 60%, rgb(18 19 22 / 0.5) 100%);
 }
 
@@ -315,13 +334,13 @@
 .cinema-edge--bottom span:nth-child(2) { mask-image: linear-gradient(to top, #000 0%, #000 20%, transparent 65%); }
 .cinema-edge--bottom span:nth-child(3) { mask-image: linear-gradient(to top, #000 0%, transparent 35%); }
 
-html[data-scene="dark"] .cinema-vignette,
 html[data-scene="dark"] .cinema-edge {
   visibility: visible;
 }
 
-/* Keep the open mobile menu sharp. */
-html[data-menu="open"] .cinema-edge {
+/* Keep the open mobile menu sharp; skip the blur over the moving 3D dome. */
+html[data-menu="open"] .cinema-edge,
+html[data-dome] .cinema-edge {
   display: none;
 }
 
@@ -338,14 +357,44 @@ html[data-menu="open"] .cinema-edge {
   .cinema-grain { animation: none; }
 }
 
-/* ---------- Work: Flowing Menu (mouse, 768px and up) or plain list ---------- */
+/* ---------- Mouse at 768px and up: Flowing Menu and dome; otherwise the plain list and grid ---------- */
+/* html.js is set by the inline head script; without JavaScript the plain views always show. */
 .fm-only { display: none; }
 @media (min-width: 768px) and (hover: hover) and (pointer: fine) {
-  .fm-only { display: block; }
-  .fm-fallback { display: none; }
+  .js .fm-only { display: block; }
+  .js .fm-fallback { display: none; }
 }
 /* The site is sharp everywhere: square marquee thumbnails. */
 .fm-work span[style*="background-image"] { border-radius: 0; }
+/* Keyboard focus: the moss band slides in, plus a stone ring inside it (the
+   component's own focus outline is cancelled by its outline-none class). */
+.fm-work a:focus-visible {
+  outline: 2px solid #f7f6f2;
+  outline-offset: -6px;
+}
+
+/* ---------- Mobile menu panel ---------- */
+.menu-panel {
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-12px);
+  transition:
+    opacity 0.2s linear,
+    transform 0.35s cubic-bezier(0.2, 0.9, 0.2, 1),
+    visibility 0s linear 0.35s;
+}
+.menu-panel[data-open] {
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.2s linear,
+    transform 0.35s cubic-bezier(0.2, 0.9, 0.2, 1),
+    visibility 0s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .menu-panel { transform: none; }
+}
 
 /* ---------- Nav text roll ---------- */
 .roll-letters { display: inline-flex; }

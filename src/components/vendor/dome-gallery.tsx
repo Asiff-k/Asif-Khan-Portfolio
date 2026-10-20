@@ -11,7 +11,9 @@
  * particle stage shows through; tiles are not tab stops (pieces repeat
  * around the dome): the dome is one focusable group where arrow keys turn it,
  * Enter or Space opens the piece in front and Escape closes it, and the grid
- * stays the screen reader view of the same pieces; tile images load lazily; an opened piece is shown whole (contain,
+ * stays the screen reader view of the same pieces; the masked backdrop-blur
+ * ring around the edge is removed (a full-area backdrop blur over 3D tiles
+ * cost about 8fps on an integrated GPU; the colour fade at the edge stays); tile images load lazily; an opened piece is shown whole (contain,
  * no shadow) instead of cropped.
  */
 
@@ -905,15 +907,6 @@ export default function DomeGallery({
             className="absolute inset-0 m-auto z-[3] pointer-events-none"
             style={{
               backgroundImage: `radial-gradient(rgba(235, 235, 235, 0) 65%, var(--overlay-blur-color, ${overlayBlurColor}) 100%)`
-            }}
-          />
-
-          <div
-            className="absolute inset-0 m-auto z-[3] pointer-events-none"
-            style={{
-              WebkitMaskImage: `radial-gradient(rgba(235, 235, 235, 0) 70%, var(--overlay-blur-color, ${overlayBlurColor}) 90%)`,
-              maskImage: `radial-gradient(rgba(235, 235, 235, 0) 70%, var(--overlay-blur-color, ${overlayBlurColor}) 90%)`,
-              backdropFilter: 'blur(3px)'
             }}
           />
 

@@ -111,7 +111,7 @@ export function ToolDirectory({ tools, categories }: { tools: ToolEntry[]; categ
                 onClick={() => setCategory(c)}
                 className="t-label pressable shrink-0 border border-rule bg-stone-deep px-3 py-2 text-moss hover:border-moss aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-mint"
               >
-                {c} <span className="opacity-70">{counts.get(c) ?? 0}</span>
+                {c} <span className="tabular-nums">{counts.get(c) ?? 0}</span>
               </button>
             ))}
           </div>

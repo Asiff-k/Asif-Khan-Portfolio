@@ -26,10 +26,13 @@ const inter = Inter({
   display: "swap",
 });
 
+// Labels only (small stamps): not preloaded, so it does not compete with the
+// hero text fonts for early bandwidth. It still loads, with swap.
 const jetbrains = JetBrains_Mono({
   variable: "--font-jetbrains",
   subsets: ["latin"],
   display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -70,6 +73,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <SiteHeader />
         {children}
         <SiteFooter />
+        {/* House lights fade layer: above the page background, below the particle stage. */}
+        <div aria-hidden className="scene-backdrop" />
         <StageLoader />
         <Overlays />
         <CinemaRoot />
