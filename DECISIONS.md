@@ -4,8 +4,8 @@ One line each: what was chosen and why.
 
 ## Setup
 - Packages pinned to releases at least two weeks old (three 0.186.1, @react-three/fiber 9.8.1, @react-three/drei 10.7.9, gsap 3.15.0, lenis 1.3.26) for stability.
-- The body is the single fixed backdrop: its background follows `--scene-bg`, so no extra full-screen layer is needed.
-- House lights are page-wide CSS variables (`--scene-*`) tweened by GSAP, so backdrop, text and rules always change together and text never sits on the wrong background.
+- The body is the single fixed backdrop: its background follows `--scene-bg`, so no extra full-screen layer is needed. (Superseded in P6: a transparent fade layer now carries the transition; see the P6 section.)
+- House lights are page-wide CSS variables (`--scene-*`), so backdrop, text and rules always change together and text never sits on the wrong background. (P6: the variables now switch once mid-fade instead of being tweened every frame.)
 - Scene-aware Tailwind colours (`bg`, `fg`, `fg-soft`, `fg-muted`, `line`, `line-strong`, `surface`, `accent`, `on-fg`) replace fixed tokens on the home page, header and footer; other pages keep the light palette and look unchanged.
 - The home page renders dark before any script runs (`:root:has(main[data-scenes])`), matching the dark hero scene and avoiding a light-to-dark flash.
 - Every home section now has the same vertical padding so each scene change happens with the section clearly in view.
@@ -44,7 +44,7 @@ One line each: what was chosen and why.
 
 ## Work (Flowing Menu)
 
-- Flowing Menu shows only with a mouse at 768px and up (CSS media query, no JS switch, so no layout shift). Touch and narrow screens keep the plain list: tap goes straight to the project page, with a one-line summary.
+- Flowing Menu shows only with a mouse at 768px and up (CSS media query reserves its space, so no layout shift; P6 made the menu itself client-only). Touch and narrow screens keep the plain list: tap goes straight to the project page, with a one-line summary.
 - Its background is transparent and its text and divider colours follow the scene variables, so the particle field shows through and the house lights still apply. The marquee band is moss with stone text.
 - Thumbnails in the band use the Next image optimizer at 640px wide, not the full-size covers.
 - The component's own load-in sweep (intro) is off: it runs on mount, before the section is on screen. The heading reveal covers the entrance.
@@ -58,10 +58,10 @@ One line each: what was chosen and why.
 - Before/after diff sliders skipped: there are no pairs in public/design/process. TODO(asset) in src/components/design-showcase.tsx. daisyUI is set up (include: mockup, diff; prefix d-; themes false); those are the file names in daisyUI 5.7.47's components folder, and its classes ship only when used.
 - Dome Gallery: tile and opened radius 0 (site is sharp everywhere), grayscale off, 640px optimized thumbnails, 1080px for the opened piece. An opened piece is shown whole (object-fit contain, no drop shadow) instead of cropped to the portrait frame.
 - The dome's backdrop is transparent so the CAN particles stay visible around it; its edge fades still blend into carbon.
-- The dome is one tab stop: arrow keys turn it, Enter or Space opens the piece in front, Escape closes. Its 175 tiles repeat the 54 pieces, so they are not individual tab stops; screen readers get the grid, which lists each piece once with filters.
+- The dome is one tab stop: arrow keys turn it, Enter or Space opens the piece in front, Escape closes. Its tiles (120 since P6) repeat the 54 pieces, so they are not individual tab stops; screen readers get the grid, which lists each piece once with filters.
 - Dome by default with a mouse at 768px and up; grid by default on touch, under 768px and with reduced motion. The button under the dome switches views on every screen size.
 - The dome is full-bleed, viewport-high and pinned for half a screen of scrolling on desktop only (pinning a drag surface on touch would trap the page).
-- The dome component (and @use-gesture) loads only when the section is within 800px of the viewport.
+- The dome component (and @use-gesture) is not in the first load. (P6: on desktop it mounts once the page is idle after load; elsewhere when the section is within 800px.)
 
 ## AI data, Experience, Contact, footer, nav, cursor, project pages
 
