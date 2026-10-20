@@ -110,3 +110,4 @@ One line each: what was chosen and why.
 - The sphere (AI data) and the can (Design) turn about their own vertical axis continuously, one full turn about every 18 seconds, including while they form.
 - The contact orb is now a thin white ring of particles that pulses slowly (about 7% in size) and drifts half way toward the cursor.
 - The progressive edge blur is limited to the home page: with every page black, it would otherwise blur the top of project pages at rest.
+- Dome drag: the pointer, momentum and arrow keys now move a target rotation, and the dome glides toward it every frame (exponential ease, about 110ms behind). After a flick it keeps turning and slows with time-based friction (about 2.5s to rest), so it never stops abruptly. Grabbing it mid-glide catches it where it is, without a jump.

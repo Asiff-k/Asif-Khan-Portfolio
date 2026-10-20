@@ -14,7 +14,9 @@
  * stays the screen reader view of the same pieces; the masked backdrop-blur
  * ring around the edge is removed (a full-area backdrop blur over 3D tiles
  * cost about 8fps on an integrated GPU; the colour fade at the edge stays); tile images load lazily; an opened piece is shown whole (contain,
- * no shadow) instead of cropped.
+ * no shadow) instead of cropped; dragging, momentum and arrow keys move a
+ * target the dome glides toward (exponential ease, time-based friction), so
+ * motion never stops abruptly.
  */
 
 import { useEffect, useMemo, useRef, useCallback } from 'react';
@@ -288,6 +290,45 @@ export default function DomeGallery({
     applyTransform(rotationRef.current.x, rotationRef.current.y);
   }, []);
 
+  // Smoothing (site change): dragging, momentum and the arrow keys move a
+  // target rotation, and the dome glides toward it every frame with an
+  // exponential ease (about 110ms behind), so there are no hard stops.
+  const targetRef = useRef({ x: 0, y: 0 });
+  const glideRAF = useRef<number | null>(null);
+  const stopGlide = () => {
+    if (glideRAF.current) cancelAnimationFrame(glideRAF.current);
+    glideRAF.current = null;
+  };
+  const glide = () => {
+    if (glideRAF.current) return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let last = performance.now();
+    const step = () => {
+      const now = performance.now();
+      const dt = Math.min(0.05, Math.max(0, now - last) / 1000);
+      last = now;
+      const k = reduced ? 1 : 1 - Math.exp(-dt / 0.11);
+      const cur = rotationRef.current;
+      const tg = targetRef.current;
+      const nx = cur.x + (tg.x - cur.x) * k;
+      const ny = cur.y + (tg.y - cur.y) * k;
+      if (Math.abs(tg.x - nx) < 0.002 && Math.abs(tg.y - ny) < 0.002) {
+        rotationRef.current = { ...tg };
+        applyTransform(tg.x, tg.y);
+        glideRAF.current = null;
+        return;
+      }
+      rotationRef.current = { x: nx, y: ny };
+      applyTransform(nx, ny);
+      glideRAF.current = requestAnimationFrame(step);
+    };
+    glideRAF.current = requestAnimationFrame(step);
+  };
+  const setTarget = (x: number, y: number) => {
+    targetRef.current = { x: clamp(x, -maxVerticalRotationDeg, maxVerticalRotationDeg), y };
+    glide();
+  };
+
   const stopInertia = useCallback(() => {
     if (inertiaRAF.current) {
       cancelAnimationFrame(inertiaRAF.current);
@@ -295,38 +336,31 @@ export default function DomeGallery({
     }
   }, []);
 
-  const startInertia = useCallback(
-    (vx: number, vy: number) => {
-      const MAX_V = 1.4;
-      let vX = clamp(vx, -MAX_V, MAX_V) * 80;
-      let vY = clamp(vy, -MAX_V, MAX_V) * 80;
-      let frames = 0;
-      const d = clamp(dragDampening ?? 0.6, 0, 1);
-      const frictionMul = 0.94 + 0.055 * d;
-      const stopThreshold = 0.015 - 0.01 * d;
-      const maxFrames = Math.round(90 + 270 * d);
-      const step = () => {
-        vX *= frictionMul;
-        vY *= frictionMul;
-        if (Math.abs(vX) < stopThreshold && Math.abs(vY) < stopThreshold) {
-          inertiaRAF.current = null;
-          return;
-        }
-        if (++frames > maxFrames) {
-          inertiaRAF.current = null;
-          return;
-        }
-        const nextX = clamp(rotationRef.current.x - vY / 200, -maxVerticalRotationDeg, maxVerticalRotationDeg);
-        const nextY = wrapAngleSigned(rotationRef.current.y + vX / 200);
-        rotationRef.current = { x: nextX, y: nextY };
-        applyTransform(nextX, nextY);
-        inertiaRAF.current = requestAnimationFrame(step);
-      };
-      stopInertia();
+  // Momentum after a flick: the target keeps moving and slows down smoothly
+  // (time-based friction, so it feels the same at any frame rate).
+  const startInertia = (vx: number, vy: number) => {
+    const MAX_V = 1.6;
+    let vX = clamp(vx, -MAX_V, MAX_V) * 80;
+    let vY = clamp(vy, -MAX_V, MAX_V) * 80;
+    let last = performance.now();
+    const step = () => {
+      const now = performance.now();
+      const dt = Math.min(0.05, Math.max(0, now - last) / 1000);
+      last = now;
+      const decay = Math.exp(-dt / 0.45);
+      vX *= decay;
+      vY *= decay;
+      if (Math.abs(vX) < 0.02 && Math.abs(vY) < 0.02) {
+        inertiaRAF.current = null;
+        return;
+      }
+      const f = dt * 60;
+      setTarget(targetRef.current.x - (vY / 200) * f, targetRef.current.y + (vX / 200) * f);
       inertiaRAF.current = requestAnimationFrame(step);
-    },
-    [dragDampening, maxVerticalRotationDeg, stopInertia]
-  );
+    };
+    stopInertia();
+    inertiaRAF.current = requestAnimationFrame(step);
+  };
 
   useGesture(
     {
@@ -341,6 +375,8 @@ export default function DomeGallery({
         draggingRef.current = true;
         cancelTapRef.current = false;
         movedRef.current = false;
+        // Catch the dome where it visibly is, so grabbing it never jumps.
+        targetRef.current = { ...rotationRef.current };
         startRotRef.current = { ...rotationRef.current };
         startPosRef.current = { x: evt.clientX, y: evt.clientY };
         const potential = (evt.target as Element).closest?.('.item__image') as HTMLElement | null;
@@ -367,11 +403,8 @@ export default function DomeGallery({
         );
         const nextY = startRotRef.current.y + dxTotal / dragSensitivity;
 
-        const cur = rotationRef.current;
-        if (cur.x !== nextX || cur.y !== nextY) {
-          rotationRef.current = { x: nextX, y: nextY };
-          applyTransform(nextX, nextY);
-        }
+        const tg = targetRef.current;
+        if (tg.x !== nextX || tg.y !== nextY) setTarget(nextX, nextY);
 
         if (last) {
           draggingRef.current = false;
@@ -558,6 +591,10 @@ export default function DomeGallery({
 
   const openItemFromElement = (el: HTMLElement) => {
     if (openingRef.current) return;
+    // Settle the dome where it is before measuring the tile.
+    stopInertia();
+    stopGlide();
+    targetRef.current = { ...rotationRef.current };
     openingRef.current = true;
     openStartedAtRef.current = performance.now();
     lockScroll();
@@ -668,32 +705,21 @@ export default function DomeGallery({
   useEffect(() => {
     return () => {
       document.body.classList.remove('dg-scroll-lock');
+      stopInertia();
+      stopGlide();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const keyTween = useRef<number | null>(null);
   const turnTo = (x: number, y: number) => {
-    if (keyTween.current) cancelAnimationFrame(keyTween.current);
     stopInertia();
-    const from = { ...rotationRef.current };
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const start = performance.now();
-    const step = () => {
-      const t = reduced ? 1 : Math.min(1, Math.max(0, performance.now() - start) / 420);
-      const e = 1 - Math.pow(1 - t, 4);
-      const nx = from.x + (x - from.x) * e;
-      const ny = from.y + (y - from.y) * e;
-      rotationRef.current = { x: nx, y: ny };
-      applyTransform(nx, ny);
-      keyTween.current = t < 1 ? requestAnimationFrame(step) : null;
-    };
-    keyTween.current = requestAnimationFrame(step);
+    setTarget(x, y);
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (focusedElRef.current) return;
     const col = 360 / segments;
-    const { x, y } = rotationRef.current;
+    const { x, y } = targetRef.current;
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
       e.preventDefault();
       turnTo(x, y + (e.key === 'ArrowLeft' ? col : -col));
