@@ -199,17 +199,6 @@ export const projects: Project[] = [
 ];
 
 // Smaller repositories listed without a case study page.
-export const otherProjects = [
-  {
-    title: "Dev Journey",
-    summary:
-      "A Flutter app for following a learning path, with sign-in, course categories, modules, milestones, favourites and a profile. Built for a university course.",
-    stack: ["Flutter", "Dart", "Supabase"],
-    year: "2025",
-    href: "https://github.com/Asiff-k/Dev_Journey",
-  },
-];
-
 export function getProject(slug: string) {
   return projects.find((p) => p.slug === slug);
 }

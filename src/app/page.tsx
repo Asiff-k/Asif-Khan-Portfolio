@@ -5,6 +5,7 @@ import { ArrowDown, ArrowRight, ArrowUpRight, DownloadIcon } from "@/components/
 import { PageMotion } from "@/components/cinema/page-motion";
 import { Tilt } from "@/components/cinema/tilt";
 import { ToolLoop } from "@/components/cinema/tool-loop";
+import { AreaArt, type ArtKey } from "@/components/area-art";
 import { ContactIcon, LogoMark } from "@/components/logo-mark";
 import { MediaImage } from "@/components/media-image";
 import { SectionHead } from "@/components/section-head";
@@ -12,8 +13,8 @@ import { WorkMenu } from "@/components/work-menu";
 import { aiDataWork, education, jobs, languages, toolGroups } from "@/content/experience";
 import { gallery, galleryCategories } from "@/content/gallery";
 import type { LogoKey } from "@/content/logos.generated";
-import { media, type MediaKey } from "@/content/media.generated";
-import { otherProjects, projects } from "@/content/projects";
+import { media } from "@/content/media.generated";
+import { projects } from "@/content/projects";
 import { contacts, site } from "@/content/site";
 import { tools } from "@/content/tools";
 
@@ -22,8 +23,8 @@ type Area = {
   body: string[];
   evidence: { label: string; href: string }[];
   visual:
-    | { kind: "screens"; images: { image: MediaKey; alt: string }[] }
-    | { kind: "posters"; images: MediaKey[] }
+    | { kind: "screens"; art: ArtKey[] }
+    | { kind: "posters"; art: ArtKey[] }
     | { kind: "logos"; logos: { logo?: LogoKey; name: string }[] };
 };
 
@@ -43,10 +44,7 @@ const areas: Area[] = [
     ],
     visual: {
       kind: "screens",
-      images: [
-        { image: "apps/chol-ghuri-matching", alt: "Chol Ghuri: group matching with the score explained" },
-        { image: "apps/careernavigator-matches", alt: "CareerNavigator: career matches with weighted scores" },
-      ],
+      art: ["editor", "terminal"],
     },
   },
   {
@@ -62,10 +60,7 @@ const areas: Area[] = [
     ],
     visual: {
       kind: "screens",
-      images: [
-        { image: "ui/brhex-hero", alt: "BRHEX Studio home page design" },
-        { image: "ui/cipher-shield-cover", alt: "Cipher Shield home page design" },
-      ],
+      art: ["wireframe", "canvas"],
     },
   },
   {
@@ -76,7 +71,7 @@ const areas: Area[] = [
     evidence: [{ label: "See all 54 pieces", href: "#design" }],
     visual: {
       kind: "posters",
-      images: ["graphics/pasta-yum", "graphics/can-blueberry-fusion", "graphics/watch-hour-unit", "graphics/tee-wild"],
+      art: ["poster-sun", "poster-type", "poster-grid", "poster-can"],
     },
   },
   {
@@ -285,29 +280,6 @@ export default function Home() {
             </li>
           ))}
         </ol>
-
-        <div className="mt-12">
-          <p className="t-stamp text-fg-muted">Also on GitHub</p>
-          <ul className="mt-3 border-t border-line">
-            {otherProjects.map((p) => (
-              <li key={p.title} className="border-b border-line">
-                <a
-                  href={p.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group grid gap-3 py-5 active:bg-surface md:grid-cols-12 md:items-baseline md:gap-6"
-                >
-                  <span className="t-subtitle md:col-span-3 group-hover:text-accent">{p.title}</span>
-                  <span className="t-body-sm text-fg-soft md:col-span-6">{p.summary}</span>
-                  <span className="t-stamp inline-flex items-center gap-1.5 text-fg-muted md:col-span-3 md:justify-end">
-                    {p.stack.join(" · ")} · {p.year} <ArrowUpRight />
-                    <span className="sr-only">(opens in a new tab)</span>
-                  </span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
       </section>
 
       {/* Graphic design */}
@@ -511,15 +483,10 @@ function AreaVisual({ visual }: { visual: Area["visual"] }) {
   if (visual.kind === "screens") {
     return (
       <div className="grid gap-4 sm:grid-cols-2">
-        {visual.images.map((s) => (
-          <Tilt key={s.image}>
-            <div data-reveal="image" className="aspect-[16/10] overflow-hidden border border-line bg-surface">
-              <MediaImage
-                image={s.image}
-                alt={s.alt}
-                sizes="(min-width: 64rem) 30vw, (min-width: 40rem) 50vw, 100vw"
-                className="size-full object-cover object-top"
-              />
+        {visual.art.map((a) => (
+          <Tilt key={a}>
+            <div data-reveal="image" className="aspect-[16/10] overflow-hidden border border-line">
+              <AreaArt name={a} />
             </div>
           </Tilt>
         ))}
@@ -529,21 +496,18 @@ function AreaVisual({ visual }: { visual: Area["visual"] }) {
   if (visual.kind === "posters") {
     return (
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        {visual.images.map((image) => (
-          <div key={image} data-reveal="image" className="aspect-[3/4] overflow-hidden border border-line bg-surface">
-            <MediaImage image={image} alt="" sizes="(min-width: 64rem) 15vw, (min-width: 40rem) 25vw, 50vw" className="size-full object-cover" />
+        {visual.art.map((a) => (
+          <div key={a} data-reveal="image" className="aspect-[3/4] overflow-hidden border border-line">
+            <AreaArt name={a} />
           </div>
         ))}
       </div>
     );
   }
   return (
-    <ul
-      className="grid grid-cols-3 gap-x-3 gap-y-6 border border-line bg-surface px-4 py-8 sm:grid-cols-4 sm:px-8 md:grid-cols-6"
-      aria-label="AI tools and platforms I work with"
-    >
+    <ul className="grid grid-cols-3 gap-x-3 gap-y-6 py-4 sm:grid-cols-4 md:grid-cols-6" aria-label="AI tools and platforms">
       {visual.logos.map((l) => (
-        <li key={l.name} className="flex flex-col items-center gap-2 text-center">
+        <li key={l.name} className="group flex flex-col items-center gap-2 text-center">
           <LogoMark logo={l.logo} name={l.name} size="lg" />
           <span className="text-[0.75rem] leading-tight text-fg-soft">{l.name}</span>
         </li>

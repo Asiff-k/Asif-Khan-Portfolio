@@ -708,7 +708,6 @@ export default function DomeGallery({
       stopInertia();
       stopGlide();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const turnTo = (x: number, y: number) => {

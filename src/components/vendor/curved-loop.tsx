@@ -1,5 +1,4 @@
 'use client';
-/* eslint-disable */
 /**
  * Curved Loop from React Bits (https://reactbits.dev), TS + Tailwind variant.
  * Copyright (c) 2026 David Haz. MIT + Commons Clause License Condition v1.0:
