@@ -9,24 +9,24 @@
 }
 
 /*
- * Monochrome: black, white and greys only. Every corner is sharp.
- * The token names come from the earlier light theme and are kept so every
- * page switches at once: "stone" is now the black page colour, "ink" the
- * white text colour, and the former green accents (moss, mint) are white.
+ * Monochrome on white: white page, black text, greys between. Every corner
+ * is sharp. "stone" is the white page colour, "ink" the black text colour;
+ * the former accent tokens (moss, mint) and the former dark panels (carbon)
+ * now resolve to black text on white as well.
  */
 @theme {
-  --color-stone: #0a0a0a;
-  --color-stone-deep: #141414;
-  --color-ink: #f5f5f5;
-  --color-ink-soft: #c4c4c4;
-  --color-muted: #a3a3a3;
-  --color-rule: #262626;
-  --color-carbon: #0a0a0a;
-  --color-carbon-rule: #262626;
-  --color-carbon-text: #f5f5f5;
-  --color-carbon-muted: #a3a3a3;
-  --color-moss: #f5f5f5;
-  --color-mint: #ffffff;
+  --color-stone: #ffffff;
+  --color-stone-deep: #f4f4f4;
+  --color-ink: #0a0a0a;
+  --color-ink-soft: #3d3d3d;
+  --color-muted: #5c5c5c;
+  --color-rule: #e3e3e3;
+  --color-carbon: #ffffff;
+  --color-carbon-rule: #e3e3e3;
+  --color-carbon-text: #0a0a0a;
+  --color-carbon-muted: #5c5c5c;
+  --color-moss: #0a0a0a;
+  --color-mint: #0a0a0a;
 
   --font-display: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
@@ -38,7 +38,7 @@
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Semantic colours. One black palette for the whole site (no light sections). */
+/* Semantic colours. One white palette for the whole site. */
 @theme inline {
   --color-bg: var(--scene-bg);
   --color-fg: var(--scene-fg);
@@ -53,16 +53,16 @@
 
 @layer base {
   :root {
-    color-scheme: dark;
-    --scene-bg: #0a0a0a;
-    --scene-fg: #f5f5f5;
-    --scene-fg-soft: #c4c4c4;
-    --scene-fg-muted: #a3a3a3;
-    --scene-line: #262626;
-    --scene-line-strong: #8a8a8a;
-    --scene-surface: #141414;
-    --scene-accent: #ffffff;
-    --scene-on-fg: #0a0a0a;
+    color-scheme: light;
+    --scene-bg: #ffffff;
+    --scene-fg: #0a0a0a;
+    --scene-fg-soft: #3d3d3d;
+    --scene-fg-muted: #5c5c5c;
+    --scene-line: #e3e3e3;
+    --scene-line-strong: #0a0a0a;
+    --scene-surface: #f4f4f4;
+    --scene-accent: #0a0a0a;
+    --scene-on-fg: #ffffff;
   }
 
   html {
@@ -230,96 +230,17 @@
   }
 }
 
-/* High contrast: lighter secondary text and stronger rules. */
+/* High contrast: darker secondary text and stronger rules. */
 @media (prefers-contrast: more) {
   :root {
-    --color-rule: #8a8a8a;
-    --color-muted: #e5e5e5;
-    --color-ink-soft: #e5e5e5;
-    --color-carbon-muted: #e5e5e5;
-    --scene-fg-soft: #e5e5e5;
-    --scene-fg-muted: #e5e5e5;
-    --scene-line: #8a8a8a;
+    --color-rule: #5c5c5c;
+    --color-muted: #1f1f1f;
+    --color-ink-soft: #1f1f1f;
+    --color-carbon-muted: #1f1f1f;
+    --scene-fg-soft: #1f1f1f;
+    --scene-fg-muted: #1f1f1f;
+    --scene-line: #5c5c5c;
   }
-}
-
-/* ---------- Cinema overlays ---------- */
-
-.cinema-grain {
-  position: fixed;
-  inset: -50%;
-  z-index: 45;
-  pointer-events: none;
-  opacity: 0.05;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.07 0 0 0 0 0.07 0 0 0 0 0.08 0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-  background-size: 180px 180px;
-  animation: cinema-grain 1s steps(8) infinite;
-}
-
-@keyframes cinema-grain {
-  0% { transform: translate(0, 0); }
-  12% { transform: translate(-3%, 2%); }
-  25% { transform: translate(2%, -4%); }
-  37% { transform: translate(-5%, -1%); }
-  50% { transform: translate(4%, 3%); }
-  62% { transform: translate(-1%, 5%); }
-  75% { transform: translate(5%, -2%); }
-  87% { transform: translate(-4%, -5%); }
-  100% { transform: translate(0, 0); }
-}
-
-/* Behind the content (z 0, after the stage in DOM order): darkens the edges, never the text. */
-.cinema-vignette {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background: radial-gradient(ellipse at 50% 45%, transparent 60%, rgb(0 0 0 / 0.55) 100%);
-}
-
-.cinema-edge {
-  position: fixed;
-  left: 0;
-  right: 0;
-  z-index: 43;
-  height: 10vh;
-  pointer-events: none;
-}
-.cinema-edge--top { top: 4rem; }
-.cinema-edge--bottom { bottom: 0; }
-.cinema-edge span { position: absolute; inset: 0; }
-.cinema-edge span:nth-child(1) { backdrop-filter: blur(2px); }
-.cinema-edge span:nth-child(2) { backdrop-filter: blur(5px); }
-.cinema-edge span:nth-child(3) { backdrop-filter: blur(10px); }
-.cinema-edge--top span:nth-child(1) { mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 100%); }
-.cinema-edge--top span:nth-child(2) { mask-image: linear-gradient(to bottom, #000 0%, #000 20%, transparent 65%); }
-.cinema-edge--top span:nth-child(3) { mask-image: linear-gradient(to bottom, #000 0%, transparent 35%); }
-.cinema-edge--bottom span:nth-child(1) { mask-image: linear-gradient(to top, #000 0%, #000 40%, transparent 100%); }
-.cinema-edge--bottom span:nth-child(2) { mask-image: linear-gradient(to top, #000 0%, #000 20%, transparent 65%); }
-.cinema-edge--bottom span:nth-child(3) { mask-image: linear-gradient(to top, #000 0%, transparent 35%); }
-
-/* Home page only (other pages would sit blurred under it at rest). */
-html:not(:has(main[data-home])) .cinema-edge {
-  display: none;
-}
-
-/* Keep the open mobile menu sharp; skip the blur over the moving 3D dome. */
-html[data-menu="open"] .cinema-edge,
-html[data-dome] .cinema-edge {
-  display: none;
-}
-
-/* Edge blur costs GPU time on phones and is barely visible there. */
-@media (max-width: 767px) {
-  .cinema-edge { display: none; }
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .cinema-edge { display: none; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cinema-grain { animation: none; }
 }
 
 /* ---------- Mouse at 768px and up: Flowing Menu and dome; otherwise the plain list and grid ---------- */
@@ -329,12 +250,14 @@ html[data-dome] .cinema-edge {
   .js .fm-only { display: block; }
   .js .fm-fallback { display: none; }
 }
+/* Index numbers and meta labels ship at 50% opacity; on white that is too light to read comfortably. */
+.fm-work .opacity-50 { opacity: 0.72; }
 /* The site is sharp everywhere: square marquee thumbnails. */
 .fm-work span[style*="background-image"] { border-radius: 0; }
-/* Keyboard focus: the white band slides in, plus a black ring inside it (the
+/* Keyboard focus: the black band slides in, plus a white ring inside it (the
    component's own focus outline is cancelled by its outline-none class). */
 .fm-work a:focus-visible {
-  outline: 2px solid #0a0a0a;
+  outline: 2px solid #ffffff;
   outline-offset: -6px;
 }
 
@@ -402,7 +325,7 @@ html[data-dome] .cinema-edge {
     opacity 0.2s linear;
 }
 .cursor[data-visible] { opacity: 1; }
-/* The labelled circle is solid white with black text, so its label always reads. */
+/* The labelled circle is solid black with white text, so its label always reads. */
 .cursor[data-label] {
   width: 64px;
   height: 64px;
@@ -420,12 +343,12 @@ html[data-dome] .cinema-edge {
 }
 .cursor[data-label] span { opacity: 1; transition-delay: 0.15s; }
 
-/* ---------- Project pages: white panel wipe on arrival ---------- */
+/* ---------- Project pages: black panel wipe on arrival ---------- */
 .page-wipe {
   position: fixed;
   inset: 4rem 0 0 0;
   z-index: 35;
-  background: #f5f5f5;
+  background: #0a0a0a;
   pointer-events: none;
   transform-origin: top;
   transform: scaleY(0);
@@ -474,8 +397,8 @@ html[data-dome] .cinema-edge {
 }
 
 /* ---------- Monochrome hovers ----------
-   Links used to turn green on hover; with white text on black, a colour
-   change to white is invisible, so those hovers underline instead. */
+   Links used to change colour on hover; with black text and a black accent
+   that change is invisible, so those hovers underline instead. */
 .hover\:text-accent:hover,
 .group:hover .group-hover\:text-accent,
 .hover\:text-moss:hover,
@@ -486,31 +409,50 @@ html[data-dome] .cinema-edge {
   text-underline-offset: 0.2em;
 }
 
-/* ---------- Logos: greyscale, and they lift on hover ----------
+/* ---------- Logos: greyscale, and they float up with a soft glow on hover ----------
    Brand marks are shown in greyscale to keep the site black and white. On
-   hover (the logo itself, its card or its link) they scale up slightly and
-   brighten; keyboard focus on the link does the same. */
+   hover (the logo, its card or its link) and on keyboard focus they rise a
+   few pixels with a soft shadow beneath. */
 .logo-mark img {
   filter: grayscale(1);
-  opacity: 0.85;
   transition:
-    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.2s linear,
-    filter 0.2s linear;
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.35s ease;
 }
 @media (hover: hover) {
   .logo-mark:hover img,
   .group:hover .logo-mark img {
-    transform: scale(1.12);
-    opacity: 1;
-    filter: grayscale(1) brightness(1.3);
+    transform: translateY(-5px);
+    filter: grayscale(1) drop-shadow(0 10px 14px rgb(0 0 0 / 0.18));
   }
 }
 a:focus-visible .logo-mark img {
-  transform: scale(1.12);
-  opacity: 1;
-  filter: grayscale(1) brightness(1.3);
+  transform: translateY(-5px);
+  filter: grayscale(1) drop-shadow(0 10px 14px rgb(0 0 0 / 0.18));
 }
 @media (prefers-reduced-motion: reduce) {
   .logo-mark img { transform: none !important; }
+}
+
+/* ---------- Contact: a hairline drawn by scroll, and a slowly turning figure ---------- */
+.contact-line { transform-origin: left; }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .contact-line {
+      animation: contact-line linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 35%;
+    }
+  }
+}
+@keyframes contact-line {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.contact-mark { animation: contact-turn 48s linear infinite; }
+@keyframes contact-turn {
+  to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .contact-mark { animation: none; }
 }

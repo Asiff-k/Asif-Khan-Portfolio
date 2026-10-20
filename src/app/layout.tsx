@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono, Manrope } from "next/font/google";
 import { CinemaRoot } from "@/components/cinema/cinema-root";
 import { StageLoader } from "@/components/cinema/stage-loader";
-import { Overlays } from "@/components/cinema/overlays";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { jsFlagScript } from "@/lib/js-flag";
@@ -42,11 +41,11 @@ export const metadata: Metadata = {
     template: "%s · Asiful Hasan Khan",
   },
   description:
-    "Portfolio of Asiful Hasan Khan, a final-year CSE student in Sylhet, Bangladesh, who builds web apps and designs interfaces.",
+    "Portfolio of Asiful Hasan Khan, a fullstack developer and UI/UX designer in Sylhet, Bangladesh, who builds web apps and designs interfaces.",
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0a0a0a",
+  themeColor: "#ffffff",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -71,7 +70,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         {children}
         <SiteFooter />
         <StageLoader />
-        <Overlays />
         <CinemaRoot />
       </body>
     </html>

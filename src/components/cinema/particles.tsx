@@ -2,9 +2,9 @@
 
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
-import { AdditiveBlending, BufferAttribute, BufferGeometry, Color, ShaderMaterial, Vector2, Vector3, type Points } from "three";
+import { BufferAttribute, BufferGeometry, Color, NormalBlending, ShaderMaterial, Vector2, Vector3, type Points } from "three";
 import { gsap } from "@/lib/gsap";
-import { can, cloud, field, ring, sphere, type Formation, type View } from "./formations";
+import { can, cloud, field, sphere, type Formation, type View } from "./formations";
 import { stage, type FormationKey } from "./stage-controller";
 
 const vertex = /* glsl */ `
@@ -21,11 +21,11 @@ const vertex = /* glsl */ `
   uniform float uPointerActive;
   uniform float uRepel;
   uniform float uAngle;
+  uniform float uAngleX;
   uniform float uSpinFrom;
   uniform float uSpinTo;
   uniform vec3 uCenterFrom;
   uniform vec3 uCenterTo;
-  uniform float uPulse;
   varying float vAlpha;
   varying float vMix;
 
@@ -38,26 +38,29 @@ const vertex = /* glsl */ `
     );
   }
 
-  // Turn a point about the vertical axis through c.
-  vec3 spinY(vec3 p, vec3 c, float a) {
+  // Turn a point about c on two axes, like a planet: the vertical axis (a)
+  // and the horizontal axis (b), at different speeds.
+  vec3 spin(vec3 p, vec3 c, float a, float b) {
     vec3 d = p - c;
     float s = sin(a);
     float k = cos(a);
-    return c + vec3(d.x * k + d.z * s, d.y, -d.x * s + d.z * k);
+    d = vec3(d.x * k + d.z * s, d.y, -d.x * s + d.z * k);
+    s = sin(b);
+    k = cos(b);
+    d = vec3(d.x, d.y * k - d.z * s, d.y * s + d.z * k);
+    return c + d;
   }
 
   void main() {
     // Stagger: each particle starts a little later than the last.
     float p = clamp(uProgress * 1.3 - aRand.w * 0.3, 0.0, 1.0);
     p = p * p * (3.0 - 2.0 * p);
-    vec3 from = mix(aFrom, spinY(aFrom, uCenterFrom, uAngle), uSpinFrom);
-    vec3 to = mix(aTo, spinY(aTo, uCenterTo, uAngle), uSpinTo);
+    vec3 from = mix(aFrom, spin(aFrom, uCenterFrom, uAngle, uAngleX), uSpinFrom);
+    vec3 to = mix(aTo, spin(aTo, uCenterTo, uAngle, uAngleX), uSpinTo);
     vec3 pos = mix(from, to, p);
     float travel = sin(p * 3.14159);
     pos += flow(pos * 0.6, uTime * 0.35) * (uNoise + travel * 0.55) * (0.3 + aRand.x * 0.7);
     pos *= 1.0 + sin(uTime * 0.6 + aRand.y) * uBreath;
-    // Contact ring: a slow, even pulse (the ring sits at the origin).
-    pos *= 1.0 + uPulse * sin(uTime * 1.8);
 
     // Pointer repel in screen plane; the uniform is eased on the CPU so it springs back.
     vec2 d = pos.xy - uPointer;
@@ -77,7 +80,6 @@ const fragment = /* glsl */ `
   uniform vec3 uColorA;
   uniform vec3 uColorB;
   uniform float uOpacity;
-  uniform float uDim;
   varying float vAlpha;
   varying float vMix;
   void main() {
@@ -85,7 +87,7 @@ const fragment = /* glsl */ `
     float a = smoothstep(0.5, 0.0, d);
     a *= a;
     if (a < 0.01) discard;
-    gl_FragColor = vec4(mix(uColorA, uColorB, vMix), a * vAlpha * uOpacity * uDim);
+    gl_FragColor = vec4(mix(uColorA, uColorB, vMix), a * vAlpha * uOpacity);
   }
 `;
 
@@ -99,10 +101,11 @@ function onIdle(fn: () => void): () => void {
   return () => window.clearTimeout(id);
 }
 
-// Monochrome: white and grey dust, additive on the black page.
-const LOOK = { a: "#ffffff", b: "#a3a3a3", opacity: 0.5 };
+// Monochrome: black and grey dust on the white page (normal blending; additive
+// black would not show).
+const LOOK = { a: "#0a0a0a", b: "#5c5c5c", opacity: 0.24 };
 
-// Formations that turn continuously about their own vertical axis.
+// Formations that turn continuously about their own centre, on two axes.
 const SPINS: Partial<Record<FormationKey, true>> = { can: true, sphere: true };
 
 export function Particles({ count }: { count: number }) {
@@ -120,10 +123,6 @@ export function Particles({ count }: { count: number }) {
     ready.current = { promise, resolve };
   }
   const pointer = useRef({ target: new Vector2(999, 999), active: 0, targetActive: 0 });
-  // How far the particles have gathered into the contact ring (0..1); the ring
-  // eases toward the cursor by this much.
-  const ringWeight = useRef(0);
-  const follow = useRef(new Vector2());
 
   const view: View = useMemo(() => {
     const v = viewport.getCurrentViewport(camera, [0, 0, 0]);
@@ -151,7 +150,7 @@ export function Particles({ count }: { count: number }) {
         fragmentShader: fragment,
         transparent: true,
         depthWrite: false,
-        blending: AdditiveBlending,
+        blending: NormalBlending,
         uniforms: {
           uTime: { value: 0 },
           uProgress: { value: 0 },
@@ -163,15 +162,14 @@ export function Particles({ count }: { count: number }) {
           uPointerActive: { value: 0 },
           uRepel: { value: 0.5 },
           uAngle: { value: 0 },
+          uAngleX: { value: 0 },
           uSpinFrom: { value: 0 },
           uSpinTo: { value: 0 },
           uCenterFrom: { value: new Vector3() },
           uCenterTo: { value: new Vector3() },
-          uPulse: { value: 0 },
           uColorA: { value: new Color(LOOK.a) },
           uColorB: { value: new Color(LOOK.b) },
           uOpacity: { value: LOOK.opacity },
-          uDim: { value: 1 },
         },
       }),
     [gl],
@@ -197,7 +195,6 @@ export function Particles({ count }: { count: number }) {
       f.cloud = cloud(count, view);
       f.field = field(count, view);
       f.sphere = sphere(count, Math.min(view.halfH * 0.62, view.halfW * 0.5), sphereCenter);
-      f.ring = ring(count, 0.45);
       const c = can(count, view);
       f.can = c.points;
       centers.current.sphere = new Vector3(...sphereCenter);
@@ -260,13 +257,11 @@ export function Particles({ count }: { count: number }) {
       scrub(from, to, p) {
         generation++;
         tween?.kill();
-        ringWeight.current = to === "ring" ? p : from === "ring" ? 1 - p : 0;
         if (!pair.current || pair.current[0] !== from || pair.current[1] !== to) setPairAttributes(from, to);
         material.uniforms.uProgress.value = p;
       },
       morph(to, duration = 2.4) {
         tween?.kill();
-        ringWeight.current = 0;
         const g = ++generation;
         void ready.current?.promise.then(() => {
           if (g !== generation) return;
@@ -319,28 +314,15 @@ export function Particles({ count }: { count: number }) {
     const u = material.uniforms;
     const dt = Math.min(delta, 0.05);
     u.uTime.value += dt;
-    // One full turn about every 18 seconds.
+    // About one turn every 18 seconds side to side, and every 29 seconds top to
+    // bottom, so the shape tumbles slowly like a planet.
     u.uAngle.value = (u.uAngle.value + dt * 0.35) % (Math.PI * 2);
+    u.uAngleX.value = (u.uAngleX.value + dt * 0.22) % (Math.PI * 2);
     const ptr = pointer.current;
     const k = 1 - Math.pow(0.001, dt);
     (u.uPointer.value as Vector2).lerp(ptr.target, k);
     ptr.active += (ptr.targetActive - ptr.active) * k;
-    // The ring drifts toward the cursor, so repel fades out as it gathers.
-    const w = ringWeight.current;
-    u.uPointerActive.value = ptr.active * (1 - w);
-    u.uPulse.value = w * 0.07;
-    u.uDim.value = 1 - w * 0.6;
-    const pts = points.current;
-    if (pts) {
-      // Half way toward the cursor, so the links under it stay readable.
-      const on = w > 0 && ptr.active > 0.01;
-      const tx = on ? ptr.target.x * 0.5 * w : 0;
-      const ty = on ? ptr.target.y * 0.5 * w : 0;
-      const kk = 1 - Math.pow(0.05, dt);
-      follow.current.x += (tx - follow.current.x) * kk;
-      follow.current.y += (ty - follow.current.y) * kk;
-      pts.position.set(follow.current.x, follow.current.y, 0);
-    }
+    u.uPointerActive.value = ptr.active;
   });
 
   return <points ref={points} geometry={geometry} material={material} frustumCulled={false} />;

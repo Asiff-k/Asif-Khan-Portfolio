@@ -65,7 +65,7 @@ export const tools: Tool[] = [
     task: "Research",
     about: "Answers questions using only the sources you add, and makes audio overviews.",
     use: "Asking questions about my own documents and notes.",
-    href: "https://notebooklm.google.com",
+    href: "https://notebook.google.com",
   },
   {
     name: "Claude",
@@ -87,7 +87,7 @@ export const tools: Tool[] = [
     task: "Interface design",
     about: "Turns a written brief into interface designs, with code and Figma export.",
     use: "Designing web interfaces.",
-    href: "https://stitch.withgoogle.com",
+    href: "https://stitch.google.com",
   },
   {
     name: "Figma",

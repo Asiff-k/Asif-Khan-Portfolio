@@ -26,8 +26,8 @@ export function WorkMenu({ items }: { items: FlowingMenuItem[] }) {
       intro={false}
       bgColor="transparent"
       textColor="var(--scene-fg)"
-      marqueeBgColor="#f5f5f5"
-      marqueeTextColor="#0a0a0a"
+      marqueeBgColor="#0a0a0a"
+      marqueeTextColor="#ffffff"
       borderColor="var(--scene-line)"
     />
   );

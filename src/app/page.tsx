@@ -5,17 +5,18 @@ import { ArrowDown, ArrowRight, DownloadIcon } from "@/components/icons";
 import { PageMotion } from "@/components/cinema/page-motion";
 import { Tilt } from "@/components/cinema/tilt";
 import { ToolLoop } from "@/components/cinema/tool-loop";
-import { AreaArt, type ArtKey } from "@/components/area-art";
 import { LogoMark } from "@/components/logo-mark";
 import { MediaImage } from "@/components/media-image";
 import { SectionHead } from "@/components/section-head";
+import { StockCredit, StockImage } from "@/components/stock-image";
 import { WorkMenu } from "@/components/work-menu";
-import { aiDataWork, education, jobs, languages, toolGroups } from "@/content/experience";
+import { aiDataWork, education, jobs, languages, skills, toolGroups } from "@/content/experience";
 import { gallery, galleryCategories } from "@/content/gallery";
 import type { LogoKey } from "@/content/logos.generated";
 import { media } from "@/content/media.generated";
 import { projects } from "@/content/projects";
 import { site } from "@/content/site";
+import type { StockKey } from "@/content/stock";
 import { tools } from "@/content/tools";
 
 type Area = {
@@ -23,9 +24,9 @@ type Area = {
   body: string[];
   evidence: { label: string; href: string }[];
   visual:
-    | { kind: "screens"; art: ArtKey[] }
-    | { kind: "posters"; art: ArtKey[] }
-    | { kind: "logos"; logos: { logo?: LogoKey; name: string }[] };
+    | { kind: "screens"; photos: StockKey[] }
+    | { kind: "posters"; photos: StockKey[] }
+    | { kind: "logos"; logos: { logo?: LogoKey; name: string; href?: string }[] };
 };
 
 // The four areas of work. Each is backed by real projects on this site, and the
@@ -34,8 +35,8 @@ const areas: Area[] = [
   {
     title: "Software development",
     body: [
-      "I build complete web apps on my own. Chol Ghuri matches university students into travel groups and splits the costs; CareerNavigator recommends careers from a student's skills and projects. Both run on PHP, MySQL and JavaScript, with accounts, email verification and admin panels.",
-      "When a problem is new to me, I research it before choosing an approach. I've also built a Next.js company website and Flutter apps.",
+      "Fullstack development, frontend and backend. I build web apps from scratch: Chol Ghuri matches university students into travel groups and splits the costs; CareerNavigator recommends careers from a student's skills and projects. Both run on PHP, MySQL and JavaScript, with accounts, email verification and admin panels.",
+      "I also built the full UI and development of incodet.com for Incodet, my own agency, and I build Flutter apps.",
     ],
     evidence: [
       { label: "Chol Ghuri", href: "/work/chol-ghuri" },
@@ -44,41 +45,41 @@ const areas: Area[] = [
     ],
     visual: {
       kind: "screens",
-      art: ["editor", "terminal"],
+      photos: ["software-dashboard", "software-code"],
     },
   },
   {
     title: "UI/UX design",
     body: [
-      "I design web and app interfaces in Figma, from wireframes to final screens. My client work includes websites for a security advisory firm, a training provider and a virtual tour studio.",
-      "At NextGen Production I worked as the link between designers and developers, then moved up to team leader: setting daily priorities, assigning work and keeping delivery on schedule.",
+      "I design web and app interfaces in Figma, from wireframes to final screens. Project-based client work includes the Cipher Shield, KI Training and NextGen Production websites.",
+      "At NextGen Production I worked as a Product Designer, on graphics and UI/UX, and moved up to Team Leader: setting daily priorities, assigning work and keeping delivery on schedule.",
     ],
     evidence: [
       { label: "Cipher Shield", href: "/work/cipher-shield" },
       { label: "KI Training", href: "/work/ki-training" },
-      { label: "BRHEX Studio", href: "/work/brhex-studio" },
+      { label: "NextGen Production", href: "/work/nextgen-production" },
     ],
     visual: {
       kind: "screens",
-      art: ["wireframe", "canvas"],
+      photos: ["uiux-tablet-wireframe", "uiux-sketch-wireframes"],
     },
   },
   {
     title: "Graphic design",
     body: [
-      "Posters, product ads, social posts and T-shirt art: the composition, type and branding are mine.",
+      "Posters, product ads, social posts and T-shirt art. I take ideas from AI for inspiration, then design every piece myself in Canva.",
     ],
     evidence: [{ label: "See all 54 pieces", href: "#design" }],
     visual: {
       kind: "posters",
-      art: ["poster-sun", "poster-type", "poster-grid", "poster-can"],
+      photos: ["graphic-framed-poster", "graphic-type-poster", "graphic-colour-posters", "graphic-magazine"],
     },
   },
   {
     title: "AI tools and data",
     body: [
-      "Tools I work with: Perplexity and Gemini Notebook for research, Claude for code, Google Stitch for interface design, and HeyGen, Synthesia and Colossyan for video.",
-      "I've also completed three AI training data projects: robot video segmentation, satellite image annotation and first-person video capture.",
+      "AI/ML knowledge and hands-on work training AI models: I've completed three AI training data projects, in robot video segmentation, satellite image annotation and first-person video capture.",
+      "I work with AI tools daily to save time: Perplexity and Gemini Notebook for research, Claude for code, Google Stitch for interface design, and HeyGen, Synthesia and Colossyan for video.",
     ],
     evidence: [
       { label: "AI tools", href: "/ai-tools" },
@@ -89,7 +90,7 @@ const areas: Area[] = [
       logos: [
         ...tools.filter((t) => t.status === "used"),
         ...tools.filter((t) => t.status === "platform" && t.logo),
-      ].map((t) => ({ logo: t.logo, name: t.name })),
+      ].map((t) => ({ logo: t.logo, name: t.name, href: t.href.startsWith("http") ? t.href : undefined })),
     },
   },
 ];
@@ -129,10 +130,8 @@ export default function Home() {
               I build the software and design the screens.
             </h1>
             <p className="t-body-lg mt-8 max-w-xl text-fg-soft">
-              I&apos;m Asif, a final-year Computer Science and Engineering student at Leading University in Sylhet.
-              I&apos;ve built two full web apps on my own, designed interfaces for client projects, and moved up from
-              UI/UX Designer to Team Leader at NextGen Production. I&apos;ve also completed three AI training data
-              projects.
+              Fullstack developer (Web + App), UI/UX designer, and AI enthusiast. I build web apps from scratch,
+              design interfaces for clients, and work with AI tools daily to save time and enhance my process.
             </p>
             <div className="mt-10 flex flex-wrap gap-3">
               <Link
@@ -187,7 +186,8 @@ export default function Home() {
       {/* What I do */}
       <section className="page-x py-24 md:py-32" aria-labelledby="skills-title">
         <SectionHead index="01" label="Skills" title="What I do" id="skills-title">
-          Four kinds of work, each with the projects behind it.
+          My process: I use AI to save time and for design ideas, then design and build everything myself, in
+          Canva and in code.
         </SectionHead>
         <ol>
           {areas.map((a, i) => (
@@ -231,7 +231,7 @@ export default function Home() {
       {/* Selected work */}
       <section id="work" className="page-x py-24 md:py-32" aria-labelledby="work-title">
         <SectionHead index="02" label="Projects" title="Selected work" id="work-title">
-          Two web apps I built on my own, a company website I designed and built, and interface designs for client
+          Two web apps I built on my own, the website of my agency Incodet, and interface designs for client
           websites.
         </SectionHead>
         {/* Mouse and wide screens: Flowing Menu. Touch and narrow screens: the list below. */}
@@ -285,7 +285,8 @@ export default function Home() {
       {/* Graphic design */}
       <section id="design" className="page-x py-24 md:py-32" aria-labelledby="design-title">
         <SectionHead index="03" label="Graphic design" title="Posters, ads and social posts" id="design-title">
-          The imagery is AI-generated; the composition, type and branding are mine. Tap any piece to see it larger.
+          I use AI as a tool for inspiration and efficiency, but every design and build is my own work. Tap any piece
+          to see it larger.
         </SectionHead>
         <div className="mt-8">
           <DesignShowcase
@@ -373,6 +374,16 @@ export default function Home() {
 
           <div className="space-y-14 lg:col-span-4 lg:col-start-9">
             <div>
+              <h3 className="t-stamp text-fg-muted">Skills</h3>
+              <ul className="mt-4 border-t border-line">
+                {skills.map((sk) => (
+                  <li key={sk} className="t-body-sm border-b border-line py-2.5">
+                    {sk}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
               <h3 className="t-stamp text-fg-muted">Education</h3>
               <ol className="mt-4">
                 {education.map((e) => (
@@ -417,36 +428,61 @@ export default function Home() {
 function AreaVisual({ visual }: { visual: Area["visual"] }) {
   if (visual.kind === "screens") {
     return (
-      <div className="grid gap-4 sm:grid-cols-2">
-        {visual.art.map((a) => (
-          <Tilt key={a}>
-            <div data-reveal="image" className="aspect-[16/10] overflow-hidden border border-line">
-              <AreaArt name={a} />
-            </div>
-          </Tilt>
-        ))}
+      <div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {visual.photos.map((ph) => (
+            <Tilt key={ph}>
+              <div data-reveal="image" className="aspect-[16/10] overflow-hidden border border-line bg-surface">
+                <StockImage photo={ph} sizes="(min-width: 64rem) 30vw, (min-width: 40rem) 50vw, 100vw" />
+              </div>
+            </Tilt>
+          ))}
+        </div>
+        <StockCredit photos={visual.photos} />
       </div>
     );
   }
   if (visual.kind === "posters") {
     return (
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        {visual.art.map((a) => (
-          <div key={a} data-reveal="image" className="aspect-[3/4] overflow-hidden border border-line">
-            <AreaArt name={a} />
-          </div>
-        ))}
+      <div>
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          {visual.photos.map((ph) => (
+            <div key={ph} data-reveal="image" className="aspect-[3/4] overflow-hidden border border-line bg-surface">
+              <StockImage photo={ph} sizes="(min-width: 64rem) 15vw, (min-width: 40rem) 25vw, 50vw" />
+            </div>
+          ))}
+        </div>
+        <StockCredit photos={visual.photos} />
       </div>
     );
   }
   return (
     <ul className="grid grid-cols-3 gap-x-3 gap-y-6 py-4 sm:grid-cols-4 md:grid-cols-6" aria-label="AI tools and platforms">
-      {visual.logos.map((l) => (
-        <li key={l.name} className="group flex flex-col items-center gap-2 text-center">
-          <LogoMark logo={l.logo} name={l.name} size="lg" />
-          <span className="text-[0.75rem] leading-tight text-fg-soft">{l.name}</span>
-        </li>
-      ))}
+      {visual.logos.map((l) => {
+        const inner = (
+          <>
+            <LogoMark logo={l.logo} name={l.name} size="lg" />
+            <span className="text-[0.75rem] leading-tight text-fg-soft">{l.name}</span>
+          </>
+        );
+        return (
+          <li key={l.name} className="flex justify-center">
+            {l.href ? (
+              <a
+                href={l.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex flex-col items-center gap-2 text-center"
+              >
+                {inner}
+                <span className="sr-only">(opens in a new tab)</span>
+              </a>
+            ) : (
+              <span className="group flex flex-col items-center gap-2 text-center">{inner}</span>
+            )}
+          </li>
+        );
+      })}
     </ul>
   );
 }

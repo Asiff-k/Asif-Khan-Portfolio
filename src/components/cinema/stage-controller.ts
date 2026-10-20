@@ -2,7 +2,7 @@
 // Has no three.js import, so the main bundle stays light; the stage registers
 // its implementation once it has loaded.
 
-export type FormationKey = "cloud" | "field" | "can" | "sphere" | "ring";
+export type FormationKey = "cloud" | "field" | "can" | "sphere";
 
 type Impl = {
   /** Scrub between two formations; p is 0..1. */

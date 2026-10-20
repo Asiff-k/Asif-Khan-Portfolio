@@ -7,13 +7,12 @@ import { usePrefersReducedMotion } from "@/lib/use-media";
 import { stage, type FormationKey } from "./stage-controller";
 
 // Section -> formation transitions, scrubbed as each section scrolls in:
-// Hero to Work FIELD, Design CAN, AI data SPHERE (both turning), Experience
-// FIELD (a reading section, so the particles step back), Contact RING.
+// Hero to Work FIELD, Design CAN, AI data SPHERE (both turning on two axes),
+// Experience and Contact FIELD (reading sections, so the particles step back).
 const beats: { selector: string; from: FormationKey; to: FormationKey }[] = [
   { selector: "#design", from: "field", to: "can" },
   { selector: "#ai-data", from: "can", to: "sphere" },
   { selector: "#experience", from: "sphere", to: "field" },
-  { selector: "#contact", from: "field", to: "ring" },
 ];
 
 export function ScrollWorld() {

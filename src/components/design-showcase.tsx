@@ -77,18 +77,13 @@ export function DesignShowcase({ pieces, grid }: { pieces: { src: string; title:
   useEffect(() => {
     const el = slot.current;
     if (!el || !mountDome) return;
-    const root = document.documentElement;
     const io = new IntersectionObserver(([e]) => {
       el.style.visibility = e.isIntersecting ? "" : "hidden";
-      // The edge blur re-blurs every moving tile behind it; off while the dome shows.
-      if (e.isIntersecting) root.dataset.dome = "";
-      else delete root.dataset.dome;
     });
     io.observe(el);
     return () => {
       io.disconnect();
       el.style.visibility = "";
-      delete root.dataset.dome;
     };
   }, [mountDome]);
 
@@ -123,7 +118,7 @@ export function DesignShowcase({ pieces, grid }: { pieces: { src: string; title:
               label="Design pieces on a 3D dome. Arrow keys turn it, Enter opens the piece in front, Escape closes it."
               fit={0.6}
               grayscale={false}
-              overlayBlurColor="#0a0a0a"
+              overlayBlurColor="#ffffff"
               imageBorderRadius="0px"
               openedImageBorderRadius="0px"
               openedImageWidth="min(80vw, 420px)"

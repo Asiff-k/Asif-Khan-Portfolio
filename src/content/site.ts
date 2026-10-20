@@ -1,7 +1,7 @@
 export const site = {
   name: "Asiful Hasan Khan",
   shortName: "Asif Khan",
-  role: "Software developer and UI/UX designer",
+  role: "Fullstack developer and UI/UX designer",
   location: "Sylhet, Bangladesh",
   email: "asiffkhanx007@gmail.com",
   phone: { display: "+880 1707-613617", href: "tel:+8801707613617" },

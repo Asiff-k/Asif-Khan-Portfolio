@@ -1,78 +1,92 @@
 import Link from "next/link";
-import { contacts, nav, site } from "@/content/site";
+import { contacts, nav, site, socials } from "@/content/site";
 import { FooterName } from "./cinema/footer-name";
 import { ArrowUpRight, DownloadIcon } from "./icons";
-import { ContactIcon } from "./logo-mark";
 
-// The email has its own large link above the list, so it is not repeated in it.
-const reach = contacts.filter((c) => c.label !== "Email");
+const phone = contacts.find((c) => c.label === "Phone and WhatsApp");
+const cv = contacts.find((c) => c.label === "CV");
 
 /**
- * The one contact area on the site, at the bottom of every page: email, the
- * ways to reach Asif (each listed once), page links and the oversized name.
- * "#contact" links in the header and hero point here.
+ * The one contact area on the site, at the bottom of every page. Minimal on
+ * white: the heading with a slowly turning line figure, a hairline that draws
+ * across as it scrolls in, then three plain columns (about, write or call,
+ * elsewhere). Every link appears once. "#contact" links point here.
  */
 export function SiteFooter() {
   return (
     <footer id="contact" className="border-t border-line" aria-labelledby="contact-title">
-      <div className="page-x grid gap-14 py-24 md:py-32 lg:grid-cols-12 lg:gap-10">
-        <div className="lg:col-span-6">
-          <p className="t-stamp text-accent">Contact</p>
-          <h2 id="contact-title" data-reveal="heading" className="t-display-lg mt-4">
-            Let&apos;s talk.
-          </h2>
-          <p className="t-body-lg mt-8 max-w-md text-fg-muted">
+      <div className="page-x pt-24 md:pt-32">
+        <div className="flex items-end justify-between gap-10">
+          <div>
+            <p className="t-stamp text-fg-muted">Contact</p>
+            <h2 id="contact-title" data-reveal="heading" className="t-display-lg mt-4">
+              Let&apos;s talk.
+            </h2>
+          </div>
+          <ContactMark />
+        </div>
+        <span aria-hidden className="contact-line mt-10 block h-px w-full bg-fg md:mt-14" />
+
+        <div className="grid gap-12 py-12 md:grid-cols-12 md:gap-10 md:py-16">
+          <p className="t-body-lg text-fg-soft md:col-span-5">
             I&apos;m a CSE student who builds web apps, designs interfaces and graphics, and works with AI tools every
             day. If you&apos;d like to talk about my work or a project, I&apos;d be glad to hear from you.
           </p>
-          <a
-            href={`mailto:${site.email}`}
-            className="group mt-10 inline-flex max-w-full items-center gap-3 border-b border-line pb-2 transition-colors duration-150 hover:border-accent"
-          >
-            <span className="t-title break-all group-hover:text-accent">{site.email}</span>
-            <ArrowUpRight className="size-5 shrink-0 text-fg-muted group-hover:text-accent" />
-          </a>
-          <p className="t-stamp mt-4 text-fg-muted">Sylhet, Bangladesh · GMT+6</p>
-        </div>
 
-        <div className="lg:col-span-5 lg:col-start-8 lg:self-end">
-          <p className="t-stamp text-fg-muted">Reach me on</p>
-          <ul className="mt-3 border-t border-line">
-            {reach.map((c) => (
-              <li key={c.label} className="flex items-center gap-x-4 border-b border-line">
-                <a
-                  href={c.href}
-                  {...("external" in c && c.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                  {...("download" in c && c.download ? { download: true } : {})}
-                  className="group grid min-w-0 flex-1 grid-cols-[1.5rem_1fr_auto] items-center gap-x-4 py-3.5"
-                >
-                  <ContactIcon contact={c} />
-                  <span className="min-w-0">
-                    <span className="t-stamp block text-fg-muted">{c.label}</span>
-                    <span className="mt-0.5 block break-words text-[0.9375rem] group-hover:text-accent">{c.value}</span>
-                  </span>
-                  {"download" in c && c.download ? (
-                    <DownloadIcon className="text-fg-muted group-hover:text-accent" />
-                  ) : (
-                    <ArrowUpRight className="text-fg-muted transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent" />
-                  )}
-                  {"external" in c && c.external && <span className="sr-only">(opens in a new tab)</span>}
+          <div className="md:col-span-4 md:col-start-7">
+            <p className="t-stamp text-fg-muted">Write or call</p>
+            <a
+              href={`mailto:${site.email}`}
+              className="group mt-4 inline-flex max-w-full items-center gap-2 border-b border-line pb-1.5 transition-colors duration-150 hover:border-fg"
+            >
+              <span className="t-title break-all">{site.email}</span>
+              <ArrowUpRight className="size-4 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </a>
+            {phone && (
+              <p className="mt-5 flex flex-wrap text-base items-baseline gap-x-3 gap-y-1">
+                <a href={phone.href} className="hover:text-accent">
+                  {phone.value}
                 </a>
-                {"also" in c && (
+                <span aria-hidden className="text-fg-muted">
+                  ·
+                </span>
+                <a href={phone.also.href} target="_blank" rel="noopener noreferrer" className="hover:text-accent">
+                  WhatsApp
+                  <span className="sr-only"> (opens in a new tab)</span>
+                </a>
+              </p>
+            )}
+            <p className="t-stamp mt-5 text-fg-muted">Sylhet, Bangladesh · GMT+6</p>
+          </div>
+
+          <div className="md:col-span-2 md:col-start-11">
+            <p className="t-stamp text-fg-muted">Elsewhere</p>
+            <ul className="mt-4 space-y-2.5">
+              {socials.map((s) => (
+                <li key={s.label}>
                   <a
-                    href={c.also.href}
+                    href={s.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group t-stamp pressable inline-flex shrink-0 items-center gap-2 border border-line px-3 py-2 hover:border-accent hover:text-accent"
+                    className="group inline-flex items-center gap-1.5 hover:text-accent"
                   >
-                    <ContactIcon contact={c.also} />
-                    {c.also.label}
+                    {s.label}
+                    <ArrowUpRight className="size-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                     <span className="sr-only">(opens in a new tab)</span>
                   </a>
-                )}
-              </li>
-            ))}
-          </ul>
+                </li>
+              ))}
+              {cv && (
+                <li>
+                  <a href={cv.href} download className="group inline-flex items-center gap-1.5 hover:text-accent">
+                    Download CV
+                    <DownloadIcon className="size-3.5" />
+                    <span className="sr-only"> ({site.cv.size})</span>
+                  </a>
+                </li>
+              )}
+            </ul>
+          </div>
         </div>
       </div>
 
@@ -100,5 +114,19 @@ export function SiteFooter() {
         <p className="t-stamp text-fg-muted">© 2026 {site.name}</p>
       </div>
     </footer>
+  );
+}
+
+/** A thin square-in-square line figure that turns slowly (static with reduced motion). */
+function ContactMark() {
+  return (
+    <svg aria-hidden viewBox="0 0 120 120" className="contact-mark hidden size-24 shrink-0 text-fg md:block lg:size-28">
+      <g fill="none" stroke="currentColor" strokeWidth={1}>
+        <rect x={20} y={20} width={80} height={80} />
+        <rect x={20} y={20} width={80} height={80} transform="rotate(45 60 60)" />
+        <circle cx={60} cy={60} r={28} />
+      </g>
+      <rect x={58} y={58} width={4} height={4} fill="currentColor" />
+    </svg>
   );
 }

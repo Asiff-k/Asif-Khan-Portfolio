@@ -20,8 +20,8 @@ export function ToolLoop({ tools }: { tools: string[] }) {
       speed={1.5}
       fontSize={narrow ? 120 : 72}
       fontWeight={800}
-      color="#f5f5f5"
-      separatorColor="#737373"
+      color="#0a0a0a"
+      separatorColor="#8a8a8a"
       pauseOnHover
       scrollBoost={0.2}
       edgeFade={0.25}

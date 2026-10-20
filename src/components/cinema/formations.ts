@@ -111,17 +111,3 @@ export function can(count: number, view: View): { points: Formation; center: [nu
   }
   return { points: out, center: [cx, cy, cz] };
 }
-
-/** Thin circle of particles at the origin: the contact "orb", pulsed in the shader. */
-export function ring(count: number, radius: number): Formation {
-  const r = rand(5);
-  const out = new Float32Array(count * 3);
-  for (let i = 0; i < count; i++) {
-    const a = r() * Math.PI * 2;
-    const rr = radius * (1 + (r() - 0.5) * 0.05);
-    out[i * 3] = Math.cos(a) * rr;
-    out[i * 3 + 1] = Math.sin(a) * rr;
-    out[i * 3 + 2] = (r() - 0.5) * 0.03;
-  }
-  return out;
-}
