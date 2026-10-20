@@ -22,7 +22,7 @@ export function SectionHead({ index, label, title, id, children }: Props) {
         </h2>
       </div>
       {children && (
-        <p className="t-body-sm text-fg-soft md:col-span-4 md:col-start-9 md:self-end">{children}</p>
+        <p className="text-[1.0625rem] leading-relaxed font-medium text-fg md:col-span-4 md:col-start-9 md:self-end md:text-[1.125rem]">{children}</p>
       )}
     </div>
   );

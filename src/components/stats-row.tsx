@@ -42,7 +42,7 @@ export function StatsRow({ stats }: { stats: Stat[] }) {
           <span className="font-display mt-4 text-[clamp(2.25rem,1.6rem+2vw,3.25rem)] leading-none font-medium tracking-[-0.03em]">
             {s.value}
           </span>
-          <span className="mt-2 text-[0.875rem] text-fg-muted">{s.label}</span>
+          <span className="mt-2 text-[0.9375rem] text-fg-soft md:text-base md:text-base">{s.label}</span>
         </li>
       ))}
     </ul>

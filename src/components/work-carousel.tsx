@@ -203,9 +203,9 @@ export function WorkCarousel({ items }: { items: CarouselItem[] }) {
                 <img src={it.image} alt={it.alt} draggable={false} loading="lazy" decoding="async" className="size-full object-cover object-top" />
               </div>
               <div className="px-2 pt-4 pb-2">
-                <p className="text-[0.75rem] font-medium tracking-wide text-[#5d5e62] uppercase">{it.kind}</p>
+                <p className="text-[0.8125rem] font-semibold tracking-wide text-[#2a2b30] uppercase">{it.kind}</p>
                 <h3 className="font-display mt-1 text-[1.375rem] leading-tight font-medium tracking-[-0.02em]">{it.title}</h3>
-                <p className="mt-1.5 line-clamp-2 text-[0.9375rem] text-[#3d3e42]">{it.line}</p>
+                <p className="mt-1.5 line-clamp-2 text-[0.9375rem] text-[#2a2b30] md:text-base">{it.line}</p>
                 <Link
                   href={it.href}
                   tabIndex={i === active ? 0 : -1}
@@ -224,7 +224,7 @@ export function WorkCarousel({ items }: { items: CarouselItem[] }) {
         <button type="button" onClick={() => go(Math.round(target.current) - 1)} aria-label="Previous project" className="btn-secondary !p-3">
           <ArrowLeft />
         </button>
-        <p className="min-w-16 text-center font-mono text-[0.8125rem] text-[#5d5e62]" aria-live="polite">
+        <p className="min-w-16 text-center font-mono text-[0.875rem] text-[#2a2b30]" aria-live="polite">
           {active + 1} / {n}
         </p>
         <button type="button" onClick={() => go(Math.round(target.current) + 1)} aria-label="Next project" className="btn-primary !p-3">

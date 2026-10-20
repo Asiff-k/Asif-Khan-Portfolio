@@ -65,7 +65,7 @@ const panels: Panel[] = [
     title: "Graphic design",
     line: "Posters, product ads, social posts and T-shirt art.",
     detail: `Composition, type and branding, designed in Canva. All ${gallery.length} pieces are in the gallery below, filterable by category.`,
-    color: "#d9481f",
+    color: "#cf4419",
     innerDark: true,
     button: { label: `See all ${gallery.length} pieces`, href: "#design" },
     links: [],
@@ -169,7 +169,7 @@ export default function Home() {
                 ["Studying", "BSc CSE, Leading University (2027)"],
               ].map(([k, v]) => (
                 <div key={k} className="grid grid-cols-[6.5rem_1fr] gap-3 py-2.5">
-                  <dt className="pt-0.5 text-[0.8125rem] text-fg-muted">{k}</dt>
+                  <dt className="pt-0.5 text-[0.875rem] font-medium text-fg-soft md:text-[0.9375rem]">{k}</dt>
                   <dd className="t-body-sm">{v}</dd>
                 </div>
               ))}
@@ -266,7 +266,7 @@ export default function Home() {
                   {logo && <LogoMark logo={logo} name={w.platform} size="sm" />}
                 </div>
                 <h4 className="t-title mt-6">{w.title}</h4>
-                <p className="mt-1 text-[0.875rem] text-fg-muted">{w.org}</p>
+                <p className="mt-1 text-[0.9375rem] text-fg-soft md:text-base md:text-base">{w.org}</p>
                 <p className="t-body-sm mt-4 text-fg-soft">{w.body}</p>
                 <dl className="mt-auto grid grid-cols-[5.5rem_1fr] gap-y-1.5 pt-6 text-[0.8125rem]">
                   <dt className="text-fg-muted">Platform</dt>
@@ -285,43 +285,43 @@ export default function Home() {
         <SectionHead index="05" label="Background" title="Experience and education" id="experience-title" />
         <ul data-reveal-group className="grid gap-4 md:grid-cols-6">
           <li data-reveal="item" className="rounded-card bg-[#e7eef7] p-7 md:order-1 md:col-span-4 md:p-9">
-            <p className="text-[0.8125rem] font-medium text-[#3d3e42]">{nextgen.period}</p>
+            <p className="text-[0.9375rem] font-medium text-[#2a2b30] md:text-base">{nextgen.period}</p>
             <h3 className="t-headline mt-4">{nextgen.title}</h3>
             <p className="mt-2 font-medium">{nextgen.org}</p>
             <ul className="mt-6 space-y-2.5">
               {nextgen.points.slice(0, 2).map((pt) => (
-                <li key={pt} className="t-body-sm text-[#3d3e42]">
+                <li key={pt} className="t-body-sm text-[#2a2b30]">
                   {pt}
                 </li>
               ))}
             </ul>
           </li>
           <li data-reveal="item" className="rounded-card bg-[#f1e9de] p-7 md:col-span-3 md:order-3">
-            <p className="text-[0.8125rem] font-medium text-[#3d3e42]">{incodet.period}</p>
+            <p className="text-[0.9375rem] font-medium text-[#2a2b30] md:text-base">{incodet.period}</p>
             <h3 className="t-title mt-3">{incodet.title}</h3>
             <p className="mt-1 font-medium">{incodet.org}</p>
             <ul className="mt-4 space-y-2">
               {incodet.points.slice(0, 2).map((pt) => (
-                <li key={pt} className="t-body-sm text-[#3d3e42]">
+                <li key={pt} className="t-body-sm text-[#2a2b30]">
                   {pt}
                 </li>
               ))}
             </ul>
           </li>
           <li data-reveal="item" className="rounded-card bg-[#ebe8fb] p-7 md:order-2 md:col-span-2">
-            <p className="text-[0.8125rem] font-medium text-[#3d3e42]">{codesoft.period}</p>
+            <p className="text-[0.9375rem] font-medium text-[#2a2b30] md:text-base">{codesoft.period}</p>
             <h3 className="t-title mt-3">{codesoft.title}</h3>
             <p className="mt-1 font-medium">{codesoft.org}</p>
             <ul className="mt-4 space-y-2">
               {codesoft.points.slice(0, 2).map((pt) => (
-                <li key={pt} className="t-body-sm text-[#3d3e42]">
+                <li key={pt} className="t-body-sm text-[#2a2b30]">
                   {pt}
                 </li>
               ))}
             </ul>
           </li>
           <li data-reveal="item" className="card p-7 md:order-4 md:col-span-3">
-            <h3 className="text-[0.8125rem] font-medium text-fg-muted">Education</h3>
+            <h3 className="text-[0.9375rem] font-medium text-fg-soft md:text-base">Education</h3>
             <ol className="mt-4 space-y-4">
               {education.map((e) => (
                 <li key={e.title}>
@@ -334,7 +334,7 @@ export default function Home() {
             </ol>
           </li>
           <li data-reveal="item" className="card p-7 md:order-5 md:col-span-2">
-            <h3 className="text-[0.8125rem] font-medium text-fg-muted">Skills</h3>
+            <h3 className="text-[0.9375rem] font-medium text-fg-soft md:text-base">Skills</h3>
             <ul className="mt-4 flex flex-wrap gap-2">
               {skills.map((sk) => (
                 <li key={sk} className="rounded-full bg-[#f2f2ef] px-3 py-1.5 text-[0.875rem]">
@@ -342,11 +342,11 @@ export default function Home() {
                 </li>
               ))}
             </ul>
-            <h3 className="mt-6 text-[0.8125rem] font-medium text-fg-muted">Languages</h3>
+            <h3 className="mt-6 text-[0.9375rem] font-medium text-fg-soft md:text-base">Languages</h3>
             <p className="t-body-sm mt-2">{languages.join(", ")}</p>
           </li>
           <li data-reveal="item" className="card p-7 md:order-6 md:col-span-4">
-            <h3 className="text-[0.8125rem] font-medium text-fg-muted">Tools</h3>
+            <h3 className="text-[0.9375rem] font-medium text-fg-soft md:text-base">Tools</h3>
             <dl className="mt-4 grid gap-x-8 gap-y-3 sm:grid-cols-2">
               {toolGroups.map((g) => (
                 <div key={g.label}>

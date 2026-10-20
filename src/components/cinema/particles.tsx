@@ -6,6 +6,7 @@ import { BufferAttribute, BufferGeometry, Color, NormalBlending, ShaderMaterial,
 import { gsap } from "@/lib/gsap";
 import { can, cloud, field, sphere, type Formation, type View } from "./formations";
 import { stage, type FormationKey } from "./stage-controller";
+import { createTextMask } from "./text-mask";
 
 const vertex = /* glsl */ `
   attribute vec3 aFrom;
@@ -87,6 +88,8 @@ const fragment = /* glsl */ `
   uniform vec3 uColorA;
   uniform vec3 uColorB;
   uniform float uOpacity;
+  uniform sampler2D uMask;
+  uniform vec2 uRes;
   varying float vAlpha;
   varying float vMix;
   void main() {
@@ -94,7 +97,11 @@ const fragment = /* glsl */ `
     float a = smoothstep(0.5, 0.0, d);
     a *= a;
     if (a < 0.01) discard;
-    gl_FragColor = vec4(mix(uColorA, uColorB, vMix), a * vAlpha * uOpacity);
+    // Text mask: almost no particles where text sits on the bare page.
+    vec2 uv = gl_FragCoord.xy / uRes;
+    // CanvasTexture is flipped on upload (flipY), so screen-space uv maps straight onto it.
+    float m = texture2D(uMask, uv).r;
+    gl_FragColor = vec4(mix(uColorA, uColorB, vMix), a * vAlpha * uOpacity * mix(1.0, 0.08, m));
   }
 `;
 
@@ -130,11 +137,9 @@ export function Particles({ count }: { count: number }) {
     ready.current = { promise, resolve };
   }
   const pointer = useRef({ target: new Vector2(999, 999), active: 0, targetActive: 0 });
-  // Sections that ask for a clean background (see data-particles-quiet).
-  const quietEls = useRef<HTMLElement[]>([]);
-  useEffect(() => {
-    quietEls.current = [...document.querySelectorAll<HTMLElement>("[data-particles-quiet]")];
-  }, []);
+  // Where text sits on the bare page (see text-mask.ts).
+  const mask = useMemo(() => createTextMask(), []);
+  useEffect(() => () => mask.dispose(), [mask]);
 
   const view: View = useMemo(() => {
     const v = viewport.getCurrentViewport(camera, [0, 0, 0]);
@@ -184,9 +189,11 @@ export function Particles({ count }: { count: number }) {
           uColorA: { value: new Color(LOOK.a) },
           uColorB: { value: new Color(LOOK.b) },
           uOpacity: { value: LOOK.opacity },
+          uMask: { value: mask.texture },
+          uRes: { value: new Vector2(1, 1) },
         },
       }),
-    [gl],
+    [gl, mask],
   );
 
   // Which ends of the current pair turn, and about which centre.
@@ -339,18 +346,9 @@ export function Particles({ count }: { count: number }) {
     (u.uPointer.value as Vector2).lerp(ptr.target, k);
     ptr.active += (ptr.targetActive - ptr.active) * k;
     u.uPointerActive.value = ptr.active;
-    // Past the hero, the wave field sits behind reading sections: ease it to
-    // 60% so paragraphs stay easy to read; shapes keep full strength. Sections
-    // marked data-particles-quiet (the About statement, whose grey words must
-    // stay readable) fade the particles almost to nothing while on screen.
-    const reading = lastTarget.current === "field" && window.scrollY > window.innerHeight * 0.5;
-    let quiet = false;
-    for (const q of quietEls.current) {
-      const r = q.getBoundingClientRect();
-      if (r.top < window.innerHeight * 0.9 && r.bottom > window.innerHeight * 0.1) quiet = true;
-    }
-    const goal = LOOK.opacity * (quiet ? 0.04 : reading ? 0.6 : 1);
-    u.uOpacity.value += (goal - u.uOpacity.value) * (1 - Math.pow(0.02, dt));
+    // Clear the particles behind text (the mask), and keep them bold elsewhere.
+    mask.update();
+    gl.getDrawingBufferSize(u.uRes.value as Vector2);
   });
 
   return <points ref={points} geometry={geometry} material={material} frustumCulled={false} />;

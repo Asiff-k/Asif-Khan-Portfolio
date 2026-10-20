@@ -34,7 +34,7 @@ export function DesignGallery({ entries, categories }: { entries: GalleryEntry[]
                 {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
                 <img {...props} />
               </span>
-              <span className="mt-2.5 block px-1 text-[0.875rem] text-fg-soft group-hover:text-fg">{e.title}</span>
+              <span className="mt-2.5 block px-1 text-[0.9375rem] font-medium text-fg-soft group-hover:text-fg md:text-base">{e.title}</span>
             </button>
           </li>
         );

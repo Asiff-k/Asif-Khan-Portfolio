@@ -25,7 +25,7 @@ export function SiteFooter() {
             I&apos;m a CSE student who builds web apps and designs interfaces and graphics. If you&apos;d like to talk
             about my work or a project, I&apos;d be glad to hear from you.
           </p>
-          <p className="mt-3 text-[0.875rem] text-fg-muted">Sylhet, Bangladesh · GMT+6</p>
+          <p className="mt-3 text-[0.9375rem] text-fg-soft md:text-base md:text-base">Sylhet, Bangladesh · GMT+6</p>
         </div>
 
         <ul data-reveal-group className="mx-auto mt-12 grid max-w-5xl gap-3 sm:grid-cols-2 lg:grid-cols-4 md:gap-4">
@@ -40,7 +40,7 @@ export function SiteFooter() {
                     <ContactIcon contact={c} size="sm" />
                   </span>
                   <span className="min-w-0 flex-1">
-                    <span className="block text-[0.8125rem] text-fg-muted">{c.label}</span>
+                    <span className="block text-[0.875rem] font-medium text-fg-soft md:text-[0.9375rem]">{c.label}</span>
                     <a
                       href={c.href}
                       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
@@ -95,7 +95,7 @@ export function SiteFooter() {
         <FooterName name={site.name} />
       </div>
       <div className="page-x border-t border-line py-5">
-        <p className="text-[0.8125rem] text-fg-muted">© 2026 {site.name}</p>
+        <p className="text-[0.875rem] font-medium text-fg-soft md:text-[0.9375rem]">© 2026 {site.name}</p>
       </div>
     </footer>
   );

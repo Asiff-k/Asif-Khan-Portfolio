@@ -46,7 +46,7 @@ export function ToolWall({ tools, caption }: { tools: WallTool[]; caption: strin
           );
         })}
       </ul>
-      <p className="mt-8 text-center text-[0.9375rem] text-fg-soft">
+      <p className="mt-8 text-center text-[0.9375rem] text-fg-soft md:text-base">
         <span className="rounded-md bg-[linear-gradient(transparent_45%,#f9e48c_45%,#f9e48c_88%,transparent_88%)] px-1.5 font-medium text-fg">
           {caption}
         </span>

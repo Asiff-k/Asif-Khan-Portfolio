@@ -18,13 +18,13 @@
   --color-stone: #f7f7f5;
   --color-stone-deep: #ffffff;
   --color-ink: #121316;
-  --color-ink-soft: #3d3e42;
-  --color-muted: #5d5e62;
+  --color-ink-soft: #2a2b30;
+  --color-muted: #2a2b30;
   --color-rule: #e6e6e3;
   --color-carbon: #f7f7f5;
   --color-carbon-rule: #e6e6e3;
   --color-carbon-text: #121316;
-  --color-carbon-muted: #5d5e62;
+  --color-carbon-muted: #2a2b30;
   --color-moss: #121316;
   --color-mint: #121316;
 
@@ -58,8 +58,8 @@
     color-scheme: light;
     --scene-bg: #f7f7f5;
     --scene-fg: #121316;
-    --scene-fg-soft: #3d3e42;
-    --scene-fg-muted: #5d5e62;
+    --scene-fg-soft: #2a2b30;
+    --scene-fg-muted: #2a2b30;
     --scene-line: #e6e6e3;
     --scene-line-strong: #c9c9c5;
     --scene-surface: #ffffff;
@@ -83,6 +83,7 @@
     color: var(--scene-fg);
     font-family: var(--font-sans);
     font-size: 1rem;
+    font-weight: 450;
     line-height: 1.6;
     letter-spacing: -0.005em;
     -webkit-font-smoothing: antialiased;
@@ -173,7 +174,10 @@
 }
 
 @utility t-body-sm {
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
+  @media (width >= 48rem) {
+    font-size: 1rem;
+  }
   line-height: 1.55;
   letter-spacing: 0;
 }
@@ -524,21 +528,8 @@ a:focus-visible .logo-mark img {
   .logo-mark img { transform: none !important; }
 }
 
-/* ---------- Reading over the particle field ----------
-   Once the particle stage is on the page (html.has-stage), paragraph text gets
-   a soft halo in the page colour, which locally fades the particles behind it
-   so body copy stays easy to read. */
-.has-stage main p,
-.has-stage footer p,
-.has-stage main li {
-  text-shadow:
-    0 0 6px var(--scene-bg),
-    0 0 14px var(--scene-bg);
-}
-.no-halo,
-.no-halo * {
-  text-shadow: none !important;
-}
+/* Reading over the particle field: the particle shader clears itself behind
+   text (src/components/cinema/text-mask.ts), so no text halo is needed. */
 
 
 /* ---------- About: skill stickers ----------

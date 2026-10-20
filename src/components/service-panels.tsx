@@ -61,7 +61,7 @@ export function ServicePanels({ panels }: { panels: Panel[] }) {
                 </Link>
               </div>
               <div className="md:col-span-5">
-                <p className={`text-[0.9375rem] leading-relaxed ${p.innerDark ? "text-white" : "text-white/80"}`}>{p.detail}</p>
+                <p className={`text-[0.9375rem] leading-relaxed md:text-base text-white`}>{p.detail}</p>
                 {p.links.length > 0 && (
                   <ul className="mt-4 flex flex-wrap gap-2" aria-label={`${p.title}: related work`}>
                     {p.links.map((l) => (
@@ -118,7 +118,7 @@ export function ServicePanels({ panels }: { panels: Panel[] }) {
                     </span>
                     <span className="min-w-0">
                       <span className="block font-medium">{c.title}</span>
-                      <span className="mt-0.5 block text-[0.8125rem] text-[#5d5e62]">{c.meta}</span>
+                      <span className="mt-0.5 block text-[0.875rem] text-[#2a2b30]">{c.meta}</span>
                     </span>
                   </li>
                 ))}

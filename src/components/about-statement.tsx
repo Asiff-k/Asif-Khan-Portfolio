@@ -24,7 +24,7 @@ export type SkillSticker = {
  * the paragraph, so they never cover a word; under 1024px they wrap in a row
  * below it. Words are split on the server, so the text is complete without
  * JavaScript; with reduced motion the text is dark and every sticker shows.
- * The particle field fades out behind this section (data-particles-quiet).
+ * The particle shader clears itself behind the text (see text-mask.ts).
  */
 export function AboutStatement({ text, stickers }: { text: string; stickers: SkillSticker[] }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -80,7 +80,7 @@ export function AboutStatement({ text, stickers }: { text: string; stickers: Ski
   }, [reduce, stickers, text]);
 
   return (
-    <div ref={ref} data-particles-quiet className="relative">
+    <div ref={ref} className="relative">
       <p className="font-display relative mx-auto max-w-4xl text-center text-[clamp(1.6rem,1.05rem+2.3vw,3rem)] leading-[1.18] font-medium tracking-[-0.025em] text-[#121316] [text-shadow:none] lg:max-w-[min(56rem,calc(100%-27rem))]">
         {words.map((w, i) => (
           <span key={i} data-word>
