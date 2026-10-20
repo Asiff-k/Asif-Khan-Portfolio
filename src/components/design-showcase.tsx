@@ -123,7 +123,7 @@ export function DesignShowcase({ pieces, grid }: { pieces: { src: string; title:
               label="Design pieces on a 3D dome. Arrow keys turn it, Enter opens the piece in front, Escape closes it."
               fit={0.6}
               grayscale={false}
-              overlayBlurColor="#181a1d"
+              overlayBlurColor="#0a0a0a"
               imageBorderRadius="0px"
               openedImageBorderRadius="0px"
               openedImageWidth="min(80vw, 420px)"

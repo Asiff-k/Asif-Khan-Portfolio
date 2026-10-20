@@ -9,22 +9,24 @@
 }
 
 /*
- * Design tokens from the Stitch "Kinetic Editorial Technologist" system.
- * Light editorial canvas with inverted carbon panels. Every corner is sharp.
+ * Monochrome: black, white and greys only. Every corner is sharp.
+ * The token names come from the earlier light theme and are kept so every
+ * page switches at once: "stone" is now the black page colour, "ink" the
+ * white text colour, and the former green accents (moss, mint) are white.
  */
 @theme {
-  --color-stone: #f7f6f2;
-  --color-stone-deep: #ebeae5;
-  --color-ink: #121316;
-  --color-ink-soft: #46464b;
-  --color-muted: #5f6359;
-  --color-rule: #dfe1d8;
-  --color-carbon: #181a1d;
-  --color-carbon-rule: #2a2d33;
-  --color-carbon-text: #f7f6f2;
-  --color-carbon-muted: #a2a59f;
-  --color-moss: #3e6b5c;
-  --color-mint: #82b8a0;
+  --color-stone: #0a0a0a;
+  --color-stone-deep: #141414;
+  --color-ink: #f5f5f5;
+  --color-ink-soft: #c4c4c4;
+  --color-muted: #a3a3a3;
+  --color-rule: #262626;
+  --color-carbon: #0a0a0a;
+  --color-carbon-rule: #262626;
+  --color-carbon-text: #f5f5f5;
+  --color-carbon-muted: #a3a3a3;
+  --color-moss: #f5f5f5;
+  --color-mint: #ffffff;
 
   --font-display: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
@@ -36,11 +38,7 @@
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/*
- * Scene-aware colours ("house lights"). These follow --scene-* variables,
- * which the scene director tweens between the light and dark palettes.
- * Off the home page they stay on the light palette.
- */
+/* Semantic colours. One black palette for the whole site (no light sections). */
 @theme inline {
   --color-bg: var(--scene-bg);
   --color-fg: var(--scene-fg);
@@ -55,34 +53,18 @@
 
 @layer base {
   :root {
-    color-scheme: light;
-    --scene-bg: #f7f6f2;
-    --scene-fg: #121316;
-    --scene-fg-soft: #46464b;
-    --scene-fg-muted: #5f6359;
-    --scene-line: #dfe1d8;
-    --scene-line-strong: #121316;
-    --scene-surface: #ebeae5;
-    --scene-accent: #3e6b5c;
-    --scene-on-fg: #f7f6f2;
-    --scene-dark: 0;
+    color-scheme: dark;
+    --scene-bg: #0a0a0a;
+    --scene-fg: #f5f5f5;
+    --scene-fg-soft: #c4c4c4;
+    --scene-fg-muted: #a3a3a3;
+    --scene-line: #262626;
+    --scene-line-strong: #8a8a8a;
+    --scene-surface: #141414;
+    --scene-accent: #ffffff;
+    --scene-on-fg: #0a0a0a;
   }
 
-  /* The home page opens on the dark hero scene, before any script runs. */
-  :root:has(main[data-scenes]) {
-    --scene-bg: #181a1d;
-    --scene-fg: #f7f6f2;
-    --scene-fg-soft: #a2a59f;
-    --scene-fg-muted: #a2a59f;
-    --scene-line: #2a2d33;
-    --scene-line-strong: #a2a59f;
-    --scene-surface: #2a2d33;
-    --scene-accent: #82b8a0;
-    --scene-on-fg: #181a1d;
-    --scene-dark: 1;
-  }
-
-  /* The page background is the scene colour; .scene-backdrop carries the fade between scenes. */
   html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
@@ -248,21 +230,16 @@
   }
 }
 
-/* High contrast: before any script runs; the house lights apply the same
-   values (paletteFor in src/lib/scene.ts). */
+/* High contrast: lighter secondary text and stronger rules. */
 @media (prefers-contrast: more) {
   :root {
-    --color-rule: #121316;
-    --color-muted: #2f312c;
-    --color-carbon-muted: #d7d9d2;
-    --scene-fg-soft: #2f312c;
-    --scene-fg-muted: #2f312c;
-    --scene-line: #121316;
-  }
-  :root:has(main[data-scenes]) {
-    --scene-fg-soft: #d7d9d2;
-    --scene-fg-muted: #d7d9d2;
-    --scene-line: #a2a59f;
+    --color-rule: #8a8a8a;
+    --color-muted: #e5e5e5;
+    --color-ink-soft: #e5e5e5;
+    --color-carbon-muted: #e5e5e5;
+    --scene-fg-soft: #e5e5e5;
+    --scene-fg-muted: #e5e5e5;
+    --scene-line: #8a8a8a;
   }
 }
 
@@ -291,24 +268,13 @@
   100% { transform: translate(0, 0); }
 }
 
-/* House lights fade layer (see SceneDirector): transparent at rest, opacity-only while scenes change. */
-.scene-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0;
-}
-
-/* Behind the content (z 0, after the stage in DOM order): darkens the backdrop, never the text.
-   Fades with the backdrop. */
+/* Behind the content (z 0, after the stage in DOM order): darkens the edges, never the text. */
 .cinema-vignette {
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: var(--scene-dark);
-  background: radial-gradient(ellipse at 50% 45%, transparent 60%, rgb(18 19 22 / 0.5) 100%);
+  background: radial-gradient(ellipse at 50% 45%, transparent 60%, rgb(0 0 0 / 0.55) 100%);
 }
 
 .cinema-edge {
@@ -318,8 +284,6 @@
   z-index: 43;
   height: 10vh;
   pointer-events: none;
-  opacity: var(--scene-dark);
-  visibility: hidden;
 }
 .cinema-edge--top { top: 4rem; }
 .cinema-edge--bottom { bottom: 0; }
@@ -334,8 +298,9 @@
 .cinema-edge--bottom span:nth-child(2) { mask-image: linear-gradient(to top, #000 0%, #000 20%, transparent 65%); }
 .cinema-edge--bottom span:nth-child(3) { mask-image: linear-gradient(to top, #000 0%, transparent 35%); }
 
-html[data-scene="dark"] .cinema-edge {
-  visibility: visible;
+/* Home page only (other pages would sit blurred under it at rest). */
+html:not(:has(main[data-home])) .cinema-edge {
+  display: none;
 }
 
 /* Keep the open mobile menu sharp; skip the blur over the moving 3D dome. */
@@ -366,10 +331,10 @@ html[data-dome] .cinema-edge {
 }
 /* The site is sharp everywhere: square marquee thumbnails. */
 .fm-work span[style*="background-image"] { border-radius: 0; }
-/* Keyboard focus: the moss band slides in, plus a stone ring inside it (the
+/* Keyboard focus: the white band slides in, plus a black ring inside it (the
    component's own focus outline is cancelled by its outline-none class). */
 .fm-work a:focus-visible {
-  outline: 2px solid #f7f6f2;
+  outline: 2px solid #0a0a0a;
   outline-offset: -6px;
 }
 
@@ -426,8 +391,8 @@ html[data-dome] .cinema-edge {
   width: 8px;
   height: 8px;
   border-radius: 9999px;
-  background: #f7f6f2;
-  color: #121316;
+  background: #f5f5f5;
+  color: #0a0a0a;
   mix-blend-mode: difference;
   pointer-events: none;
   opacity: 0;
@@ -437,8 +402,7 @@ html[data-dome] .cinema-edge {
     opacity 0.2s linear;
 }
 .cursor[data-visible] { opacity: 1; }
-/* The labelled circle is solid (scene ink on light, stone on dark): a blended
-   circle turns off-palette over moss. */
+/* The labelled circle is solid white with black text, so its label always reads. */
 .cursor[data-label] {
   width: 64px;
   height: 64px;
@@ -456,12 +420,12 @@ html[data-dome] .cinema-edge {
 }
 .cursor[data-label] span { opacity: 1; transition-delay: 0.15s; }
 
-/* ---------- Project pages: moss panel wipe on arrival ---------- */
+/* ---------- Project pages: white panel wipe on arrival ---------- */
 .page-wipe {
   position: fixed;
   inset: 4rem 0 0 0;
   z-index: 35;
-  background: #3e6b5c;
+  background: #f5f5f5;
   pointer-events: none;
   transform-origin: top;
   transform: scaleY(0);
@@ -497,36 +461,27 @@ html[data-dome] .cinema-edge {
 }
 .d-mockup-phone {
   border-color: var(--scene-line-strong);
-  background: #121316;
+  background: #0a0a0a;
 }
 
-/* ---------- Hero intro (letterbox) ---------- */
-.intro-bar {
-  display: none;
-  position: fixed;
-  left: 0;
-  right: 0;
-  z-index: 70;
-  height: 12vh;
-  /* Ink (darkest token) so the letterbox reads against the carbon hero. */
-  background: #121316;
-  pointer-events: none;
+/* ---------- Hero headline: a simple fade-in (CSS only, so it never waits for JavaScript) ---------- */
+[data-hero-title] {
+  animation: hero-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
 }
-.intro-bar--top { top: 0; border-bottom: 1px solid #2a2d33; }
-.intro-bar--bottom { bottom: 0; border-top: 1px solid #2a2d33; }
-html.intro .intro-bar,
-html.intro-playing .intro-bar {
-  display: block;
+@keyframes hero-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
 }
-html.intro [data-hero-title] {
-  visibility: hidden;
+
+/* ---------- Monochrome hovers ----------
+   Links used to turn green on hover; with white text on black, a colour
+   change to white is invisible, so those hovers underline instead. */
+.hover\:text-accent:hover,
+.group:hover .group-hover\:text-accent,
+.hover\:text-moss:hover,
+.group:hover .group-hover\:text-moss,
+.hover\:text-mint:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
 }
-/* Fail-safe: if the intro script never runs, reveal everything after 3s. */
-html.intro [data-hero-title] {
-  animation: intro-failsafe 0s linear 3s forwards;
-}
-html.intro .intro-bar {
-  animation: intro-failsafe-bar 0s linear 3s forwards;
-}
-@keyframes intro-failsafe { to { visibility: visible; } }
-@keyframes intro-failsafe-bar { to { visibility: hidden; } }

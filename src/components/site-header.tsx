@@ -86,7 +86,7 @@ export function SiteHeader() {
             <li>
               <Link
                 href="/#contact"
-                className="t-stamp pressable inline-flex items-center bg-fg px-4 py-3 text-on-fg hover:bg-accent"
+                className="t-stamp pressable inline-flex items-center bg-fg px-4 py-3 text-on-fg hover:bg-fg-soft"
               >
                 Contact
               </Link>

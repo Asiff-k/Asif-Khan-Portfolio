@@ -1,11 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono, Manrope } from "next/font/google";
 import { CinemaRoot } from "@/components/cinema/cinema-root";
-import { introScript } from "@/components/cinema/intro";
 import { StageLoader } from "@/components/cinema/stage-loader";
 import { Overlays } from "@/components/cinema/overlays";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { jsFlagScript } from "@/lib/js-flag";
 import { siteUrl } from "@/lib/site-url";
 import "lenis/dist/lenis.css";
 import "./globals.css";
@@ -46,24 +46,21 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f7f6f2",
+  themeColor: "#0a0a0a",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      // The intro script adds a class before hydration; only <html> attributes are exempt.
+      // The head script adds a class before hydration; only <html> attributes are exempt.
       suppressHydrationWarning
       className={`${manrope.variable} ${inter.variable} ${jetbrains.variable}`}
     >
       <head>
-        {/* Decides before first paint whether the hero intro plays. */}
-        <script dangerouslySetInnerHTML={{ __html: introScript }} />
+        <script dangerouslySetInnerHTML={{ __html: jsFlagScript }} />
       </head>
       <body className="min-h-dvh">
-        <div aria-hidden className="intro-bar intro-bar--top" />
-        <div aria-hidden className="intro-bar intro-bar--bottom" />
         <a
           href="#main"
           className="t-label sr-only z-50 bg-ink px-4 py-3 text-stone focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
@@ -73,8 +70,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <SiteHeader />
         {children}
         <SiteFooter />
-        {/* House lights fade layer: above the page background, below the particle stage. */}
-        <div aria-hidden className="scene-backdrop" />
         <StageLoader />
         <Overlays />
         <CinemaRoot />

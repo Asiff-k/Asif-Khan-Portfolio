@@ -21,9 +21,6 @@ setConsoleFunction((type: string, message: string, ...params: unknown[]) => {
 export default function Stage() {
   const [tier] = useState(getDeviceTier);
   const [running, setRunning] = useState(true);
-  const [family] = useState(
-    () => getComputedStyle(document.documentElement).getPropertyValue("--font-manrope").trim() || "sans-serif",
-  );
 
   // Pause rendering when the tab is hidden.
   useEffect(() => {
@@ -40,7 +37,7 @@ export default function Stage() {
         camera={{ position: [0, 0, 10], fov: 35, near: 0.1, far: 50 }}
         gl={{ antialias: false, alpha: true, powerPreference: "high-performance", stencil: false, depth: false }}
       >
-        <Particles count={tier.particles} fontFamily={family} />
+        <Particles count={tier.particles} />
       </Canvas>
     </div>
   );

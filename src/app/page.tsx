@@ -124,9 +124,9 @@ const galleryEntries: GalleryEntry[] = gallery.map((g) => ({
 
 export default function Home() {
   return (
-    <main id="main" data-scenes="home">
+    <main id="main" data-home>
       {/* Intro */}
-      <section data-scene="dark" className="page-x pt-10 pb-24 md:pt-16 md:pb-32" aria-labelledby="intro-title">
+      <section className="page-x pt-10 pb-24 md:pt-16 md:pb-32" aria-labelledby="intro-title">
         <div className="grid gap-12 md:grid-cols-12 md:gap-10">
           <div className="md:col-span-7 lg:col-span-8">
             <p className="t-stamp text-accent">Software · UI/UX · Graphic design · AI</p>
@@ -142,7 +142,7 @@ export default function Home() {
             <div className="mt-10 flex flex-wrap gap-3">
               <Link
                 href="#work"
-                className="t-stamp pressable inline-flex items-center gap-2 bg-fg px-5 py-4 text-on-fg hover:bg-accent"
+                className="t-stamp pressable inline-flex items-center gap-2 bg-fg px-5 py-4 text-on-fg hover:bg-fg-soft"
               >
                 See my work <ArrowDown />
               </Link>
@@ -190,7 +190,7 @@ export default function Home() {
       </section>
 
       {/* What I do */}
-      <section data-scene="light" className="page-x py-24 md:py-32" aria-labelledby="skills-title">
+      <section className="page-x py-24 md:py-32" aria-labelledby="skills-title">
         <SectionHead index="01" label="Skills" title="What I do" id="skills-title">
           Four kinds of work, each with the projects behind it.
         </SectionHead>
@@ -234,7 +234,7 @@ export default function Home() {
       </section>
 
       {/* Selected work */}
-      <section id="work" data-scene="light" className="page-x py-24 md:py-32" aria-labelledby="work-title">
+      <section id="work" className="page-x py-24 md:py-32" aria-labelledby="work-title">
         <SectionHead index="02" label="Projects" title="Selected work" id="work-title">
           Two web apps I built on my own, a company website I designed and built, and interface designs for client
           websites.
@@ -311,7 +311,7 @@ export default function Home() {
       </section>
 
       {/* Graphic design */}
-      <section id="design" data-scene="dark" className="page-x py-24 md:py-32" aria-labelledby="design-title">
+      <section id="design" className="page-x py-24 md:py-32" aria-labelledby="design-title">
         <SectionHead index="03" label="Graphic design" title="Posters, ads and social posts" id="design-title">
           I generate the imagery with AI tools, then do the composition, type and branding myself. Tap any piece to see
           it larger.
@@ -325,7 +325,7 @@ export default function Home() {
       </section>
 
       {/* AI data work */}
-      <section id="ai-data" data-scene="dark" aria-labelledby="ai-title">
+      <section id="ai-data" aria-labelledby="ai-title">
         <div aria-hidden className="overflow-hidden pt-16 md:pt-24">
           <ToolLoop tools={loopTools} />
         </div>
@@ -364,7 +364,7 @@ export default function Home() {
       </section>
 
       {/* Experience */}
-      <section id="experience" data-scene="light" className="page-x py-24 md:py-32" aria-labelledby="experience-title">
+      <section id="experience" className="page-x py-24 md:py-32" aria-labelledby="experience-title">
         <SectionHead index="05" label="Background" title="Experience and education" id="experience-title" />
         <div className="grid gap-16 pt-10 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-7">
@@ -439,7 +439,7 @@ export default function Home() {
       </section>
 
       {/* Contact */}
-      <section id="contact" data-scene="dark" aria-labelledby="contact-title">
+      <section id="contact" aria-labelledby="contact-title">
         <div className="page-x grid gap-14 py-24 md:py-32 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-6">
             <p className="t-stamp text-accent">06 · Contact</p>

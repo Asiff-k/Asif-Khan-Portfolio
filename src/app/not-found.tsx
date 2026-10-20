@@ -10,7 +10,7 @@ export default function NotFound() {
         This page doesn&apos;t exist. It may have moved, or the link may have a typo.
       </p>
       <div className="mt-10 flex flex-wrap gap-3">
-        <Link href="/" className="t-stamp pressable inline-flex items-center gap-2 bg-ink px-5 py-4 text-stone hover:bg-moss">
+        <Link href="/" className="t-stamp pressable inline-flex items-center gap-2 bg-ink px-5 py-4 text-stone hover:bg-ink-soft">
           <ArrowLeft /> Back to home
         </Link>
         <Link

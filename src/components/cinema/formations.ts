@@ -58,13 +58,14 @@ export function sphere(count: number, radius: number, center: [number, number, n
 /**
  * Drinks can surface: a lathe profile (domed base, straight body, tapered neck,
  * lid rim) sampled by surface area, tilted slightly. Echoes the can designs in
- * the gallery. Sits right of centre so the section heading stays clear.
+ * the gallery. Sits right of centre so the section heading stays clear, and
+ * turns about its own vertical axis (see SPINS in particles.tsx).
  *
  * TODO(asset): the brief's solid can (lathe mesh with a label sleeve) needs flat
  * label artwork at public/design/labels/*.png (about 1.8:1). Until then the
  * Design beat stays particles only.
  */
-export function can(count: number, view: View): Formation {
+export function can(count: number, view: View): { points: Formation; center: [number, number, number] } {
   const r = rand(4);
   const height = view.halfH * 1.25;
   const radius = height * 0.27;
@@ -108,49 +109,19 @@ export function can(count: number, view: View): Formation {
     out[i * 3 + 1] = cy + x * Math.sin(tilt) + yy * Math.cos(tilt);
     out[i * 3 + 2] = cz + z;
   }
-  return out;
+  return { points: out, center: [cx, cy, cz] };
 }
 
-/**
- * Points sampled from "ASIF" drawn in Manrope 800 on an offscreen canvas.
- * Falls back to a sphere if the canvas or font is unavailable.
- */
-export async function name(count: number, view: View, family: string): Promise<Formation> {
-  try {
-    await document.fonts.load(`800 200px ${family}`);
-  } catch {}
-  const w = 1400;
-  const h = 420;
-  const canvas = document.createElement("canvas");
-  canvas.width = w;
-  canvas.height = h;
-  const ctx = canvas.getContext("2d", { willReadFrequently: true });
-  if (!ctx) return sphere(count, view.halfH * 0.7);
-  ctx.fillStyle = "#fff";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.font = `800 360px ${family}`;
-  ctx.fillText("ASIF", w / 2, h / 2 + 10);
-  const data = ctx.getImageData(0, 0, w, h).data;
-  const hits: number[] = [];
-  for (let y = 0; y < h; y += 2) {
-    for (let x = 0; x < w; x += 2) {
-      if (data[(y * w + x) * 4 + 3] > 128) hits.push(x, y);
-    }
-  }
-  if (hits.length === 0) return sphere(count, view.halfH * 0.7);
-  const r = rand(3);
+/** Thin circle of particles at the origin: the contact "orb", pulsed in the shader. */
+export function ring(count: number, radius: number): Formation {
+  const r = rand(5);
   const out = new Float32Array(count * 3);
-  // A wide wordmark along the lower edge of the hero, below the text block and
-  // partly cropped by the frame, so the headline and intro sit on clean dark.
-  // Glyphs are about 260px tall in the 420px canvas; aim for half the view height.
-  const scale = Math.min((view.halfH * 0.5) / 260, (view.halfW * 1.8) / w);
-  const centerY = -view.halfH * 0.74;
   for (let i = 0; i < count; i++) {
-    const k = Math.floor(r() * (hits.length / 2)) * 2;
-    out[i * 3] = (hits[k] - w / 2 + (r() - 0.5) * 2) * scale;
-    out[i * 3 + 1] = -(hits[k + 1] - h / 2 + (r() - 0.5) * 2) * scale + centerY;
-    out[i * 3 + 2] = (r() - 0.5) * 0.4;
+    const a = r() * Math.PI * 2;
+    const rr = radius * (1 + (r() - 0.5) * 0.05);
+    out[i * 3] = Math.cos(a) * rr;
+    out[i * 3 + 1] = Math.sin(a) * rr;
+    out[i * 3 + 2] = (r() - 0.5) * 0.03;
   }
   return out;
 }

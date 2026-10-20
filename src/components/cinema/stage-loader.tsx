@@ -13,7 +13,7 @@ const Stage = dynamic(() => import("./stage"), { ssr: false });
  * load it once the browser is idle. Touch devices wait for the first scroll
  * or touch: evaluating three.js costs a phone several hundred milliseconds of
  * main thread, which would otherwise land while the page is still becoming
- * interactive. Reduced motion gets a static poster instead.
+ * interactive. Reduced motion gets no stage.
  */
 export function StageLoader() {
   const pathname = usePathname();
@@ -50,13 +50,7 @@ export function StageLoader() {
   }, [pathname, reduce]);
 
   if (pathname !== "/") return null;
-  if (reduce) {
-    return (
-      <div
-        aria-hidden
-        className="pointer-events-none fixed inset-0 z-0 bg-[url(/images/cinema-poster.webp)] bg-cover bg-center opacity-60"
-      />
-    );
-  }
+  // Reduced motion: no particles at all, just the black page.
+  if (reduce) return null;
   return go ? <Stage /> : null;
 }

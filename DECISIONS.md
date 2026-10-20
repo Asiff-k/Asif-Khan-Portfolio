@@ -97,3 +97,16 @@ One line each: what was chosen and why.
 - prefers-contrast: more applies darker secondary text and stronger rules to the scene palettes too (paletteFor in src/lib/scene.ts), not only to the static tokens.
 - Flowing Menu links get an explicit focus ring: the component's outline-none class cancels its own focus outline in Tailwind 4.
 - The cursor label is re-checked on scroll, so it does not keep the label of an element that scrolled away.
+
+## Monochrome redesign (black and white)
+
+- One black palette for the whole site: page #0a0a0a, surface #141414, rules #262626, strong rules #8a8a8a, text #f5f5f5, secondary text #c4c4c4 and #a3a3a3, accent white. No green anywhere (UI, particles, favicon, social share image, theme colour).
+- The old token names (stone, ink, moss, mint, carbon) are kept with new values so every page turned black at once: "stone" is now the black page colour, "ink" the white text colour, moss and mint are white. A comment in globals.css explains this.
+- Light/dark scene switching is removed completely (scene director, fade layer, per-section light/dark markers). Every page, including project pages, the AI tools page and 404, is black.
+- Links that used to turn green on hover now underline (white on white would show no change). White buttons hover to light grey; pressed filter buttons are white with black text.
+- Content images stay in colour: your portrait, project screenshots and design pieces are the work itself, not interface colour.
+- Particles are white and grey (additive, 50% opacity). With reduced motion there is no stage and no poster (the old poster was a capture of the green ASIF formation).
+- The "ASIF" particle wordmark and the letterbox intro are gone. The hero headline fades and rises in with CSS only (0.9s), so it never waits for JavaScript; reduced motion shows it at once. On load the particles gather into the quiet field.
+- The sphere (AI data) and the can (Design) turn about their own vertical axis continuously, one full turn about every 18 seconds, including while they form.
+- The contact orb is now a thin white ring of particles that pulses slowly (about 7% in size) and drifts half way toward the cursor.
+- The progressive edge blur is limited to the home page: with every page black, it would otherwise blur the top of project pages at rest.

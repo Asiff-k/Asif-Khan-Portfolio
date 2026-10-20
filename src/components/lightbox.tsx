@@ -337,7 +337,7 @@ export function Lightbox({ items, index, onIndexChange, onClosed, getOrigin, lab
       onPointerCancel={onPointerUp}
       onClick={onBackdropClick}
     >
-      <motion.div aria-hidden className="absolute inset-0 bg-[rgba(18,19,22,0.97)]" style={{ opacity: scrim }} />
+      <motion.div aria-hidden className="absolute inset-0 bg-[rgba(10,10,10,0.97)]" style={{ opacity: scrim }} />
 
       <motion.div className="absolute inset-0" style={{ x: trackX }}>
         {neighbours.map((i) => {

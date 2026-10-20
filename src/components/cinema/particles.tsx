@@ -2,19 +2,9 @@
 
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
-import {
-  AdditiveBlending,
-  BufferAttribute,
-  BufferGeometry,
-  Color,
-  NormalBlending,
-  ShaderMaterial,
-  Vector2,
-  type Points,
-} from "three";
+import { AdditiveBlending, BufferAttribute, BufferGeometry, Color, ShaderMaterial, Vector2, Vector3, type Points } from "three";
 import { gsap } from "@/lib/gsap";
-import { sceneStore, type SceneName } from "@/lib/scene";
-import { can, cloud, field, name, sphere, type Formation, type View } from "./formations";
+import { can, cloud, field, ring, sphere, type Formation, type View } from "./formations";
 import { stage, type FormationKey } from "./stage-controller";
 
 const vertex = /* glsl */ `
@@ -30,6 +20,12 @@ const vertex = /* glsl */ `
   uniform vec2 uPointer;
   uniform float uPointerActive;
   uniform float uRepel;
+  uniform float uAngle;
+  uniform float uSpinFrom;
+  uniform float uSpinTo;
+  uniform vec3 uCenterFrom;
+  uniform vec3 uCenterTo;
+  uniform float uPulse;
   varying float vAlpha;
   varying float vMix;
 
@@ -42,14 +38,26 @@ const vertex = /* glsl */ `
     );
   }
 
+  // Turn a point about the vertical axis through c.
+  vec3 spinY(vec3 p, vec3 c, float a) {
+    vec3 d = p - c;
+    float s = sin(a);
+    float k = cos(a);
+    return c + vec3(d.x * k + d.z * s, d.y, -d.x * s + d.z * k);
+  }
+
   void main() {
     // Stagger: each particle starts a little later than the last.
     float p = clamp(uProgress * 1.3 - aRand.w * 0.3, 0.0, 1.0);
     p = p * p * (3.0 - 2.0 * p);
-    vec3 pos = mix(aFrom, aTo, p);
+    vec3 from = mix(aFrom, spinY(aFrom, uCenterFrom, uAngle), uSpinFrom);
+    vec3 to = mix(aTo, spinY(aTo, uCenterTo, uAngle), uSpinTo);
+    vec3 pos = mix(from, to, p);
     float travel = sin(p * 3.14159);
     pos += flow(pos * 0.6, uTime * 0.35) * (uNoise + travel * 0.55) * (0.3 + aRand.x * 0.7);
     pos *= 1.0 + sin(uTime * 0.6 + aRand.y) * uBreath;
+    // Contact ring: a slow, even pulse (the ring sits at the origin).
+    pos *= 1.0 + uPulse * sin(uTime * 1.8);
 
     // Pointer repel in screen plane; the uniform is eased on the CPU so it springs back.
     vec2 d = pos.xy - uPointer;
@@ -81,7 +89,6 @@ const fragment = /* glsl */ `
   }
 `;
 
-// Dark scenes glow (mint with moss, additive). Light scenes read as ink dust.
 /** Run a callback when the browser is idle (Safari has no requestIdleCallback). */
 function onIdle(fn: () => void): () => void {
   if (typeof window.requestIdleCallback === "function") {
@@ -92,15 +99,17 @@ function onIdle(fn: () => void): () => void {
   return () => window.clearTimeout(id);
 }
 
-const look: Record<SceneName, { a: string; b: string; opacity: number; additive: boolean }> = {
-  dark: { a: "#82b8a0", b: "#3e6b5c", opacity: 0.7, additive: true },
-  light: { a: "#121316", b: "#46464b", opacity: 0.18, additive: false },
-};
+// Monochrome: white and grey dust, additive on the black page.
+const LOOK = { a: "#ffffff", b: "#a3a3a3", opacity: 0.5 };
 
-export function Particles({ count, fontFamily }: { count: number; fontFamily: string }) {
+// Formations that turn continuously about their own vertical axis.
+const SPINS: Partial<Record<FormationKey, true>> = { can: true, sphere: true };
+
+export function Particles({ count }: { count: number }) {
   const { size, camera, viewport, gl } = useThree();
   const points = useRef<Points>(null);
   const formations = useRef<Partial<Record<FormationKey, Formation>>>({});
+  const centers = useRef<Partial<Record<FormationKey, Vector3>>>({});
   // The formation pair currently in the buffers; null after a free morph.
   const pair = useRef<[FormationKey, FormationKey] | null>(["cloud", "cloud"]);
   const lastTarget = useRef<FormationKey>("cloud");
@@ -111,9 +120,9 @@ export function Particles({ count, fontFamily }: { count: number; fontFamily: st
     ready.current = { promise, resolve };
   }
   const pointer = useRef({ target: new Vector2(999, 999), active: 0, targetActive: 0 });
-  // How far the particles have gathered into the contact orb (0..1); the orb
+  // How far the particles have gathered into the contact ring (0..1); the ring
   // eases toward the cursor by this much.
-  const orb = useRef(0);
+  const ringWeight = useRef(0);
   const follow = useRef(new Vector2());
 
   const view: View = useMemo(() => {
@@ -135,49 +144,71 @@ export function Particles({ count, fontFamily }: { count: number; fontFamily: st
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [count]);
 
-  const material = useMemo(() => {
-    const scene = sceneStore.get();
-    return new ShaderMaterial({
-      vertexShader: vertex,
-      fragmentShader: fragment,
-      transparent: true,
-      depthWrite: false,
-      blending: look[scene].additive ? AdditiveBlending : NormalBlending,
-      uniforms: {
-        uTime: { value: 0 },
-        uProgress: { value: 0 },
-        uNoise: { value: 0.08 },
-        uBreath: { value: 0.012 },
-        uSize: { value: 5 },
-        uPixelRatio: { value: gl.getPixelRatio() },
-        uPointer: { value: new Vector2(999, 999) },
-        uPointerActive: { value: 0 },
-        uRepel: { value: 0.5 },
-        uColorA: { value: new Color(look[scene].a) },
-        uColorB: { value: new Color(look[scene].b) },
-        uOpacity: { value: look[scene].opacity },
-        uDim: { value: 1 },
-      },
-    });
-  }, [gl]);
+  const material = useMemo(
+    () =>
+      new ShaderMaterial({
+        vertexShader: vertex,
+        fragmentShader: fragment,
+        transparent: true,
+        depthWrite: false,
+        blending: AdditiveBlending,
+        uniforms: {
+          uTime: { value: 0 },
+          uProgress: { value: 0 },
+          uNoise: { value: 0.08 },
+          uBreath: { value: 0.012 },
+          uSize: { value: 5 },
+          uPixelRatio: { value: gl.getPixelRatio() },
+          uPointer: { value: new Vector2(999, 999) },
+          uPointerActive: { value: 0 },
+          uRepel: { value: 0.5 },
+          uAngle: { value: 0 },
+          uSpinFrom: { value: 0 },
+          uSpinTo: { value: 0 },
+          uCenterFrom: { value: new Vector3() },
+          uCenterTo: { value: new Vector3() },
+          uPulse: { value: 0 },
+          uColorA: { value: new Color(LOOK.a) },
+          uColorB: { value: new Color(LOOK.b) },
+          uOpacity: { value: LOOK.opacity },
+          uDim: { value: 1 },
+        },
+      }),
+    [gl],
+  );
+
+  // Which ends of the current pair turn, and about which centre.
+  function setSpin(from: FormationKey | null, to: FormationKey) {
+    const u = material.uniforms;
+    u.uSpinFrom.value = from && SPINS[from] ? 1 : 0;
+    u.uSpinTo.value = SPINS[to] ? 1 : 0;
+    const cf = from ? centers.current[from] : undefined;
+    const ct = centers.current[to];
+    if (cf) (u.uCenterFrom.value as Vector3).copy(cf);
+    if (ct) (u.uCenterTo.value as Vector3).copy(ct);
+  }
 
   // Build formation targets for the current viewport; recomputed on resize.
   useEffect(() => {
     let cancelled = false;
-    const build = async () => {
+    const build = () => {
       const f = formations.current;
+      const sphereCenter: [number, number, number] = [view.halfW * 0.35, 0, -1];
       f.cloud = cloud(count, view);
       f.field = field(count, view);
-      f.sphere = sphere(count, Math.min(view.halfH * 0.62, view.halfW * 0.5), [view.halfW * 0.35, 0, -1]);
-      f.orb = sphere(count, 0.32, [0, 0, 0]);
-      f.can = can(count, view);
-      f.name = await name(count, view, fontFamily);
+      f.sphere = sphere(count, Math.min(view.halfH * 0.62, view.halfW * 0.5), sphereCenter);
+      f.ring = ring(count, 0.45);
+      const c = can(count, view);
+      f.can = c.points;
+      centers.current.sphere = new Vector3(...sphereCenter);
+      centers.current.can = new Vector3(...c.center);
       if (cancelled) return;
       if (pair.current) {
         setPairAttributes(pair.current[0], pair.current[1]);
       } else {
         // After a free morph, snap to the same formation rebuilt for the new size.
         const t = f[lastTarget.current];
+        setSpin(null, lastTarget.current);
         if (t) {
           (geometry.getAttribute("aFrom") as BufferAttribute).copyArray(t).needsUpdate = true;
           (geometry.getAttribute("aTo") as BufferAttribute).copyArray(t).needsUpdate = true;
@@ -185,20 +216,21 @@ export function Particles({ count, fontFamily }: { count: number; fontFamily: st
       }
       ready.current?.resolve();
     };
-    const cancel = onIdle(() => void build());
+    const cancel = onIdle(build);
     return () => {
       cancelled = true;
       cancel();
     };
     // setPairAttributes is stable for the life of the geometry.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [view, count, fontFamily]);
+  }, [view, count]);
 
   function setPairAttributes(from: FormationKey, to: FormationKey) {
     // Remember the requested pair even before the formations exist; the
     // build step applies it once they do.
     pair.current = [from, to];
     lastTarget.current = to;
+    setSpin(from, to);
     const f = formations.current;
     const a = f[from];
     const b = f[to];
@@ -208,7 +240,7 @@ export function Particles({ count, fontFamily }: { count: number; fontFamily: st
     (geometry.getAttribute("position") as BufferAttribute).copyArray(b).needsUpdate = true;
   }
 
-  // Where the particles visibly are right now (ignoring noise), for time-based morphs.
+  // Where the particles visibly are right now (ignoring noise and spin), for time-based morphs.
   function snapshot(): Formation {
     const from = geometry.getAttribute("aFrom").array as Float32Array;
     const to = geometry.getAttribute("aTo").array as Float32Array;
@@ -227,14 +259,14 @@ export function Particles({ count, fontFamily }: { count: number; fontFamily: st
     stage.register({
       scrub(from, to, p) {
         generation++;
-        orb.current = to === "orb" ? p : from === "orb" ? 1 - p : 0;
         tween?.kill();
+        ringWeight.current = to === "ring" ? p : from === "ring" ? 1 - p : 0;
         if (!pair.current || pair.current[0] !== from || pair.current[1] !== to) setPairAttributes(from, to);
         material.uniforms.uProgress.value = p;
       },
       morph(to, duration = 2.4) {
         tween?.kill();
-        orb.current = 0;
+        ringWeight.current = 0;
         const g = ++generation;
         void ready.current?.promise.then(() => {
           if (g !== generation) return;
@@ -246,6 +278,7 @@ export function Particles({ count, fontFamily }: { count: number; fontFamily: st
           (geometry.getAttribute("aTo") as BufferAttribute).copyArray(target).needsUpdate = true;
           pair.current = null;
           lastTarget.current = to;
+          setSpin(null, to);
           material.uniforms.uProgress.value = 0;
           tween = gsap.to(material.uniforms.uProgress, { value: 1, duration, ease: "expo.out" });
         });
@@ -258,20 +291,6 @@ export function Particles({ count, fontFamily }: { count: number; fontFamily: st
     // material and geometry are stable for the life of the stage.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // House lights: dark scenes glow, light scenes switch to soft ink.
-  useEffect(() => {
-    return sceneStore.subscribe((scene) => {
-      const l = look[scene];
-      material.blending = l.additive ? AdditiveBlending : NormalBlending;
-      material.needsUpdate = true;
-      const a = new Color(l.a);
-      const b = new Color(l.b);
-      gsap.to(material.uniforms.uColorA.value, { r: a.r, g: a.g, b: a.b, duration: 0.8, ease: "power2.inOut" });
-      gsap.to(material.uniforms.uColorB.value, { r: b.r, g: b.g, b: b.b, duration: 0.8, ease: "power2.inOut" });
-      gsap.to(material.uniforms.uOpacity, { value: l.opacity, duration: 0.8, ease: "power2.inOut" });
-    });
-  }, [material]);
 
   // Pointer: repel within about 120px, eased so particles spring back.
   useEffect(() => {
@@ -298,24 +317,28 @@ export function Particles({ count, fontFamily }: { count: number; fontFamily: st
 
   useFrame((_, delta) => {
     const u = material.uniforms;
-    u.uTime.value += Math.min(delta, 0.05);
+    const dt = Math.min(delta, 0.05);
+    u.uTime.value += dt;
+    // One full turn about every 18 seconds.
+    u.uAngle.value = (u.uAngle.value + dt * 0.35) % (Math.PI * 2);
     const ptr = pointer.current;
-    const k = 1 - Math.pow(0.001, Math.min(delta, 0.05));
+    const k = 1 - Math.pow(0.001, dt);
     (u.uPointer.value as Vector2).lerp(ptr.target, k);
     ptr.active += (ptr.targetActive - ptr.active) * k;
-    // The orb drifts toward the cursor, so repel fades out as it gathers.
-    u.uPointerActive.value = ptr.active * (1 - orb.current);
+    // The ring drifts toward the cursor, so repel fades out as it gathers.
+    const w = ringWeight.current;
+    u.uPointerActive.value = ptr.active * (1 - w);
+    u.uPulse.value = w * 0.07;
+    u.uDim.value = 1 - w * 0.4;
     const pts = points.current;
     if (pts) {
-      const w = orb.current * ptr.active;
-      // Half way toward the cursor, and dimmer as it gathers (all particles
-      // in one small orb are bright), so the contact links stay readable.
-      const tx = w ? ptr.target.x * 0.5 : 0;
-      const ty = w ? ptr.target.y * 0.5 : 0;
-      u.uDim.value = 1 - orb.current * 0.55;
-      const kk = 1 - Math.pow(0.05, Math.min(delta, 0.05));
-      follow.current.x += (tx * orb.current - follow.current.x) * kk;
-      follow.current.y += (ty * orb.current - follow.current.y) * kk;
+      // Half way toward the cursor, so the links under it stay readable.
+      const on = w > 0 && ptr.active > 0.01;
+      const tx = on ? ptr.target.x * 0.5 * w : 0;
+      const ty = on ? ptr.target.y * 0.5 * w : 0;
+      const kk = 1 - Math.pow(0.05, dt);
+      follow.current.x += (tx - follow.current.x) * kk;
+      follow.current.y += (ty - follow.current.y) * kk;
       pts.position.set(follow.current.x, follow.current.y, 0);
     }
   });

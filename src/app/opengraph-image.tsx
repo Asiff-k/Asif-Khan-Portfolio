@@ -14,18 +14,18 @@ export default function OpengraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#f7f6f2",
-          color: "#121316",
+          background: "#0a0a0a",
+          color: "#f5f5f5",
           padding: "72px 80px",
-          borderTop: "16px solid #121316",
+          borderTop: "16px solid #f5f5f5",
         }}
       >
-        <div style={{ display: "flex", fontSize: 24, letterSpacing: 4, color: "#3e6b5c" }}>
+        <div style={{ display: "flex", fontSize: 24, letterSpacing: 4, color: "#ffffff" }}>
           SOFTWARE · UI/UX · GRAPHIC DESIGN
         </div>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ fontSize: 96, fontWeight: 700, letterSpacing: -4, lineHeight: 1 }}>Asiful Hasan Khan</div>
-          <div style={{ marginTop: 28, fontSize: 36, color: "#46464b" }}>
+          <div style={{ marginTop: 28, fontSize: 36, color: "#c4c4c4" }}>
             Software developer and UI/UX designer
           </div>
         </div>
@@ -33,10 +33,10 @@ export default function OpengraphImage() {
           style={{
             display: "flex",
             justifyContent: "space-between",
-            borderTop: "2px solid #dfe1d8",
+            borderTop: "2px solid #262626",
             paddingTop: 24,
             fontSize: 24,
-            color: "#5f6359",
+            color: "#a3a3a3",
           }}
         >
           <span>Sylhet, Bangladesh</span>
