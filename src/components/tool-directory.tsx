@@ -80,7 +80,7 @@ export function ToolDirectory({ tools, categories }: { tools: ToolEntry[]; categ
               type="button"
               aria-pressed={usedOnly}
               onClick={() => setUsedOnly((v) => !v)}
-              className="t-label pressable inline-flex items-center gap-2 border border-rule bg-stone-deep px-3 py-2 text-moss hover:border-moss aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-stone"
+              className="chip"
             >
               <span
                 aria-hidden
@@ -109,7 +109,7 @@ export function ToolDirectory({ tools, categories }: { tools: ToolEntry[]; categ
                 type="button"
                 aria-pressed={category === c}
                 onClick={() => setCategory(c)}
-                className="t-label pressable shrink-0 border border-rule bg-stone-deep px-3 py-2 text-moss hover:border-moss aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-stone"
+                className="chip shrink-0"
               >
                 {c} <span className="tabular-nums">{counts.get(c) ?? 0}</span>
               </button>
@@ -124,7 +124,7 @@ export function ToolDirectory({ tools, categories }: { tools: ToolEntry[]; categ
           <button
             type="button"
             onClick={reset}
-            className="t-stamp pressable mt-5 inline-flex bg-ink px-4 py-3 text-stone hover:bg-ink-soft"
+            className="btn-primary mt-5"
           >
             Clear filters
           </button>

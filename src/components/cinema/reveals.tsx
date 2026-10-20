@@ -13,6 +13,9 @@ import { usePrefersReducedMotion } from "@/lib/use-media";
  *   settles from scale 1.12 to 1, like a slow camera dolly.
  * - [data-reveal="item"]: masked rise for cards and timeline entries.
  * - [data-draw]: an SVG line drawn by scroll (stroke-dashoffset scrub).
+ * - [data-reveal="fade"]: fades up from an 8px blur to sharp; neighbours that
+ *   enter together are staggered.
+ * Headings and items also go from blurred to sharp as they rise.
  * Content is visible without JavaScript; nothing runs for reduced motion.
  *
  * Setup waits for an idle moment after hydration, reads every position in one
@@ -39,6 +42,7 @@ export function Reveals() {
         .map((group) => ({ group, items: [...group.querySelectorAll<HTMLElement>('[data-reveal="item"]')] }))
         .filter((g) => g.items.length && below(g.group));
       const paths = [...document.querySelectorAll<SVGPathElement>("[data-draw]")];
+      const fades = [...document.querySelectorAll<HTMLElement>('[data-reveal="fade"]')].filter(below);
 
       // Write pass: initial states.
       for (const el of images) {
@@ -46,7 +50,8 @@ export function Reveals() {
         const img = el.querySelector("img");
         if (img) gsap.set(img, { scale: 1.12 });
       }
-      for (const { items } of groups) gsap.set(items, { yPercent: 18, opacity: 0, clipPath: "inset(0% 0% 100% 0%)" });
+      for (const { items } of groups) gsap.set(items, { y: 24, opacity: 0, filter: "blur(8px)" });
+      gsap.set(fades, { y: 20, opacity: 0, filter: "blur(8px)" });
       for (const path of paths) gsap.set(path, { strokeDasharray: 1, strokeDashoffset: 1 });
 
       // Triggers.
@@ -61,9 +66,10 @@ export function Reveals() {
             split = SplitText.create(el, { type: "lines", mask: "lines" });
             gsap.fromTo(
               split.lines,
-              { yPercent: 110 },
+              { yPercent: 110, filter: "blur(8px)" },
               {
                 yPercent: 0,
+                filter: "blur(0px)",
                 duration: 1.2,
                 stagger: 0.08,
                 ease: ease.enter,
@@ -104,19 +110,40 @@ export function Reveals() {
           once: true,
           onEnter: () =>
             gsap.to(items, {
-              yPercent: 0,
+              y: 0,
               opacity: 1,
-              clipPath: "inset(0% 0% 0% 0%)",
+              filter: "blur(0px)",
               duration: 1.1,
               stagger: 0.09,
               ease: ease.enter,
-              // Drop the finished mask so tilted cards are not clipped at their edges.
-              onComplete: () => gsap.set(items, { clearProps: "clipPath" }),
+              onComplete: () => gsap.set(items, { clearProps: "filter" }),
             }),
         });
         cleanups.push(() => {
           t.kill();
-          gsap.set(items, { clearProps: "transform,opacity,clipPath" });
+          gsap.set(items, { clearProps: "transform,opacity,filter" });
+        });
+      }
+
+      // Fades: batched so elements entering together stagger.
+      if (fades.length) {
+        const batch = ScrollTrigger.batch(fades, {
+          start: "top 90%",
+          once: true,
+          onEnter: (els) =>
+            gsap.to(els, {
+              y: 0,
+              opacity: 1,
+              filter: "blur(0px)",
+              duration: 1,
+              stagger: 0.08,
+              ease: ease.enter,
+              onComplete: () => gsap.set(els, { clearProps: "filter" }),
+            }),
+        });
+        cleanups.push(() => {
+          batch.forEach((t) => t.kill());
+          gsap.set(fades, { clearProps: "transform,opacity,filter" });
         });
       }
 

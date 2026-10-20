@@ -15,25 +15,27 @@
  * now resolve to black text on white as well.
  */
 @theme {
-  --color-stone: #ffffff;
-  --color-stone-deep: #f4f4f4;
-  --color-ink: #0a0a0a;
-  --color-ink-soft: #3d3d3d;
-  --color-muted: #5c5c5c;
-  --color-rule: #e3e3e3;
-  --color-carbon: #ffffff;
-  --color-carbon-rule: #e3e3e3;
-  --color-carbon-text: #0a0a0a;
-  --color-carbon-muted: #5c5c5c;
-  --color-moss: #0a0a0a;
-  --color-mint: #0a0a0a;
+  --color-stone: #f7f7f5;
+  --color-stone-deep: #ffffff;
+  --color-ink: #121316;
+  --color-ink-soft: #3d3e42;
+  --color-muted: #5d5e62;
+  --color-rule: #e6e6e3;
+  --color-carbon: #f7f7f5;
+  --color-carbon-rule: #e6e6e3;
+  --color-carbon-text: #121316;
+  --color-carbon-muted: #5d5e62;
+  --color-moss: #121316;
+  --color-mint: #121316;
 
   --font-display: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 
-  /* Sharp shape system: remove every rounded-* utility. */
-  --radius-*: initial;
+  /* Rounded shape system (Orbix-style): cards 22px, image tiles 15px, pills full. */
+  --radius-card: 22px;
+  --radius-tile: 15px;
+  --radius-chip: 12px;
 
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -54,14 +56,14 @@
 @layer base {
   :root {
     color-scheme: light;
-    --scene-bg: #ffffff;
-    --scene-fg: #0a0a0a;
-    --scene-fg-soft: #3d3d3d;
-    --scene-fg-muted: #5c5c5c;
-    --scene-line: #e3e3e3;
-    --scene-line-strong: #0a0a0a;
-    --scene-surface: #f4f4f4;
-    --scene-accent: #0a0a0a;
+    --scene-bg: #f7f7f5;
+    --scene-fg: #121316;
+    --scene-fg-soft: #3d3e42;
+    --scene-fg-muted: #5d5e62;
+    --scene-line: #e6e6e3;
+    --scene-line-strong: #c9c9c5;
+    --scene-surface: #ffffff;
+    --scene-accent: #121316;
     --scene-on-fg: #ffffff;
   }
 
@@ -116,25 +118,25 @@
  */
 @utility t-display {
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 600;
   font-size: clamp(2.75rem, 1.6rem + 5.6vw, 6rem);
-  line-height: 1;
-  letter-spacing: -0.04em;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
   font-optical-sizing: auto;
 }
 
 @utility t-hero {
   font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(2.5rem, 1.45rem + 4.1vw, 5.25rem);
-  line-height: 1.02;
-  letter-spacing: -0.035em;
+  font-weight: 600;
+  font-size: clamp(2.5rem, 1.45rem + 4.1vw, 5rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
   font-optical-sizing: auto;
 }
 
 @utility t-display-lg {
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 500;
   font-size: clamp(2.25rem, 1.5rem + 3.4vw, 4rem);
   line-height: 1.05;
   letter-spacing: -0.03em;
@@ -142,10 +144,10 @@
 
 @utility t-headline {
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 500;
   font-size: clamp(1.75rem, 1.4rem + 1.4vw, 2.5rem);
-  line-height: 1.15;
-  letter-spacing: -0.025em;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
 }
 
 @utility t-title {
@@ -206,6 +208,88 @@
 }
 
 /* Press feedback: reacts on pointer-down, before release. */
+/* Buttons: black primary pill with a long soft shadow, white secondary pill with a hairline. */
+@utility btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  background: #121316;
+  color: #ffffff;
+  padding: 0.85rem 1.4rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.2;
+  box-shadow:
+    0 1px 1px rgb(18 19 22 / 0.06),
+    -3px 4px 6px rgb(18 19 22 / 0.06),
+    -8px 12px 16px rgb(18 19 22 / 0.07),
+    -18px 26px 34px rgb(18 19 22 / 0.08);
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease, background-color 0.2s ease;
+  &:hover { background: #2a2b30; transform: translateY(-1px); }
+  &:active { transform: scale(0.98); }
+}
+@utility btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  background: #ffffff;
+  color: #121316;
+  border: 1px solid rgb(18 19 22 / 0.12);
+  padding: 0.8rem 1.35rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.2;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.2s ease, box-shadow 0.25s ease;
+  &:hover { border-color: rgb(18 19 22 / 0.35); box-shadow: 0 8px 20px rgb(18 19 22 / 0.06); }
+  &:active { transform: scale(0.98); }
+}
+/* Small pill badge above section headings. */
+@utility pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 9999px;
+  background: #ffffff;
+  border: 1px solid rgb(18 19 22 / 0.08);
+  padding: 0.35rem 0.8rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: #121316;
+  box-shadow: 0 2px 6px rgb(18 19 22 / 0.04);
+}
+/* Filter chips: rounded pills; pressed is black. */
+@utility chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 9999px;
+  background: #ffffff;
+  border: 1px solid rgb(18 19 22 / 0.1);
+  padding: 0.5rem 0.95rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #121316;
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+  &:hover { border-color: rgb(18 19 22 / 0.35); }
+  &[aria-pressed="true"] { background: #121316; border-color: #121316; color: #ffffff; }
+}
+/* White card: hairline (ink at 6%), very soft shadow, lifts 4px on hover. */
+@utility card {
+  background: #ffffff;
+  border: 1px solid rgb(18 19 22 / 0.06);
+  border-radius: var(--radius-card);
+  box-shadow: 0 1px 2px rgb(18 19 22 / 0.03), 0 10px 30px rgb(18 19 22 / 0.04);
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s ease;
+}
+@utility card-lift {
+  @media (hover: hover) {
+    &:hover { transform: translateY(-4px); box-shadow: 0 2px 4px rgb(18 19 22 / 0.04), 0 18px 40px rgb(18 19 22 / 0.08); }
+  }
+}
+
 @utility pressable {
   transition:
     transform 100ms ease-out,
@@ -364,24 +448,23 @@
 
 /* ---------- daisyUI mockup frames: sharp, in site tokens ---------- */
 .d-mockup-browser {
-  --radius-box: 0;
-  --color-base-200: var(--scene-surface);
+  --radius-box: var(--radius-card);
+  --color-base-200: var(--scene-bg);
   border: 1px solid var(--scene-line);
-  background: var(--scene-bg);
+  background: #ffffff;
+  overflow: hidden;
 }
 .d-mockup-browser .d-mockup-browser-toolbar { margin-block: 0.625rem; }
 .d-mockup-browser .d-mockup-browser-toolbar .d-input {
   padding-inline: 0.75rem;
+  border-radius: 9999px;
   height: 1.75rem;
   max-width: 24rem;
   font-family: var(--font-mono);
   color: var(--scene-fg-soft);
 }
-.d-mockup-phone,
-.d-mockup-phone .d-mockup-phone-display,
-.d-mockup-phone .d-mockup-phone-camera {
-  border-radius: 0;
-}
+.d-mockup-phone { border-radius: 36px; }
+.d-mockup-phone .d-mockup-phone-display { border-radius: 28px; }
 .d-mockup-phone {
   border-color: var(--scene-line-strong);
   background: #0a0a0a;

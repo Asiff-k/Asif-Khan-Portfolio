@@ -76,7 +76,7 @@ export default async function ProjectPage({ params }: PageProps<"/work/[slug]">)
                         href={l.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="t-stamp pressable inline-flex items-center gap-2 bg-ink px-4 py-3 text-stone hover:bg-ink-soft"
+                        className="btn-primary"
                       >
                         {l.label} <ArrowUpRight />
                         <span className="sr-only">(opens in a new tab)</span>

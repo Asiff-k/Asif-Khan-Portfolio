@@ -150,3 +150,14 @@ One line each: what was chosen and why.
 - AI tool logos: the greyscale filter is removed everywhere. All 10 were checked one by one and are the official full-colour marks (App Store icons or the tools' own site icons, 160px, sharp at card size); none needed replacing. Ginger 2025's mark is the app's own icon.
 - Gap after the hero: the hero's bottom padding (128px) plus the Skills section's top padding (128px), under a tall portrait, left a near-empty screen. Both are now 48px.
 - Hero subline: "Fullstack developer (web and app) and UI/UX designer with hands-on AI/ML experience."
+
+## Orbix-style redesign, Part 2 (global look)
+
+- Page #f7f7f5 everywhere, text #121316, secondary text #3d3e42 and #5d5e62, hairlines #e6e6e3; white is now the card colour. No scene switching.
+- Rounded shape system: the sharp-corner reset is removed; tokens --radius-card 22px, --radius-tile 15px, --radius-chip 12px; buttons, badges and chips are full pills.
+- Buttons: primary is a black pill with a long, layered soft shadow down and to the left (the Orbix pattern, written from scratch); secondary is a white pill with a hairline border. Filter chips are white pills, black when pressed.
+- Headings: Manrope 600 for the hero and display, 500 for section titles, letter-spacing -0.03em, line-height 1.05 to 1.08.
+- Section headings sit under a small white pill badge with the section number and name. The hero stamp is a pill badge too. Nav labels are plain sentence case instead of mono capitals.
+- Cards: white, 1px border of ink at 6%, very soft shadow, lift 4px on hover (utility classes card and card-lift).
+- Motion: headings, items and the new [data-reveal="fade"] elements fade up from an 8px blur to sharp, staggered, expo ease. Nothing bounces. Reduced motion skips them.
+- Portrait, project screenshot frames and phone frames are rounded.

@@ -383,7 +383,7 @@ export function Lightbox({ items, index, onIndexChange, onClosed, getOrigin, lab
           onClick={() => go(-1)}
           disabled={!hasPrev}
           aria-label="Previous image"
-          className="pressable pointer-events-auto inline-flex size-11 items-center justify-center border border-carbon-rule text-carbon-text hover:border-mint hover:text-mint disabled:opacity-30"
+          className="pressable pointer-events-auto inline-flex size-11 items-center justify-center rounded-full border border-carbon-rule bg-white text-carbon-text hover:border-ink disabled:opacity-30"
         >
           <ArrowLeft />
         </button>
@@ -396,7 +396,7 @@ export function Lightbox({ items, index, onIndexChange, onClosed, getOrigin, lab
           onClick={() => go(1)}
           disabled={!hasNext}
           aria-label="Next image"
-          className="pressable pointer-events-auto inline-flex size-11 items-center justify-center border border-carbon-rule text-carbon-text hover:border-mint hover:text-mint disabled:opacity-30"
+          className="pressable pointer-events-auto inline-flex size-11 items-center justify-center rounded-full border border-carbon-rule bg-white text-carbon-text hover:border-ink disabled:opacity-30"
         >
           <ArrowRight />
         </button>

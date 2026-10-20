@@ -77,7 +77,7 @@ export function SiteHeader() {
                 <Link
                   href={item.href}
                   aria-current={pathname === item.href ? "page" : undefined}
-                  className="t-label py-2 transition-colors duration-150 hover:text-accent aria-[current=page]:text-accent"
+                  className="py-2 text-[0.9375rem] font-medium transition-colors duration-150 hover:text-accent aria-[current=page]:text-accent"
                 >
                   <RollText text={item.label} />
                 </Link>
@@ -86,7 +86,7 @@ export function SiteHeader() {
             <li>
               <Link
                 href="#contact"
-                className="t-stamp pressable inline-flex items-center bg-fg px-4 py-3 text-on-fg hover:bg-fg-soft"
+                className="btn-primary !px-5 !py-2.5"
               >
                 Contact
               </Link>

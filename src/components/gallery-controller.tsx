@@ -83,7 +83,7 @@ export function GalleryController({
             type="button"
             aria-pressed={filter === c}
             onClick={() => setFilter(c)}
-            className="t-label pressable shrink-0 border border-line bg-surface px-3 py-2 text-accent hover:border-accent aria-pressed:border-line-strong aria-pressed:bg-fg aria-pressed:text-bg"
+            className="chip shrink-0"
           >
             {c} <span className="tabular-nums">{counts.get(c) ?? 0}</span>
           </button>

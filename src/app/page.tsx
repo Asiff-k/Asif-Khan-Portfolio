@@ -125,7 +125,7 @@ export default function Home() {
       <section className="page-x pt-10 pb-10 md:pt-16 md:pb-12" aria-labelledby="intro-title">
         <div className="grid gap-12 md:grid-cols-12 md:gap-10">
           <div className="md:col-span-7 lg:col-span-8">
-            <p className="t-stamp text-accent">Software · UI/UX · Graphic design</p>
+            <p className="pill-badge">Software · UI/UX · Graphic design</p>
             <h1 id="intro-title" data-hero-title className="t-hero mt-6 text-balance">
               I build the software and design the screens.
             </h1>
@@ -135,20 +135,20 @@ export default function Home() {
             <div className="mt-10 flex flex-wrap gap-3">
               <Link
                 href="#work"
-                className="t-stamp pressable inline-flex items-center gap-2 bg-fg px-5 py-4 text-on-fg hover:bg-fg-soft"
+                className="btn-primary"
               >
                 See my work <ArrowDown />
               </Link>
               <Link
                 href="#contact"
-                className="t-stamp pressable inline-flex items-center gap-2 border border-line-strong px-5 py-4 hover:bg-fg hover:text-on-fg"
+                className="btn-secondary"
               >
                 Contact me
               </Link>
               <a
                 href={site.cv.href}
                 download
-                className="t-stamp pressable inline-flex items-center gap-2 border border-line-strong px-5 py-4 hover:bg-fg hover:text-on-fg"
+                className="btn-secondary"
               >
                 <DownloadIcon /> {site.cv.label}
                 <span className="sr-only"> ({site.cv.size})</span>
@@ -157,7 +157,7 @@ export default function Home() {
           </div>
 
           <figure className="md:col-span-5 lg:col-span-4">
-            <div className="overflow-hidden border border-line-strong">
+            <div className="overflow-hidden rounded-card border border-line shadow-[0_10px_30px_rgb(18_19_22/0.06)]">
               <MediaImage
                 image="photos/asif-portrait"
                 alt="Portrait of Asiful Hasan Khan in a sage green three-piece suit, outdoors"
