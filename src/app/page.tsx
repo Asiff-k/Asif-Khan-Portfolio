@@ -122,7 +122,7 @@ export default function Home() {
   return (
     <main id="main" data-home>
       {/* Intro */}
-      <section className="page-x pt-10 pb-24 md:pt-16 md:pb-32" aria-labelledby="intro-title">
+      <section className="page-x pt-10 pb-10 md:pt-16 md:pb-12" aria-labelledby="intro-title">
         <div className="grid gap-12 md:grid-cols-12 md:gap-10">
           <div className="md:col-span-7 lg:col-span-8">
             <p className="t-stamp text-accent">Software · UI/UX · Graphic design</p>
@@ -130,8 +130,7 @@ export default function Home() {
               I build the software and design the screens.
             </h1>
             <p className="t-body-lg mt-8 max-w-xl text-fg-soft">
-              Fullstack developer (Web + App), UI/UX designer, and AI enthusiast. I build web apps from scratch,
-              design interfaces for clients, and work with AI tools daily to save time and enhance my process.
+              Fullstack developer (web and app) and UI/UX designer with hands-on AI/ML experience.
             </p>
             <div className="mt-10 flex flex-wrap gap-3">
               <Link
@@ -184,7 +183,7 @@ export default function Home() {
       </section>
 
       {/* What I do */}
-      <section className="page-x py-24 md:py-32" aria-labelledby="skills-title">
+      <section className="page-x pt-10 pb-24 md:pt-12 md:pb-32" aria-labelledby="skills-title">
         <SectionHead index="01" label="Skills" title="What I do" id="skills-title">
           My process: I use AI to save time and for design ideas, then design and build everything myself, in
           Canva and in code.

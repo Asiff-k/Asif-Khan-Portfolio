@@ -138,3 +138,15 @@ One line each: what was chosen and why.
 - "Final-year" is removed everywhere: hero, site description, and Chol Ghuri's role (now "University CSE project").
 - Incodet (corrected): it is not Asif's agency. He designed and coded the Incodet website from scratch and designed the UI for two of its client projects, Cipher Shield and KI Training. Experience lists this as project-based work for Incodet, and the NextGen Production website is listed under his NextGen role.
 - The Flowing Menu's index and meta labels are raised from 50% to 72% opacity, so they read on white.
+
+## Orbix-style redesign, Part 1 (fixes)
+
+- Dome vertical drag: maxVerticalRotationDeg 35 (was 5). Tested with the real dome: dragging down and up reaches every one of the 10 tile rows. Momentum and the glide already run on both axes.
+- Dome idle drift: turns slowly sideways (4 degrees a second) and sways gently up and down (up to 35% of the vertical range). Paused while the pointer is over the dome, while dragging, while it has keyboard focus or a piece is open; off with reduced motion.
+- Dome fades lighter: the round edge fade starts at 82% (was 65%) and the top and bottom fades are 40px (were 120px), so more tiles show in full. Tiles are rounded (14px), the opened piece 20px, still shown whole (object-fit contain).
+- The full design grid is always visible directly below the dome (no button). On phones the dome is still optional behind a "View as a 3D dome" button, because dragging it fights page scrolling on touch.
+- Particles: #121316 and a slightly lighter grey, 60% opacity, 1.6x larger (point size 8, was 5), normal blending. The quiet "field" is now a wide gridded sheet low in the frame that rolls as a slow swell (two crossing sine waves), so it reads as an intentional effect, not dust.
+- Readability over particles: paragraphs and list items get a soft halo in the page colour, and once you scroll past the hero the wave eases to 60% of its strength behind the text-heavy sections. The sphere and can keep full strength.
+- AI tool logos: the greyscale filter is removed everywhere. All 10 were checked one by one and are the official full-colour marks (App Store icons or the tools' own site icons, 160px, sharp at card size); none needed replacing. Ginger 2025's mark is the app's own icon.
+- Gap after the hero: the hero's bottom padding (128px) plus the Skills section's top padding (128px), under a tall portrait, left a near-empty screen. Both are now 48px.
+- Hero subline: "Fullstack developer (web and app) and UI/UX designer with hands-on AI/ML experience."

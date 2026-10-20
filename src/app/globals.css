@@ -409,29 +409,34 @@
   text-underline-offset: 0.2em;
 }
 
-/* ---------- Logos: greyscale, and they float up with a soft glow on hover ----------
-   Brand marks are shown in greyscale to keep the site black and white. On
-   hover (the logo, its card or its link) and on keyboard focus they rise a
-   few pixels with a soft shadow beneath. */
+/* ---------- Logos: official full colour; they float up with a soft glow on hover ---------- */
 .logo-mark img {
-  filter: grayscale(1);
-  transition:
-    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    filter 0.35s ease;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), filter 0.35s ease;
 }
 @media (hover: hover) {
   .logo-mark:hover img,
   .group:hover .logo-mark img {
-    transform: translateY(-5px);
-    filter: grayscale(1) drop-shadow(0 10px 14px rgb(0 0 0 / 0.18));
+    transform: translateY(-4px) scale(1.05);
+    filter: drop-shadow(0 10px 14px rgb(0 0 0 / 0.14));
   }
 }
 a:focus-visible .logo-mark img {
-  transform: translateY(-5px);
-  filter: grayscale(1) drop-shadow(0 10px 14px rgb(0 0 0 / 0.18));
+  transform: translateY(-4px) scale(1.05);
+  filter: drop-shadow(0 10px 14px rgb(0 0 0 / 0.14));
 }
 @media (prefers-reduced-motion: reduce) {
   .logo-mark img { transform: none !important; }
+}
+
+/* ---------- Reading over the particle field ----------
+   Paragraph text gets a soft halo in the page colour, which locally fades the
+   particles behind it so body copy stays easy to read. */
+main p,
+footer p,
+main li {
+  text-shadow:
+    0 0 6px var(--scene-bg),
+    0 0 14px var(--scene-bg);
 }
 
 /* ---------- Contact: a hairline drawn by scroll, and a slowly turning figure ---------- */

@@ -30,12 +30,18 @@ export function cloud(count: number, view: View): Formation {
 
 /** Wide, shallow scattered volume: ambient texture behind reading content. */
 export function field(count: number, view: View): Formation {
+  // A wide sheet of points laid on a grid, low in the frame and receding into
+  // the distance; the shader rolls it as a slow wave (see uWave).
   const r = rand(2);
   const out = new Float32Array(count * 3);
+  const cols = Math.round(Math.sqrt(count * 2.2));
+  const rows = Math.ceil(count / cols);
   for (let i = 0; i < count; i++) {
-    out[i * 3] = (r() * 2 - 1) * view.halfW * 1.3;
-    out[i * 3 + 1] = (r() * 2 - 1) * view.halfH * 1.3;
-    out[i * 3 + 2] = -3 - r() * 5;
+    const c = i % cols;
+    const row = Math.floor(i / cols);
+    out[i * 3] = (c / (cols - 1) - 0.5) * view.halfW * 3.2 + (r() - 0.5) * 0.02;
+    out[i * 3 + 1] = -view.halfH * 0.55;
+    out[i * 3 + 2] = 1.5 - (row / Math.max(1, rows - 1)) * 14;
   }
   return out;
 }

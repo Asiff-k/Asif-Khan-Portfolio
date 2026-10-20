@@ -7,10 +7,8 @@ const sizes = { xs: 20, sm: 32, md: 44, lg: 56 } as const;
 /**
  * An official logo at a consistent size, in its own colours and proportions.
  * App Store icons fill the square; other brand marks are fitted inside it with
- * no added background, in greyscale to match the monochrome site (they scale
- * up and brighten on hover; see .logo-mark in globals.css). A tool without a
- * verified logo keeps an empty space of
- * the same size so text stays aligned; no placeholder artwork is drawn.
+ * no added background, in full colour (they lift on hover; see .logo-mark in
+ * globals.css). A tool without a verified logo keeps an empty space of the same size so text stays aligned; no placeholder artwork is drawn.
  */
 export function LogoMark({
   logo,

@@ -22,6 +22,8 @@ const vertex = /* glsl */ `
   uniform float uRepel;
   uniform float uAngle;
   uniform float uAngleX;
+  uniform float uWaveFrom;
+  uniform float uWaveTo;
   uniform float uSpinFrom;
   uniform float uSpinTo;
   uniform vec3 uCenterFrom;
@@ -57,6 +59,11 @@ const vertex = /* glsl */ `
     p = p * p * (3.0 - 2.0 * p);
     vec3 from = mix(aFrom, spin(aFrom, uCenterFrom, uAngle, uAngleX), uSpinFrom);
     vec3 to = mix(aTo, spin(aTo, uCenterTo, uAngle, uAngleX), uSpinTo);
+    // The field formation rolls as a slow swell (two crossing waves).
+    float wave = sin(from.x * 0.55 + from.z * 0.35 + uTime * 0.6) * 0.32 + sin(from.z * 0.8 - uTime * 0.45) * 0.22;
+    from.y += wave * uWaveFrom;
+    wave = sin(to.x * 0.55 + to.z * 0.35 + uTime * 0.6) * 0.32 + sin(to.z * 0.8 - uTime * 0.45) * 0.22;
+    to.y += wave * uWaveTo;
     vec3 pos = mix(from, to, p);
     float travel = sin(p * 3.14159);
     pos += flow(pos * 0.6, uTime * 0.35) * (uNoise + travel * 0.55) * (0.3 + aRand.x * 0.7);
@@ -103,7 +110,7 @@ function onIdle(fn: () => void): () => void {
 
 // Monochrome: black and grey dust on the white page (normal blending; additive
 // black would not show).
-const LOOK = { a: "#0a0a0a", b: "#5c5c5c", opacity: 0.24 };
+const LOOK = { a: "#121316", b: "#3a3b40", opacity: 0.6 };
 
 // Formations that turn continuously about their own centre, on two axes.
 const SPINS: Partial<Record<FormationKey, true>> = { can: true, sphere: true };
@@ -154,15 +161,17 @@ export function Particles({ count }: { count: number }) {
         uniforms: {
           uTime: { value: 0 },
           uProgress: { value: 0 },
-          uNoise: { value: 0.08 },
+          uNoise: { value: 0.03 },
           uBreath: { value: 0.012 },
-          uSize: { value: 5 },
+          uSize: { value: 8 },
           uPixelRatio: { value: gl.getPixelRatio() },
           uPointer: { value: new Vector2(999, 999) },
           uPointerActive: { value: 0 },
           uRepel: { value: 0.5 },
           uAngle: { value: 0 },
           uAngleX: { value: 0 },
+          uWaveFrom: { value: 0 },
+          uWaveTo: { value: 0 },
           uSpinFrom: { value: 0 },
           uSpinTo: { value: 0 },
           uCenterFrom: { value: new Vector3() },
@@ -180,6 +189,8 @@ export function Particles({ count }: { count: number }) {
     const u = material.uniforms;
     u.uSpinFrom.value = from && SPINS[from] ? 1 : 0;
     u.uSpinTo.value = SPINS[to] ? 1 : 0;
+    u.uWaveFrom.value = from === "field" ? 1 : 0;
+    u.uWaveTo.value = to === "field" ? 1 : 0;
     const cf = from ? centers.current[from] : undefined;
     const ct = centers.current[to];
     if (cf) (u.uCenterFrom.value as Vector3).copy(cf);
@@ -323,6 +334,11 @@ export function Particles({ count }: { count: number }) {
     (u.uPointer.value as Vector2).lerp(ptr.target, k);
     ptr.active += (ptr.targetActive - ptr.active) * k;
     u.uPointerActive.value = ptr.active;
+    // Past the hero, the wave field sits behind reading sections: ease it to
+    // 60% so paragraphs stay easy to read; shapes keep full strength.
+    const reading = lastTarget.current === "field" && window.scrollY > window.innerHeight * 0.5;
+    const goal = LOOK.opacity * (reading ? 0.6 : 1);
+    u.uOpacity.value += (goal - u.uOpacity.value) * (1 - Math.pow(0.02, dt));
   });
 
   return <points ref={points} geometry={geometry} material={material} frustumCulled={false} />;

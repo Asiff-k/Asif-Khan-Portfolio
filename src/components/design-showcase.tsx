@@ -14,10 +14,10 @@ const optimized = (src: string, width: number) => `/_next/image?url=${encodeURIC
 type View = "dome" | "grid";
 
 /**
- * Design section: a draggable 3D dome, pinned at full viewport, for mouse users
- * at 768px and up; the filterable grid on touch, narrow screens and with
- * reduced motion. A button under the dome switches between the two. Until the
- * visitor picks, CSS decides which one shows, so nothing jumps on hydration.
+ * Design section: a draggable 3D dome (mouse users at 768px and up, or on
+ * request elsewhere), and directly below it the full filterable masonry grid of
+ * all pieces, always visible. Until the visitor picks, CSS decides whether the
+ * dome shows, so nothing jumps on hydration.
  *
  * TODO(asset): before/after process pairs for daisyUI diff sliders
  * (public/design/process/<name>-raw.jpg and <name>-final.jpg). None exist yet,
@@ -38,7 +38,6 @@ export function DesignShowcase({ pieces, grid }: { pieces: { src: string; title:
   // Before a choice, CSS shows the dome slot only where the dome is the default.
   const cssView = choice ?? (reduce ? "grid" : null);
   const slotClass = cssView === "dome" ? "" : cssView === "grid" ? "hidden" : "fm-only";
-  const gridClass = cssView === "grid" ? "" : cssView === "dome" ? "hidden" : "fm-fallback";
 
   // Where the dome is the default (desktop), mount it once the page has loaded
   // and the browser is idle, before the visitor is likely to be scrolling:
@@ -119,12 +118,12 @@ export function DesignShowcase({ pieces, grid }: { pieces: { src: string; title:
               fit={0.6}
               grayscale={false}
               overlayBlurColor="#ffffff"
-              imageBorderRadius="0px"
-              openedImageBorderRadius="0px"
+              imageBorderRadius="14px"
+              openedImageBorderRadius="20px"
               openedImageWidth="min(80vw, 420px)"
               openedImageHeight="min(80vh, 560px)"
               dragDampening={2}
-              maxVerticalRotationDeg={5}
+              maxVerticalRotationDeg={35}
               segments={20}
             />
           )}
@@ -135,18 +134,16 @@ export function DesignShowcase({ pieces, grid }: { pieces: { src: string; title:
         <button
           type="button"
           onClick={() => setChoice(view === "dome" ? "grid" : "dome")}
-          className="t-label pressable border border-line-strong px-4 py-3 hover:bg-fg hover:text-on-fg"
+          className="btn-secondary"
         >
-          {view === "dome" ? "Show all pieces as a grid" : "View as a 3D dome"}
+          {view === "dome" ? "Hide the 3D dome" : "View as a 3D dome"}
         </button>
         {view === "dome" && (
-          <span className="t-stamp text-fg-muted">Drag or use the arrow keys to turn. Click or press Enter to open a piece.</span>
+          <span className="t-stamp text-fg-muted">Drag in any direction or use the arrow keys. Click or press Enter to open a piece.</span>
         )}
       </div>
 
-      <div className={`${gridClass} mt-8`}>
-        {grid}
-      </div>
+      <div className="mt-12">{grid}</div>
     </div>
   );
 }

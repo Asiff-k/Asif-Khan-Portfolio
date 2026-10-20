@@ -16,7 +16,8 @@
  * cost about 8fps on an integrated GPU; the colour fade at the edge stays); tile images load lazily; an opened piece is shown whole (contain,
  * no shadow) instead of cropped; dragging, momentum and arrow keys move a
  * target the dome glides toward (exponential ease, time-based friction), so
- * motion never stops abruptly.
+ * motion never stops abruptly; a slow idle drift on both axes pauses on hover,
+ * drag and focus; the edge fades are lighter so more tiles show in full.
  */
 
 import { useEffect, useMemo, useRef, useCallback } from 'react';
@@ -328,6 +329,32 @@ export default function DomeGallery({
     targetRef.current = { x: clamp(x, -maxVerticalRotationDeg, maxVerticalRotationDeg), y };
     glide();
   };
+
+  // Idle drift (site change): turns slowly sideways and sways gently up and
+  // down. Paused while the pointer is over the dome, while dragging, while it
+  // has keyboard focus or a piece is open; off with reduced motion.
+  const pausedRef = useRef(false);
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let raf = 0;
+    let last = performance.now();
+    let phase = 0;
+    const tick = () => {
+      const now = performance.now();
+      const dt = Math.min(0.05, Math.max(0, now - last) / 1000);
+      last = now;
+      const busy = pausedRef.current || draggingRef.current || focusedElRef.current || inertiaRAF.current;
+      if (!busy) {
+        phase += dt * 0.25;
+        const tg = targetRef.current;
+        const swayX = Math.sin(phase) * maxVerticalRotationDeg * 0.35;
+        setTarget(tg.x + (swayX - tg.x) * Math.min(1, dt * 0.8), tg.y - dt * 4);
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [maxVerticalRotationDeg]);
 
   const stopInertia = useCallback(() => {
     if (inertiaRAF.current) {
@@ -853,6 +880,10 @@ export default function DomeGallery({
           aria-roledescription="3D gallery"
           aria-label={label}
           onKeyDown={onKeyDown}
+          onPointerEnter={() => (pausedRef.current = true)}
+          onPointerLeave={() => (pausedRef.current = false)}
+          onFocus={() => (pausedRef.current = true)}
+          onBlur={() => (pausedRef.current = false)}
           className="absolute inset-0 grid place-items-center overflow-hidden select-none"
           style={{
             touchAction: 'none',
@@ -931,18 +962,18 @@ export default function DomeGallery({
           <div
             className="absolute inset-0 m-auto z-[3] pointer-events-none"
             style={{
-              backgroundImage: `radial-gradient(rgba(235, 235, 235, 0) 65%, var(--overlay-blur-color, ${overlayBlurColor}) 100%)`
+              backgroundImage: `radial-gradient(rgba(235, 235, 235, 0) 82%, var(--overlay-blur-color, ${overlayBlurColor}) 100%)`
             }}
           />
 
           <div
-            className="absolute left-0 right-0 top-0 h-[120px] z-[5] pointer-events-none rotate-180"
+            className="absolute left-0 right-0 top-0 h-[40px] z-[5] pointer-events-none rotate-180"
             style={{
               background: `linear-gradient(to bottom, transparent, var(--overlay-blur-color, ${overlayBlurColor}))`
             }}
           />
           <div
-            className="absolute left-0 right-0 bottom-0 h-[120px] z-[5] pointer-events-none"
+            className="absolute left-0 right-0 bottom-0 h-[40px] z-[5] pointer-events-none"
             style={{
               background: `linear-gradient(to bottom, transparent, var(--overlay-blur-color, ${overlayBlurColor}))`
             }}
