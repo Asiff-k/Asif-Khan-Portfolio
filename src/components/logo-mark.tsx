@@ -7,7 +7,9 @@ const sizes = { xs: 20, sm: 32, md: 44, lg: 56 } as const;
 /**
  * An official logo at a consistent size, in its own colours and proportions.
  * App Store icons fill the square; other brand marks are fitted inside it with
- * no added background. A tool without a verified logo keeps an empty space of
+ * no added background, in greyscale to match the monochrome site (they scale
+ * up and brighten on hover; see .logo-mark in globals.css). A tool without a
+ * verified logo keeps an empty space of
  * the same size so text stays aligned; no placeholder artwork is drawn.
  */
 export function LogoMark({
@@ -37,7 +39,7 @@ export function LogoMark({
     className: appIcon ? "size-full object-cover" : "size-[86%] object-contain",
   });
   return (
-    <span style={{ width: px, height: px }} className={`flex shrink-0 items-center justify-center ${className}`}>
+    <span style={{ width: px, height: px }} className={`logo-mark flex shrink-0 items-center justify-center ${className}`}>
       {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
       <img {...props} />
     </span>
