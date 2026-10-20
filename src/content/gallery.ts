@@ -3,6 +3,7 @@ import type { MediaKey } from "./media.generated";
 export const galleryCategories = [
   "Food & drink",
   "Product ads",
+  "Branding",
   "Gaming",
   "Posters & apparel",
   "Social posts",
@@ -20,6 +21,22 @@ export type GalleryItem = {
 // the composition, type and branding himself. Captions describe the piece and
 // never suggest that a brand shown was a client.
 export const gallery: GalleryItem[] = [
+  // Graphic Design Portfolio 2026 (newest first). Every brand name in these is invented.
+  { image: "graphics/sneaker-no-dead-weight", title: "Sneaker ad: No dead weight", category: "Product ads" },
+  { image: "graphics/headphones-silence-engineered", title: "Headphones ad: Silence, engineered", category: "Product ads" },
+  { image: "graphics/phone-see-it-first", title: "Phone ad: See it first", category: "Product ads" },
+  { image: "graphics/car-silent-running", title: "Electric car ad: Silent running", category: "Product ads" },
+  { image: "graphics/watch-measured-in-decades", title: "Watch ad: Measured in decades", category: "Product ads" },
+  { image: "graphics/perfume-oriel", title: "Perfume ad: Oriel", category: "Product ads" },
+  { image: "graphics/serum-bare-minimum", title: "Skincare ad: Bare minimum", category: "Product ads" },
+  { image: "graphics/brand-cold-north", title: "Brand identity: Cold North", category: "Branding" },
+  { image: "graphics/coffee-bag-cold-north", title: "Coffee packaging: Cold North", category: "Branding" },
+  { image: "graphics/magazine-frame", title: "Magazine cover: Frame", category: "Posters & apparel" },
+  { image: "graphics/poster-sub-freq", title: "Event poster: Sub Freq", category: "Posters & apparel" },
+  { image: "graphics/poster-sylhet", title: "Travel poster: Sylhet", category: "Posters & apparel" },
+  { image: "graphics/poster-nocturne", title: "Illustrated poster: Nocturne", category: "Posters & apparel" },
+  { image: "graphics/social-drops-friday", title: "Sneaker drop post: Drops Friday", category: "Social posts" },
+  { image: "graphics/social-midseason-edit", title: "Sale post: Midseason edit", category: "Social posts" },
   { image: "graphics/pasta-yum", title: "Pasta poster: Yum!", category: "Food & drink" },
   { image: "graphics/pasta-twist", title: "Pasta poster: Twist", category: "Food & drink" },
   { image: "graphics/pasta-one-twirl", title: "Pasta poster: One twirl", category: "Food & drink" },

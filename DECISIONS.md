@@ -182,3 +182,9 @@ Patterns studied from orbix.studio in a browser; nothing of theirs (code, text, 
 - Carousel spacing on phones is 80% of the width, so the centre card is clear and the neighbours peek in from the sides.
 - Performance: the three nearest carousel screenshots no longer load eagerly (they competed with the portrait for bandwidth); the paragraph halo applies only once the particle stage exists; srcset lists stop at 1920px (deviceSizes 640, 828, 1080, 1440, 1920; imageSizes 96, 192, 384), which cut the home page HTML from 418KB to 381KB.
 - Contrast: in the orange panel the inner area is darkened (black at 25%) instead of lightened, so white text there passes 4.5:1. The grey words of the scroll-reveal statement are the intended effect and are the only contrast items Lighthouse still flags (score 96).
+
+## Graphic Design Portfolio 2026 (15 new pieces)
+
+- Added all 15 pieces from "Asif Khan Graphic Design Portfolio 2026.zip" (5400x7200 PNGs, one 3375x4500) as 1400px-wide WebP, same settings as the original pipeline, via scripts/add-graphics-2026.mjs. The gallery now has 69 pieces; the dome, grid, filter counts, "See all" button and stats row all count from the data.
+- Categories: seven product ads (sneaker, headphones, phone, electric car, watch, perfume, skincare), a new "Branding" category for the Cold North identity and its coffee packaging, four posters (Frame magazine cover, Sub Freq event, Sylhet travel, Nocturne), and two social posts (Drops Friday, Midseason edit). The new pieces are listed first, so the newest work leads the grid.
+- The Cold North coffee bag label still reads "[BRAND NAME]" in the artwork itself; it is shown as supplied.
