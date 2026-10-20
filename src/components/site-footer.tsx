@@ -4,67 +4,95 @@ import { FooterName } from "./cinema/footer-name";
 import { ArrowUpRight, DownloadIcon } from "./icons";
 import { ContactIcon } from "./logo-mark";
 
-const elsewhere = ["GitHub", "LinkedIn", "Instagram", "Facebook", "Email", "CV"]
-  .map((label) => contacts.find((c) => c.label === label))
-  .filter((c) => c !== undefined);
+// The email has its own large link above the list, so it is not repeated in it.
+const reach = contacts.filter((c) => c.label !== "Email");
 
+/**
+ * The one contact area on the site, at the bottom of every page: email, the
+ * ways to reach Asif (each listed once), page links and the oversized name.
+ * "#contact" links in the header and hero point here.
+ */
 export function SiteFooter() {
   return (
-    <footer className="border-t border-line">
-      <div className="page-x grid gap-12 py-14 md:grid-cols-12 md:gap-10">
-        <div className="md:col-span-5">
-          <p className="font-display text-lg font-bold tracking-[-0.02em]">{site.name}</p>
-          <p className="t-body-sm mt-2 max-w-sm text-fg-soft">
-            Software, UI/UX and graphic design, with AI in the workflow. Based in {site.location}.
+    <footer id="contact" className="border-t border-line" aria-labelledby="contact-title">
+      <div className="page-x grid gap-14 py-24 md:py-32 lg:grid-cols-12 lg:gap-10">
+        <div className="lg:col-span-6">
+          <p className="t-stamp text-accent">Contact</p>
+          <h2 id="contact-title" data-reveal="heading" className="t-display-lg mt-4">
+            Let&apos;s talk.
+          </h2>
+          <p className="t-body-lg mt-8 max-w-md text-fg-muted">
+            I&apos;m a CSE student who builds web apps, designs interfaces and graphics, and works with AI tools every
+            day. If you&apos;d like to talk about my work or a project, I&apos;d be glad to hear from you.
           </p>
+          <a
+            href={`mailto:${site.email}`}
+            className="group mt-10 inline-flex max-w-full items-center gap-3 border-b border-line pb-2 transition-colors duration-150 hover:border-accent"
+          >
+            <span className="t-title break-all group-hover:text-accent">{site.email}</span>
+            <ArrowUpRight className="size-5 shrink-0 text-fg-muted group-hover:text-accent" />
+          </a>
+          <p className="t-stamp mt-4 text-fg-muted">Sylhet, Bangladesh · GMT+6</p>
         </div>
-        <nav aria-label="Footer" className="md:col-span-3">
-          <p className="t-stamp text-fg-muted">Pages</p>
-          <ul className="mt-4 space-y-2">
-            <li>
-              <Link href="/" className="t-body-sm hover:text-accent">
-                Home
-              </Link>
-            </li>
-            {nav.map((item) => (
-              <li key={item.href}>
-                <Link href={item.href} className="t-body-sm hover:text-accent">
-                  {item.label}
-                </Link>
+
+        <div className="lg:col-span-5 lg:col-start-8 lg:self-end">
+          <p className="t-stamp text-fg-muted">Reach me on</p>
+          <ul className="mt-3 border-t border-line">
+            {reach.map((c) => (
+              <li key={c.label} className="flex items-center gap-x-4 border-b border-line">
+                <a
+                  href={c.href}
+                  {...("external" in c && c.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  {...("download" in c && c.download ? { download: true } : {})}
+                  className="group grid min-w-0 flex-1 grid-cols-[1.5rem_1fr_auto] items-center gap-x-4 py-3.5"
+                >
+                  <ContactIcon contact={c} />
+                  <span className="min-w-0">
+                    <span className="t-stamp block text-fg-muted">{c.label}</span>
+                    <span className="mt-0.5 block break-words text-[0.9375rem] group-hover:text-accent">{c.value}</span>
+                  </span>
+                  {"download" in c && c.download ? (
+                    <DownloadIcon className="text-fg-muted group-hover:text-accent" />
+                  ) : (
+                    <ArrowUpRight className="text-fg-muted transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent" />
+                  )}
+                  {"external" in c && c.external && <span className="sr-only">(opens in a new tab)</span>}
+                </a>
+                {"also" in c && (
+                  <a
+                    href={c.also.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group t-stamp pressable inline-flex shrink-0 items-center gap-2 border border-line px-3 py-2 hover:border-accent hover:text-accent"
+                  >
+                    <ContactIcon contact={c.also} />
+                    {c.also.label}
+                    <span className="sr-only">(opens in a new tab)</span>
+                  </a>
+                )}
               </li>
             ))}
           </ul>
-        </nav>
-        <div className="md:col-span-4">
-          <p className="t-stamp text-fg-muted">Elsewhere</p>
-          <ul className="mt-3 border-t border-line">
-            {elsewhere.map((c) => {
-              const external = "external" in c && c.external;
-              const download = "download" in c && c.download;
-              const label = c.label === "CV" ? "Download CV" : c.label;
-              return (
-                <li key={c.label} className="border-b border-line">
-                  <a
-                    href={c.href}
-                    {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                    {...(download ? { download: true } : {})}
-                    className="group flex items-center gap-3 py-2.5 transition-colors duration-100 hover:text-accent focus-visible:text-accent"
-                  >
-                    <ContactIcon contact={c} />
-                    <span className="t-body-sm flex-1">{label}</span>
-                    {download ? (
-                      <DownloadIcon className="text-fg-muted group-hover:text-accent" />
-                    ) : (
-                      <ArrowUpRight className="text-fg-muted transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent" />
-                    )}
-                    {external && <span className="sr-only">(opens in a new tab)</span>}
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
         </div>
       </div>
+
+      <nav aria-label="Footer" className="page-x border-t border-line py-6">
+        <ul className="flex flex-wrap gap-x-6 gap-y-2">
+          <li>
+            <Link href="/" className="t-stamp hover:text-accent">
+              Home
+            </Link>
+          </li>
+          {nav.map((item) => (
+            <li key={item.href}>
+              <Link href={item.href} className="t-stamp hover:text-accent">
+                {item.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
       <div className="page-x overflow-hidden pt-4 pb-8 md:pb-10">
         <FooterName name={site.name} />
       </div>

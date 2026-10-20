@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { DesignGallery, type GalleryEntry } from "@/components/design-gallery";
 import { DesignShowcase } from "@/components/design-showcase";
-import { ArrowDown, ArrowRight, ArrowUpRight, DownloadIcon } from "@/components/icons";
+import { ArrowDown, ArrowRight, DownloadIcon } from "@/components/icons";
 import { PageMotion } from "@/components/cinema/page-motion";
 import { Tilt } from "@/components/cinema/tilt";
 import { ToolLoop } from "@/components/cinema/tool-loop";
 import { AreaArt, type ArtKey } from "@/components/area-art";
-import { ContactIcon, LogoMark } from "@/components/logo-mark";
+import { LogoMark } from "@/components/logo-mark";
 import { MediaImage } from "@/components/media-image";
 import { SectionHead } from "@/components/section-head";
 import { WorkMenu } from "@/components/work-menu";
@@ -15,7 +15,7 @@ import { gallery, galleryCategories } from "@/content/gallery";
 import type { LogoKey } from "@/content/logos.generated";
 import { media } from "@/content/media.generated";
 import { projects } from "@/content/projects";
-import { contacts, site } from "@/content/site";
+import { site } from "@/content/site";
 import { tools } from "@/content/tools";
 
 type Area = {
@@ -50,7 +50,7 @@ const areas: Area[] = [
   {
     title: "UI/UX design",
     body: [
-      "I design web and app interfaces in Figma and Google Stitch, from wireframes to final screens. My client work includes websites for a security advisory firm, a training provider and a virtual tour studio.",
+      "I design web and app interfaces in Figma, from wireframes to final screens. My client work includes websites for a security advisory firm, a training provider and a virtual tour studio.",
       "At NextGen Production I worked as the link between designers and developers, then moved up to team leader: setting daily priorities, assigning work and keeping delivery on schedule.",
     ],
     evidence: [
@@ -66,7 +66,7 @@ const areas: Area[] = [
   {
     title: "Graphic design",
     body: [
-      "Posters, product ads, social posts and T-shirt art. I generate the imagery with AI tools, then handle the composition, type and branding myself.",
+      "Posters, product ads, social posts and T-shirt art: the composition, type and branding are mine.",
     ],
     evidence: [{ label: "See all 54 pieces", href: "#design" }],
     visual: {
@@ -77,7 +77,7 @@ const areas: Area[] = [
   {
     title: "AI tools and data",
     body: [
-      "AI is part of my daily work: Perplexity and Gemini Notebook for research, Claude for code, Google Stitch for interface design, and HeyGen, Synthesia and Colossyan for video.",
+      "Tools I work with: Perplexity and Gemini Notebook for research, Claude for code, Google Stitch for interface design, and HeyGen, Synthesia and Colossyan for video.",
       "I've also completed three AI training data projects: robot video segmentation, satellite image annotation and first-person video capture.",
     ],
     evidence: [
@@ -114,7 +114,7 @@ const galleryEntries: GalleryEntry[] = gallery.map((g) => ({
   ...media[g.image],
   title: g.title,
   category: g.category,
-  meta: `${g.category} · AI-assisted`,
+  meta: g.category,
 }));
 
 export default function Home() {
@@ -124,15 +124,15 @@ export default function Home() {
       <section className="page-x pt-10 pb-24 md:pt-16 md:pb-32" aria-labelledby="intro-title">
         <div className="grid gap-12 md:grid-cols-12 md:gap-10">
           <div className="md:col-span-7 lg:col-span-8">
-            <p className="t-stamp text-accent">Software · UI/UX · Graphic design · AI</p>
+            <p className="t-stamp text-accent">Software · UI/UX · Graphic design</p>
             <h1 id="intro-title" data-hero-title className="t-hero mt-6 text-balance">
-              I build the software, design the screens, and <span className="text-accent">use AI in both.</span>
+              I build the software and design the screens.
             </h1>
             <p className="t-body-lg mt-8 max-w-xl text-fg-soft">
               I&apos;m Asif, a final-year Computer Science and Engineering student at Leading University in Sylhet.
               I&apos;ve built two full web apps on my own, designed interfaces for client projects, and moved up from
-              UI/UX Designer to Team Leader at NextGen Production. AI tools are part of my daily work, and I&apos;ve
-              completed three AI training data projects.
+              UI/UX Designer to Team Leader at NextGen Production. I&apos;ve also completed three AI training data
+              projects.
             </p>
             <div className="mt-10 flex flex-wrap gap-3">
               <Link
@@ -285,8 +285,7 @@ export default function Home() {
       {/* Graphic design */}
       <section id="design" className="page-x py-24 md:py-32" aria-labelledby="design-title">
         <SectionHead index="03" label="Graphic design" title="Posters, ads and social posts" id="design-title">
-          I generate the imagery with AI tools, then do the composition, type and branding myself. Tap any piece to see
-          it larger.
+          The imagery is AI-generated; the composition, type and branding are mine. Tap any piece to see it larger.
         </SectionHead>
         <div className="mt-8">
           <DesignShowcase
@@ -410,70 +409,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Contact */}
-      <section id="contact" aria-labelledby="contact-title">
-        <div className="page-x grid gap-14 py-24 md:py-32 lg:grid-cols-12 lg:gap-10">
-          <div className="lg:col-span-6">
-            <p className="t-stamp text-accent">06 · Contact</p>
-            <h2 id="contact-title" data-reveal="heading" className="t-display-lg mt-4">
-              Let&apos;s talk.
-            </h2>
-            <p className="t-body-lg mt-8 max-w-md text-fg-muted">
-              I&apos;m a final-year CSE student in Sylhet who builds web apps, designs interfaces and graphics, and works
-              with AI tools every day. If you&apos;d like to talk about my work or a project, I&apos;d be glad to hear
-              from you.
-            </p>
-            <a
-              href={`mailto:${site.email}`}
-              className="group mt-10 inline-flex max-w-full items-center gap-3 border-b border-line pb-2 transition-colors duration-150 hover:border-accent"
-            >
-              <span className="t-title break-all group-hover:text-accent">{site.email}</span>
-              <ArrowUpRight className="size-5 shrink-0 text-fg-muted group-hover:text-accent" />
-            </a>
-            <p className="t-stamp mt-4 text-fg-muted">Sylhet, Bangladesh · GMT+6</p>
-          </div>
-
-          <div className="lg:col-span-5 lg:col-start-8 lg:self-end">
-            <p className="t-stamp text-fg-muted">Reach me on</p>
-            <ul className="mt-3 border-t border-line">
-              {contacts.map((c) => (
-                <li key={c.label} className="flex items-center gap-x-4 border-b border-line">
-                  <a
-                    href={c.href}
-                    {...("external" in c && c.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                    {...("download" in c && c.download ? { download: true } : {})}
-                    className="group grid min-w-0 flex-1 grid-cols-[1.5rem_1fr_auto] items-center gap-x-4 py-3.5"
-                  >
-                    <ContactIcon contact={c} />
-                    <span className="min-w-0">
-                      <span className="t-stamp block text-fg-muted">{c.label}</span>
-                      <span className="mt-0.5 block break-words text-[0.9375rem] group-hover:text-accent">{c.value}</span>
-                    </span>
-                    {"download" in c && c.download ? (
-                      <DownloadIcon className="text-fg-muted group-hover:text-accent" />
-                    ) : (
-                      <ArrowUpRight className="text-fg-muted transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent" />
-                    )}
-                    {"external" in c && c.external && <span className="sr-only">(opens in a new tab)</span>}
-                  </a>
-                  {"also" in c && (
-                    <a
-                      href={c.also.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group t-stamp pressable inline-flex shrink-0 items-center gap-2 border border-line px-3 py-2 hover:border-accent hover:text-accent"
-                    >
-                      <ContactIcon contact={c.also} />
-                      {c.also.label}
-                      <span className="sr-only">(opens in a new tab)</span>
-                    </a>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
       <PageMotion />
     </main>
   );

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { nav, site, socials } from "@/content/site";
+import { nav, site } from "@/content/site";
 import { CloseIcon, MenuIcon } from "./icons";
 import { RollText } from "./roll-text";
 
@@ -85,7 +85,7 @@ export function SiteHeader() {
             ))}
             <li>
               <Link
-                href="/#contact"
+                href="#contact"
                 className="t-stamp pressable inline-flex items-center bg-fg px-4 py-3 text-on-fg hover:bg-fg-soft"
               >
                 Contact
@@ -118,7 +118,7 @@ export function SiteHeader() {
       >
         <nav aria-label="Main" className="page-x py-6">
           <ul>
-            {[...nav, { label: "Contact", href: "/#contact" }].map((item, i) => (
+            {[...nav, { label: "Contact", href: "#contact" }].map((item, i) => (
               <li key={item.href} className="border-b border-line">
                 <Link
                   href={item.href}
@@ -129,15 +129,6 @@ export function SiteHeader() {
                   <span className="t-title">{item.label}</span>
                   <span className="t-stamp text-fg-muted">{String(i + 1).padStart(2, "0")}</span>
                 </Link>
-              </li>
-            ))}
-          </ul>
-          <ul className="mt-8 grid grid-cols-2 gap-3">
-            {socials.map((s) => (
-              <li key={s.label}>
-                <a href={s.href} target="_blank" rel="noopener noreferrer" className="t-label text-fg-soft hover:text-accent">
-                  {s.label}
-                </a>
               </li>
             ))}
           </ul>

@@ -21,9 +21,10 @@ export default function AiToolsPage() {
       <header className="page-x pt-10 pb-14 md:pt-16 md:pb-20">
         <p className="t-stamp text-moss">AI tools</p>
         <div className="mt-4 grid gap-8 md:grid-cols-12 md:items-end">
-          <h1 className="t-display-lg text-balance md:col-span-8">AI is part of how I research, build and design.</h1>
+          <h1 className="t-display-lg text-balance md:col-span-8">Tools for research, code, design and video.</h1>
           <p className="t-body-lg text-ink-soft md:col-span-4">
-            The tools I use and what for, the platforms from my AI data projects, and a catalogue of AI tools by task.
+            The tools I work with and what for, the platforms from my AI data projects, and a catalogue of AI tools by
+            task.
           </p>
         </div>
       </header>

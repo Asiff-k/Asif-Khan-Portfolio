@@ -86,7 +86,7 @@ export const tools: Tool[] = [
     status: "used",
     task: "Interface design",
     about: "Turns a written brief into interface designs, with code and Figma export.",
-    use: "Designing this portfolio.",
+    use: "Designing web interfaces.",
     href: "https://stitch.withgoogle.com",
   },
   {
