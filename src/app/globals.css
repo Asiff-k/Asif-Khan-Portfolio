@@ -540,3 +540,17 @@ a:focus-visible .logo-mark img {
   text-shadow: none !important;
 }
 
+
+/* ---------- About: skill stickers ----------
+   Tilted pills; on desktop they sit in the side gutters at staggered heights
+   (--at), never over the paragraph. Hover lifts 3px and straightens. */
+.sticker {
+  transform: rotate(var(--tilt));
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (hover: hover) and (min-width: 1024px) {
+  .sticker:hover { transform: translateY(-3px) rotate(0deg); }
+}
+@media (min-width: 1024px) {
+  [data-sticker] { top: var(--at); }
+}

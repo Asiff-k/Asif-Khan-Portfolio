@@ -130,6 +130,11 @@ export function Particles({ count }: { count: number }) {
     ready.current = { promise, resolve };
   }
   const pointer = useRef({ target: new Vector2(999, 999), active: 0, targetActive: 0 });
+  // Sections that ask for a clean background (see data-particles-quiet).
+  const quietEls = useRef<HTMLElement[]>([]);
+  useEffect(() => {
+    quietEls.current = [...document.querySelectorAll<HTMLElement>("[data-particles-quiet]")];
+  }, []);
 
   const view: View = useMemo(() => {
     const v = viewport.getCurrentViewport(camera, [0, 0, 0]);
@@ -335,9 +340,16 @@ export function Particles({ count }: { count: number }) {
     ptr.active += (ptr.targetActive - ptr.active) * k;
     u.uPointerActive.value = ptr.active;
     // Past the hero, the wave field sits behind reading sections: ease it to
-    // 60% so paragraphs stay easy to read; shapes keep full strength.
+    // 60% so paragraphs stay easy to read; shapes keep full strength. Sections
+    // marked data-particles-quiet (the About statement, whose grey words must
+    // stay readable) fade the particles almost to nothing while on screen.
     const reading = lastTarget.current === "field" && window.scrollY > window.innerHeight * 0.5;
-    const goal = LOOK.opacity * (reading ? 0.6 : 1);
+    let quiet = false;
+    for (const q of quietEls.current) {
+      const r = q.getBoundingClientRect();
+      if (r.top < window.innerHeight * 0.9 && r.bottom > window.innerHeight * 0.1) quiet = true;
+    }
+    const goal = LOOK.opacity * (quiet ? 0.04 : reading ? 0.6 : 1);
     u.uOpacity.value += (goal - u.uOpacity.value) * (1 - Math.pow(0.02, dt));
   });
 

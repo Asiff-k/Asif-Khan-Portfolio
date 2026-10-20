@@ -210,8 +210,12 @@ export default function Home() {
         <AboutStatement
           text="I'm a fullstack developer and UI/UX designer. I interned in web development at CodeSoft, then worked on product design, graphics and interfaces at NextGen Production, where I became Team Leader. I designed and built Incodet's website end to end, and designed websites for Cipher Shield, KI Training and NextGen. I also train AI models and work with AI/ML."
           stickers={[
-            { text: "Team Leader at NextGen", color: "#d9481f", rotate: -7, at: 0.3, className: "-top-2 right-[6%] md:right-[10%]" },
-            { text: "Built Incodet end to end", color: "#3f2bb8", rotate: 6, at: 0.6, className: "-bottom-3 left-[4%] md:left-[12%]" },
+            { text: "Product design", color: "#cf4419", tilt: -6, cue: "product design", side: "left", at: 0.42 },
+            { text: "UI/UX design", color: "#1f3a5f", tilt: 5, cue: "UI/UX designer", side: "right", at: 0.3 },
+            { text: "Web developer", color: "#121316", tilt: 7, cue: "fullstack developer", side: "left", at: 0.02 },
+            { text: "App developer", color: "#3f2bb8", tilt: -5, cue: "fullstack developer", side: "right", at: 0.06 },
+            { text: "AI/ML", color: "#121316", tilt: -8, cue: "AI/ML", side: "right", at: 0.84 },
+            { text: "AI training", color: "#cf4419", tilt: 6, cue: "train AI models", side: "left", at: 0.8 },
           ]}
         />
         <div className="mt-16 md:mt-24">

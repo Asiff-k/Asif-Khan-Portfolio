@@ -188,3 +188,11 @@ Patterns studied from orbix.studio in a browser; nothing of theirs (code, text, 
 - Added all 15 pieces from "Asif Khan Graphic Design Portfolio 2026.zip" (5400x7200 PNGs, one 3375x4500) as 1400px-wide WebP, same settings as the original pipeline, via scripts/add-graphics-2026.mjs. The gallery now has 69 pieces; the dome, grid, filter counts, "See all" button and stats row all count from the data.
 - Categories: seven product ads (sneaker, headphones, phone, electric car, watch, perfume, skincare), a new "Branding" category for the Cold North identity and its coffee packaging, four posters (Frame magazine cover, Sub Freq event, Sylhet travel, Nocturne), and two social posts (Drops Friday, Midseason edit). The new pieces are listed first, so the newest work leads the grid.
 - The Cold North coffee bag label still reads "[BRAND NAME]" in the artwork itself; it is shown as supplied.
+
+## About statement: skill stickers
+
+- The two statement stickers are replaced by six skill stickers in a real list (ul/li): Product design, UI/UX design, Web developer, App developer, AI/ML, AI training. Solid pills, white Manrope 600, 15px desktop and 13px mobile, 8px 16px padding, soft shadow, each tilted between -8 and 8 degrees.
+- Colours reuse the panel colours, except the orange: white on #d9481f is only 4.29:1, so those two pills use #cf4419 (4.67:1). The others: #1f3a5f 11.5:1, #121316 18.6:1, #3f2bb8 9.3:1.
+- Desktop (1024px and up): the paragraph is narrowed to leave a gutter on each side, and three stickers sit in each gutter at staggered heights, so none can cover a word (checked: no overlap with any word or with each other). Under 1024px they wrap in a row below the paragraph.
+- Each sticker pops in (scale 0.6 to 1, back.out(1.7), 0.5s) when the word reveal reaches its phrase ("fullstack developer" for Web and App developer, "UI/UX designer", "product design", "train AI models", "AI/ML") and goes back when you scroll up. Hover on desktop lifts 3px and straightens. Reduced motion shows all six at once.
+- The particle field fades almost to nothing (4% of its strength) while the About statement is on screen, so the grey not-yet-revealed words sit on a clean background.
