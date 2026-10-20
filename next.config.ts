@@ -16,6 +16,9 @@ const nextConfig: NextConfig = {
     // Only the portfolio's own processed images can be optimized.
     localPatterns: [{ pathname: "/images/**", search: "" }],
     formats: ["image/avif", "image/webp"],
+    // No image on the site shows wider than about 1400px; shorter srcset lists keep the HTML small.
+    deviceSizes: [640, 828, 1080, 1440, 1920],
+    imageSizes: [96, 192, 384],
     qualities: [75],
   },
   async headers() {

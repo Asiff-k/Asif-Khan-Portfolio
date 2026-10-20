@@ -335,6 +335,13 @@
   .js .fm-fallback { display: none; }
 }
 
+/* ---------- What I do: panels stack (stick and slide over each other) only where a
+   whole panel fits on screen; on phones and short screens they scroll normally so
+   no part of a panel is ever hidden under the next one. ---------- */
+@media (min-width: 768px) and (min-height: 820px) {
+  .panel-sticky { position: sticky; }
+}
+
 /* ---------- Design grid: tiles go from blurred to sharp as they scroll in ---------- */
 .js .gallery-list > li > button > span:first-child {
   opacity: 0;
@@ -518,11 +525,12 @@ a:focus-visible .logo-mark img {
 }
 
 /* ---------- Reading over the particle field ----------
-   Paragraph text gets a soft halo in the page colour, which locally fades the
-   particles behind it so body copy stays easy to read. */
-main p,
-footer p,
-main li {
+   Once the particle stage is on the page (html.has-stage), paragraph text gets
+   a soft halo in the page colour, which locally fades the particles behind it
+   so body copy stays easy to read. */
+.has-stage main p,
+.has-stage footer p,
+.has-stage main li {
   text-shadow:
     0 0 6px var(--scene-bg),
     0 0 14px var(--scene-bg);

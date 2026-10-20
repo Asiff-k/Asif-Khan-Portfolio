@@ -22,6 +22,12 @@ export default function Stage() {
   const [tier] = useState(getDeviceTier);
   const [running, setRunning] = useState(true);
 
+  // Paragraph halos (globals.css) only matter while the particles are on screen.
+  useEffect(() => {
+    document.documentElement.classList.add("has-stage");
+    return () => document.documentElement.classList.remove("has-stage");
+  }, []);
+
   // Pause rendering when the tab is hidden.
   useEffect(() => {
     const onVis = () => setRunning(document.visibilityState === "visible");

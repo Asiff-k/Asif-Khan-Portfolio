@@ -12,6 +12,8 @@ export type Panel = {
   /** Supporting detail, shown smaller on the right. */
   detail: string;
   color: string;
+  /** Darken (not lighten) the inner panel, for colours where white text needs more contrast. */
+  innerDark?: boolean;
   button: { label: string; href: string };
   links: { label: string; href: string }[];
   images?: { image: MediaKey; alt: string; href?: string; tall?: boolean }[];
@@ -31,7 +33,7 @@ export function ServicePanels({ panels }: { panels: Panel[] }) {
         <li
           key={p.title}
           data-area={p.title}
-          className="no-halo sticky mb-8 overflow-hidden rounded-[28px] text-white shadow-[0_-10px_40px_rgb(18_19_22/0.12)] md:mb-12"
+          className="no-halo panel-sticky relative mb-8 overflow-hidden rounded-[28px] text-white shadow-[0_-10px_40px_rgb(18_19_22/0.12)] md:mb-12"
           style={{ background: p.color, top: `calc(5rem + ${i * 1.25}rem)` }}
         >
           <div className="flex items-start justify-between gap-6 px-6 pt-7 md:px-10 md:pt-10">
@@ -43,7 +45,7 @@ export function ServicePanels({ panels }: { panels: Panel[] }) {
             </span>
           </div>
 
-          <div className="m-3 mt-6 rounded-[22px] bg-white/10 p-5 md:m-4 md:mt-8 md:p-7">
+          <div className={`m-3 mt-6 rounded-[22px] p-5 md:m-4 md:mt-8 md:p-7 ${p.innerDark ? "bg-black/25" : "bg-white/10"}`}>
             <div className="grid gap-6 md:grid-cols-12 md:items-start">
               <p className="text-[1.0625rem] leading-snug font-medium md:col-span-4">
                 <span aria-hidden className="mr-2 inline-block size-1.5 translate-y-[-3px] rounded-full bg-white" />
@@ -59,7 +61,7 @@ export function ServicePanels({ panels }: { panels: Panel[] }) {
                 </Link>
               </div>
               <div className="md:col-span-5">
-                <p className="text-[0.9375rem] leading-relaxed text-white/80">{p.detail}</p>
+                <p className={`text-[0.9375rem] leading-relaxed ${p.innerDark ? "text-white" : "text-white/80"}`}>{p.detail}</p>
                 {p.links.length > 0 && (
                   <ul className="mt-4 flex flex-wrap gap-2" aria-label={`${p.title}: related work`}>
                     {p.links.map((l) => (

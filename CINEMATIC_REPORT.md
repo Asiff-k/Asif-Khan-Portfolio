@@ -1,8 +1,56 @@
 # Cinematic upgrade: report
 
-Branch `cinematic` (not merged into `main`; production is untouched).
+Branch `cinematic`, also published to `main` (production) at your request.
 
-## White theme redesign (latest)
+## Orbix-style redesign (latest)
+
+Live: https://asiffkhan.vercel.app (production, updated from `main`). Preview: https://asif-khan-portfolio-git-cinematic-asiffkhanx007-4901s-projects.vercel.app (Vercel login required).
+
+Patterns studied from orbix.studio in a browser and rebuilt in our own code. No Orbix code, text, images or brand are used, and there are no testimonials, ratings, awards, client logos or invented numbers.
+
+### Part 1, fixes
+
+- **Dome:** it drags up and down as well as sideways, and every one of the 10 tile rows can be brought into view (tested). It drifts slowly on both axes when idle, and pauses on hover, drag or focus. The edge fades are lighter, and opened pieces show whole.
+- **Particles:** a dark, clearly visible rolling wave (colour #121316, 60% opacity, 1.6x size). It eases back behind the text-heavy sections.
+- **AI logos:** all 10 are official and in full colour, checked one by one. None needed replacing.
+- **Hero:** the near-empty gap after the hero is gone, and the hero has your new subline.
+
+### Part 2, global look
+
+- **Colours:** a soft off-white #f7f7f5 page with near-black text.
+- **Shape:** rounded throughout. Cards are 22px, image tiles 15px, and buttons are pills.
+- **Buttons:** primary is black with a long soft shadow; secondary is white with a hairline border.
+- **Headings:** a calmer Manrope weight, 500 to 600.
+- **Details:** pill badges above section headings, white cards that lift on hover, and blur-to-sharp entrances.
+
+### Part 3, sections
+
+- **What I do:** four stacked panels in your four colours, with your own screenshots and posters. The code-drawn illustrations and all stock photos are deleted.
+- **Selected work:** a curved, looping carousel with a dotted arc. You can drag, swipe, or use the arrow buttons or keys.
+- **About:** your statement reveals word by word as you scroll, with two stickers.
+- **Numbers:** 54 design pieces, 7 projects, 4 website interfaces, 3 AI data projects. All are counted from your content.
+- **Design:** the dome, with the full masonry grid always visible below it.
+- **AI tools:** a logo wall of 10 cards with a soft glow and the caption "Tools I use every week". Nine cards link to official sites; Ginger 2025 has no public site.
+- **Experience:** bento cards.
+- **Contact:** one block of rounded cards with full-colour icons.
+
+### Checks (local production build, this laptop)
+
+| Check | Result | Target |
+| --- | --- | --- |
+| Lighthouse Performance, mobile (median of 9) | 80 (range 64 to 88) | at least 80: met |
+| Lighthouse Accessibility | 96 | at least 95: met |
+| Best Practices / CLS | 100 / 0.000 | |
+| Desktop scroll FPS (Intel HD 520) | 57 average, no section below 50 | |
+| Keyboard | 123 tab stops, all with a visible focus indicator | met |
+| Reduced motion | no canvas, all text and stickers visible, statement fully dark | met |
+| Dome rows | every row drags into view | met |
+| Site QA suite | 133 of 133 pass | |
+| `npm run build`, TypeScript, ESLint, console errors | pass, none | met |
+
+The Performance median sits right at 80, and single runs on this laptop swing widely, so treat it as at the threshold rather than comfortably above it.
+
+## White theme redesign
 
 Preview: https://asif-khan-portfolio-git-cinematic-asiffkhanx007-4901s-projects.vercel.app (Vercel login required; production still serves `main`).
 
@@ -387,6 +435,50 @@ The full list, one line each, is in `DECISIONS.md` and reproduced here:
 - "Final-year" is removed everywhere: hero, site description, and Chol Ghuri's role (now "University CSE project").
 - Incodet (corrected): it is not Asif's agency. He designed and coded the Incodet website from scratch and designed the UI for two of its client projects, Cipher Shield and KI Training. Experience lists this as project-based work for Incodet, and the NextGen Production website is listed under his NextGen role.
 - The Flowing Menu's index and meta labels are raised from 50% to 72% opacity, so they read on white.
+
+### Orbix-style redesign, Part 1 (fixes)
+
+- Dome vertical drag: maxVerticalRotationDeg 35 (was 5). Tested with the real dome: dragging down and up reaches every one of the 10 tile rows. Momentum and the glide already run on both axes.
+- Dome idle drift: turns slowly sideways (4 degrees a second) and sways gently up and down (up to 35% of the vertical range). Paused while the pointer is over the dome, while dragging, while it has keyboard focus or a piece is open; off with reduced motion.
+- Dome fades lighter: the round edge fade starts at 82% (was 65%) and the top and bottom fades are 40px (were 120px), so more tiles show in full. Tiles are rounded (14px), the opened piece 20px, still shown whole (object-fit contain).
+- The full design grid is always visible directly below the dome (no button). On phones the dome is still optional behind a "View as a 3D dome" button, because dragging it fights page scrolling on touch.
+- Particles: #121316 and a slightly lighter grey, 60% opacity, 1.6x larger (point size 8, was 5), normal blending. The quiet "field" is now a wide gridded sheet low in the frame that rolls as a slow swell (two crossing sine waves), so it reads as an intentional effect, not dust.
+- Readability over particles: paragraphs and list items get a soft halo in the page colour, and once you scroll past the hero the wave eases to 60% of its strength behind the text-heavy sections. The sphere and can keep full strength.
+- AI tool logos: the greyscale filter is removed everywhere. All 10 were checked one by one and are the official full-colour marks (App Store icons or the tools' own site icons, 160px, sharp at card size); none needed replacing. Ginger 2025's mark is the app's own icon.
+- Gap after the hero: the hero's bottom padding (128px) plus the Skills section's top padding (128px), under a tall portrait, left a near-empty screen. Both are now 48px.
+- Hero subline: "Fullstack developer (web and app) and UI/UX designer with hands-on AI/ML experience."
+
+### Orbix-style redesign, Part 2 (global look)
+
+- Page #f7f7f5 everywhere, text #121316, secondary text #3d3e42 and #5d5e62, hairlines #e6e6e3; white is now the card colour. No scene switching.
+- Rounded shape system: the sharp-corner reset is removed; tokens --radius-card 22px, --radius-tile 15px, --radius-chip 12px; buttons, badges and chips are full pills.
+- Buttons: primary is a black pill with a long, layered soft shadow down and to the left (the Orbix pattern, written from scratch); secondary is a white pill with a hairline border. Filter chips are white pills, black when pressed.
+- Headings: Manrope 600 for the hero and display, 500 for section titles, letter-spacing -0.03em, line-height 1.05 to 1.08.
+- Section headings sit under a small white pill badge with the section number and name. The hero stamp is a pill badge too. Nav labels are plain sentence case instead of mono capitals.
+- Cards: white, 1px border of ink at 6%, very soft shadow, lift 4px on hover (utility classes card and card-lift).
+- Motion: headings, items and the new [data-reveal="fade"] elements fade up from an 8px blur to sharp, staggered, expo ease. Nothing bounces. Reduced motion skips them.
+- Portrait, project screenshot frames and phone frames are rounded.
+
+### Orbix-style redesign, Part 3 (sections)
+
+Patterns studied from orbix.studio in a browser; nothing of theirs (code, text, images, brand) is used.
+
+- Section order: hero, 01 What I do (stacked panels), 02 Selected work (curved carousel), About statement and numbers, 03 Graphic design (dome and masonry grid), 04 AI tools and data (logo wall and data project cards), 05 Experience (bento), Contact. Routes and anchors (#work, #design, #ai-data, #experience, #contact) are unchanged.
+- What I do: four stacked service panels that stick below the header and slide over each other (#121316, #1f3a5f, #d9481f, #3f2bb8, white text). Each has the big title, "/01" style number, one short line, a white pill button, the fuller description and project links, and a row of image cards from Asif's own work: app screenshots (Software), the four client site designs (UI/UX), four posters (Graphic design). There are no AI task screenshots, so the AI panel shows the three data projects as small cards with their platform logos instead of images. The code-drawn illustrations and all stock photos are deleted.
+- Selected work: a curved carousel written from scratch. The centre card stands upright and large; neighbours tilt and drop along an arc over a dotted arc line. It loops endlessly so the first project sits in the centre with neighbours on both sides. Drag or swipe with momentum and a soft snap, arrow buttons, Left/Right keys; only the centre card's "View project" link is a tab stop (focusing it brings it to the centre). Pointer capture starts only after a real drag, so a click still opens the project. Replaces the Flowing Menu (deleted).
+- About statement: your text, each word turning from light grey to near-black as it scrolls through (scrubbed), with two tilted stickers ("Team Leader at NextGen", "Built Incodet end to end") that pop in at about 30% and 60%. Words are split on the server, so the text is complete without JavaScript and fully dark with reduced motion.
+- Numbers row: 54 design pieces, 7 projects, 4 website interfaces designed, 3 AI training data projects. Each is computed from the content data (gallery, projects, projects of kind "UI design", aiDataWork), never typed in. "Website interfaces designed" is used rather than "client websites", because one of the four is NextGen Production's own site, designed while Asif worked there.
+- AI tools logo wall: 5 x 2 white rounded cards with the full-colour logos and names, a large soft pastel glow above, and the caption "Tools I use every week" with a soft yellow marker highlight. Cards fade and sharpen in one after another, lift on hover, and the logo grows to 1.05. Links checked one by one: Perplexity, Gemini Notebook (notebook.google.com, the official address; notebooklm.google.com redirects there), Claude, Google Stitch (stitch.withgoogle.com), Figma, HeyGen, Synthesia, Colossyan, and Atlas Capture (atlascapture.io, its official site, which links to the same App Store app; atlascapture.com is a parked domain). Ginger 2025 has no public site and stays unlinked. Dot Lab has no verified logo and is not on the wall (it stays on the AI tools page and in the data projects).
+- The Curved Loop band of tool names is removed: the logo wall now shows the same tools, and repeating them read as AI emphasis.
+- Experience bento: NextGen Production (large, blue tint), CodeSoft (lavender), Incodet (beige), then white cards for Education, Skills and Languages, and Tools. Each role shows dates and two lines. Education, skills, tools and languages are kept, not removed.
+- Design: the full masonry grid (3 columns desktop, 2 tablet, 1 mobile, rounded tiles) is always visible under the dome; each tile goes from blurred to sharp as it scrolls in (IntersectionObserver plus CSS, so filtering keeps working). Filters are white pills. Clicking a tile opens the whole piece.
+- Contact: one block at the bottom of every page with clean white rounded cards, one per way to reach you, each with its full-colour icon (Gmail, WhatsApp, GitHub, LinkedIn, Instagram, Facebook; line icons for phone and CV). Every link appears once. The turning line figure and scroll-drawn hairline from the white theme are removed.
+- AI mentions: only one line remains, under What I do: "I use AI for ideas and to save time; the design and the build are my own work." Removed: the Design section's AI sentence, "works with AI tools every day" from the contact note, and the AI lines in the What I do copy. Your hero subline (hands-on AI/ML experience) and the About text are your own wording and stay. Factual AI data work stays.
+- No testimonials, ratings, awards, client logos or invented numbers.
+- Stacked panels stick and slide over each other only where a whole panel fits on screen (768px wide and 820px tall or more). On phones and short laptop screens a panel is taller than the space left under the header, so the next panel would cover its images before you could see them; there they scroll normally.
+- Carousel spacing on phones is 80% of the width, so the centre card is clear and the neighbours peek in from the sides.
+- Performance: the three nearest carousel screenshots no longer load eagerly (they competed with the portrait for bandwidth); the paragraph halo applies only once the particle stage exists; srcset lists stop at 1920px (deviceSizes 640, 828, 1080, 1440, 1920; imageSizes 96, 192, 384), which cut the home page HTML from 418KB to 381KB.
+- Contrast: in the orange panel the inner area is darkened (black at 25%) instead of lightened, so white text there passes 4.5:1. The grey words of the scroll-reveal statement are the intended effect and are the only contrast items Lighthouse still flags (score 96).
 
 ## Files changed against main
 

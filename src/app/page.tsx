@@ -66,6 +66,7 @@ const panels: Panel[] = [
     line: "Posters, product ads, social posts and T-shirt art.",
     detail: `Composition, type and branding, designed in Canva. All ${gallery.length} pieces are in the gallery below, filterable by category.`,
     color: "#d9481f",
+    innerDark: true,
     button: { label: `See all ${gallery.length} pieces`, href: "#design" },
     links: [],
     images: [

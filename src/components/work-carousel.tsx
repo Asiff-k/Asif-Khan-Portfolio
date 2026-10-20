@@ -38,7 +38,7 @@ export function WorkCarousel({ items }: { items: CarouselItem[] }) {
 
   const layout = useCallback(() => {
     const w = stage.current?.clientWidth ?? 1200;
-    const spacing = Math.min(w * 0.36, 440);
+    const spacing = w < 640 ? w * 0.8 : Math.min(w * 0.36, 440);
     cards.current.forEach((el, i) => {
       if (!el) return;
       // Endless loop: each card sits at its nearest offset from the current position.
@@ -107,7 +107,10 @@ export function WorkCarousel({ items }: { items: CarouselItem[] }) {
     };
   }, [layout]);
 
-  const spacing = () => Math.min((stage.current?.clientWidth ?? 1200) * 0.36, 440);
+  const spacing = () => {
+    const w = stage.current?.clientWidth ?? 1200;
+    return w < 640 ? w * 0.8 : Math.min(w * 0.36, 440);
+  };
 
   function onPointerDown(e: React.PointerEvent) {
     if (e.button !== 0) return;
@@ -197,7 +200,7 @@ export function WorkCarousel({ items }: { items: CarouselItem[] }) {
             <div className="card overflow-hidden p-3">
               <div className="aspect-[16/11] overflow-hidden rounded-tile bg-[#f0f0ed]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={it.image} alt={it.alt} draggable={false} loading={i < 3 ? "eager" : "lazy"} decoding="async" className="size-full object-cover object-top" />
+                <img src={it.image} alt={it.alt} draggable={false} loading="lazy" decoding="async" className="size-full object-cover object-top" />
               </div>
               <div className="px-2 pt-4 pb-2">
                 <p className="text-[0.75rem] font-medium tracking-wide text-[#5d5e62] uppercase">{it.kind}</p>
